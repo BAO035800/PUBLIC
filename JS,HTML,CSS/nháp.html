@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nháp</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 10px;
+}
+.calculator {
+    background-color: #333;
+    padding: 25px; /* Tăng khoảng padding */
+    border-radius: 15px; /* Tăng độ bo tròn */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* Làm nổi bật hơn */
+    width: 350px; /* Tăng chiều rộng */
+}
+.display {
+    margin-bottom: 20px;
+    height: auto;
+    border-radius: 8px;
+    border: 6px solid #222;
+    overflow: hidden;
+}
+#equation {
+    width: 100%;
+    height: 40px; /* Tăng chiều cao */
+    font-size: 20px; /* Tăng kích thước chữ */
+    padding: 8px;
+    border: none;
+    background-color: #222;
+    color: #bbb;
+}
+#result {
+    width: 100%;
+    height: 60px; /* Tăng chiều cao */
+    font-size: 28px; /* Font chữ lớn hơn */
+    padding: 10px;
+    border: none;
+    background-color: #222;
+    color: white;
+}
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px; /* Khoảng cách giữa các nút */
+}
+button {
+    font-size: 18px; /* Kích thước chữ lớn hơn */
+    padding: 18px; /* Tăng kích thước nút */
+    border: none;
+    border-radius: 8px;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+button:hover {
+    background-color: #555;
+}
+button:active {
+    background-color: #666;
+}
+.operator {
+    background-color: #ff9500;
+}
+.operator:hover {
+    background-color: #ff6d00;
+}
+.equals {
+    background-color: #4CAF50;
+    grid-column: span 4;
+}
+.equals:hover {
+    background-color: #45a049;
+}
+.clear {
+    background-color: #f44336;
+}
+.clear:hover {
+    background-color: #b92522;
+}
+.clear-all {
+    background-color: #e91e63;
+}
+.clear-all:hover {
+    background-color: #c2185b;
+}
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">
+            <input type="text" id="equation" disabled placeholder="Phép tính">
+            <input type="text" id="result" disabled placeholder="0">
+        </div>
+        <div class="buttons">
+            <button type="button" class="btn clear">C</button>
+            <button type="button" class="btn clear-all">CE</button>
+            <button type="button" class="btn operator input">%</button>
+            <button type="button" class="btn operator div input">/</button>
+            <button type="button" class="btn number input">7</button>
+            <button type="button" class="btn number input">8</button>
+            <button type="button" class="btn number input">9</button>
+            <button type="button" class="btn operator add input">+</button>
+            <button type="button" class="btn number input">4</button>
+            <button type="button" class="btn number input">5</button>
+            <button type="button" class="btn number input">6</button>
+            <button type="button" class="btn operator input">-</button>
+            <button type="button" class="btn number input">1</button>
+            <button type="button" class="btn number input">2</button>
+            <button type="button" class="btn number input">3</button>
+            <button type="button" class="btn operator multi input">*</button>
+            <button type="button" class="btn number input">0</button>
+            <button type="button" class="btn input">.</button>
+            <button type="button" class="btn operator input">(</button>
+            <button type="button" class="btn operator input">)</button>
+            <button type="button" class="btn equals">=</button>
+        </div>
+    </div>
+
+  <script>
+    let number=document.getElementsByClassName('number')
+    let input=document.getElementsByClassName('input')
+    let output=document.getElementById('equation')
+    let ketqua=document.getElementById('result')
+    let clear=document.getElementsByClassName('clear')[0]
+    let clearall=document.getElementsByClassName('clear-all')[0]
+    let operator=document.getElementsByClassName('operator')
+    let equal=document.getElementsByClassName('equals')[0]
+    let num
+    let mangall=[],j=0,mangso=[]
+    for(let i=0;i<input.length;i++){
+        input[i].addEventListener('click',function(){
+            let giatri=input[i].textContent;
+            output.value+= giatri
+            output.style.color='white'
+            mangall[j++]=giatri
+            console.log(mangall)
+        })
+    }
+    for(let i=0;i<number.length;i++){
+        number[i].addEventListener('click',function(){
+            num=number[i].textContent
+            num=parseInt(num);
+            mangso[j++]=num
+        })
+    }        
+    clearall.addEventListener('click',function(){
+        output.value=''
+        result=0
+        ketqua.value=''
+        mangall=[]
+        j=0
+    })
+    clear.addEventListener('click',function(){
+        output.value=output.value.slice(0,-1);
+        mangall.pop()
+    })
+    function chuyendoisau(a, b) {
+    let arr = [];
+    let temp = ''; // Chuỗi tạm để gộp các số liên tiếp
+
+    // Thay thế các phần tử chuỗi trong `a` bằng số tương ứng từ `b`
+    for (let i = 0; i < a.length; i++) {
+        for (let j = 0; j < b.length; j++) {
+            if (a[i] === b[j].toString()) {
+                a[i] = b[j]; // Thay thế chuỗi bằng số
+                break;
+            }
+        }
+    }
+
+    // Loại bỏ khoảng trắng hoặc phần tử không hợp lệ
+    a = a.filter(element => element !== undefined && element !== '');
+
+    for (let i = 0; i < a.length; i++) {
+        if (typeof a[i] === 'number') {
+            // Nếu là số, nối vào chuỗi tạm
+            temp += a[i].toString();
+        } else {
+            // Nếu gặp ký tự không phải số
+            if (temp !== '') {
+                arr.push(parseInt(temp, 10)); // Chuyển chuỗi số thành số
+                temp = ''; // Reset chuỗi tạm
+            }
+            arr.push(a[i]); // Thêm ký tự vào mảng kết quả
+        }
+    }
+
+    // Thêm số cuối cùng còn lại (nếu có)
+    if (temp !== '') {
+        arr.push(parseInt(temp, 10));
+    }
+
+    return arr;
+}
+
+
+equal.addEventListener('click', function () {
+try {
+    let expression = output.value.split('').map((char) => {
+        return isNaN(char) ? char : parseFloat(char);
+    });
+
+    ketqua.value = tinh(expression);
+} catch (error) {
+    ketqua.value = "ERROR";
+    console.error(error);
+}
+});
+
+</script>
+</body>
+</html>
