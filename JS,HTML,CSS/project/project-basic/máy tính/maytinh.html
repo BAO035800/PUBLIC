@@ -93,10 +93,10 @@ button:active {
 .clear-all:hover {
     background-color: #c2185b;
 }
-.save{
+.turn{
     background-color:#568abc;
 }
-.save:hover{
+.turn:hover{
     background-color:#336ca1;
 }
     </style>
@@ -110,7 +110,7 @@ button:active {
         <div class="buttons">
             <button type="button" class="btn clear">C</button>
             <button type="button" class="btn clear-all">CE</button>
-            <button type="button" class="btn input save">ANS</button>
+            <button type="button" class="btn input turnturn">ON</button>
             <button type="button" class="btn operator div input">/</button>
             <button type="button" class="btn number input">7</button>
             <button type="button" class="btn number input">8</button>
@@ -140,7 +140,7 @@ button:active {
         let clearall=document.getElementsByClassName('clear-all')[0]
         let operator=document.getElementsByClassName('operator')
         let equal=document.getElementsByClassName('equals')[0]
-        let ans=document.getElementsByClassName('save')[0]
+        let on=document.getElementsByClassName('turnturn')[0]
         let num
         let mangall=[],j=0,mangso=[]
         for(let i=0;i<input.length;i++){
@@ -170,7 +170,8 @@ button:active {
             output.value=output.value.slice(0,-1);
             mangall.pop()
             j--;
-        })       
+            return caculator(arr)
+        })    
         function chuyendoi(a,b){
             for(let i=0;i<a.length;i++){
                 for(let j=0;j<b.length;j++){
@@ -184,8 +185,11 @@ button:active {
             let temp=''
             let arr=[]
             for(let i=0;i<a.length;i++){
-                if(typeof a[i]==='number'){
+                /*if(typeof a[i]==='number'){
                     temp+=a[i].toString()
+                }*/
+                if (!isNaN(a[i])) { // Nếu là số
+                    temp += a[i];
                 }
                 else{
                     if(temp!=''){
@@ -200,64 +204,60 @@ button:active {
             }
             return arr
         }
-        function tinh(a,b){
-            let dau='+'
-            let result =0
-            let found=0
-            for(let i=0;i<a.length;i++){
-                for(let j=0;j<a.length;j++){
-                    if(a[j]==='+'||a[j]==='-'||a[j]==='*'||a[j]==='/'||a[j]==="("||a[j]===')'){
-                        found=1
-                        break
-                    }
-                }
-                if(found===1){
-                    if(typeof a[i]==='number'){
-                        if(dau==='+'){
-                            result+=a[i];
-                        }
-                        else if(dau==='-'){
-                            result-=a[i]
-                        } 
-                        else if(dau==='/'){
-                            result/=a[i]
-                        }
-                        else if(dau==='*'){
-                            result*=a[i]
-                        }
-                    }
-                    else if(a[i]==='+'||a[i]==='-'||a[i]==='/'||a[i]==='*'){
-                        dau=a[i]
-                    }
-                }
-                else if(found===0&&typeof a[i]==='number'){
-                    result = result*10+a[i]
-                }
-            }
-            return result
-        }
-        function xuly(a,b){
-            let arr
-            arr=chuyendoi(a,b)
-            let dau=[]
+        function calculator(a){
             let so=[]
-            let d=0,s=0
-            console.log('arr',arr)
-            for(let i=0;i<arr.length;i++){
-                if(typeof arr[i]==='number'){
-                    so[s++]=so.push(a[i])
+            let dau=[]
+            let thutu={'+':1,'-':1,'*':2,'/':2}
+            let tinh = ()=>{
+                let b=so.pop()
+                let a=so.pop()
+                let op=dau.pop()
+                let kq=0
+                switch(op){
+                    case'+':kq=a+b;break;
+                    case'-':kq=a-b;break;
+                    case'*':kq=a*b;break;
+                    case'/':kq=a/b;break;
                 }
-                else if(arr[i]==='+'||arr[i]==='-'||arr[i]==='/'||arr[i]==='*'||arr[i]==='('||arr[i]===')'){
-                    dau[s++]=dau.push(a[i])
+                return so.push(kq)
+            }
+            for(let i=0;i<a.length;i++){
+                if(typeof a[i]==='number'){
+                    so.push(a[i])
+                }
+                else if(a[i]==='('){
+                    dau.push(a[i])
+                }
+                else if(a[i]===')'){
+                    while(dau.length&&dau[dau.length-1]!=='('){
+                        tinh()
+                    }
+                    dau.pop()
+                }
+                else{
+                    while(dau.length&&thutu[dau[dau.length-1]]>=thutu[a[i]]){
+                        tinh()
+                        dau.pop()
+                    }
+                    dau.push(a[i])
                 }
             }
-            console.log('dấu',dau)
-            console.log('số',so)
-
+            while(dau.length){
+                tinh()
+            }  
+            return so[0]      
         }
         equal.addEventListener('click',function(){
             try{
-                ketqua.value = xuly(mangall,mangso);
+                let arr=[]
+                arr=chuyendoi(mangall,mangso)
+                if(arr==='null'){
+                    ketqua.value=0
+                }
+                else{
+                    ketqua.value = calculator(arr);
+                }
+                console.log('mang moi:',arr)
             }
             catch(error){
                 ketqua.value=ERROR

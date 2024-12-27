@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BÀI TẬP</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="BÀI TẬP.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header id="header">
+        <img id="logo-personal" src="logo-personal-01.svg">
+        <div class="menu">
+            <ul>
+                <li class="li-close"><a class="close" onclick="closeMenu()"><i class="fa-solid fa-xmark"></i></a></li>
+                <li><a href="portfolio.html">TRANG CHỦ</a></li>
+                <li><a href="#about">BÀI TẬP</a></li>
+                <li class="fb"><a href="https://www.facebook.com/profile.php?id=61560972477300" targer="blank"><i class="fa-brands fa-facebook"></i></a></li>
+            </ul>
+        </div>
+        <a class="icon-nav" onclick="openMenu()"><i class="fa-solid fa-bars"></i></a>
+
+    </header>
+    <div class="content">
+        <button onclick="loadContent('buoi1.html')">BUỔI 1</button>
+        <button onclick="loadContent('buoi2.html')">BUỔI 2</button>
+        <button onclick="loadContent('buoi3.html')">BUỔI 3</button>
+        <button onclick="loadContent('buoi4.html')">BUỔI 4</button>
+        <button onclick="loadContent('buoi5.html')">BUỔI 5</button>
+        <button onclick="loadContent('buoi6.html')">BUỔI 6</button>
+        <button onclick="loadContent('buoi7.html')">BUỔI 7</button>
+        <button onclick="loadContent('buoi8.html')">BUỔI 8</button>
+        <button onclick="loadContent('buoi9.html')">BUỔI 9</button>
+        <button onclick="loadContent('buoi10.html')">BUỔI 10</button>
+    </div>
+    <div id="exercise-content"></div>
+    
+    <script src="BÀI-TẬP.js"></script>
+    <script src="portfolio.js"></script>
+</body>

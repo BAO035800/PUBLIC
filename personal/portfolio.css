@@ -1,67 +1,87 @@
 :root{
     --color-primary-font:white;
-    --color-font-back:linear-gradient(to right,#A6B4FE 0%,#4D5BDB 100%);
+    --color-font-back:linear-gradient(to right,#A6B4FE 0%,#653edd 30%,#8e1fdd 60%);
     --color-back-mobile:linear-gradient(to bottom,#2D063A 0%,#3337a8 60%,#544AAB 100%);
     --color-back-content:linear-gradient(to bottom,rgba(202,230,255,0.2) 0%,rgba(126,126,255,0.2) 60%,rgba(64,12,255,0.2) 100%);
     --blur-back:blur(100);
 }
 html{
-    font-size:16px;
+    font-size:1vw;
 }
 body{
     background-color:#322979;
     font-family:'Roboto';
-    overflow: hidden;
-}
-#desktop{
-    width:100%;
-    height:100%;
     background-image:linear-gradient(to bottom,rgba(15,12,41,0.8) 0%,#262E76 33%,rgba(46,38,112,0.8) 67%,#2F243A 100%);
     background-repeat:no-repeat;
 }
+
 header{
     width:100%;
-    height:100px;
+    height:7rem;
     background-color: rgba(29,6,58,0.8);
     display:flex;
     align-items: center;
     justify-content: space-between;
     backdrop-filter: blur(50px);
     position:fixed;
+    transition:0.5s;
 }
-header .logo{
-    margin-left:50px;
+header #logo-personal{
+    margin-left:2rem;
+    width:5rem;
+    height:5rem;
+    transition: 0.5s;
 }
 header .menu{
     display:inline-block;
+    height:100%;
+    transition:0.5s;
 }
 header .menu ul {
     display:inline-block;
     width:100%;
-    height:100px;
+    height:100%;
+    /* margin-right:2vw;*/
 }
 header .menu ul>li{
     display:inline-block;
-    padding:0px 50px;
-    line-height:100px;
+    position: relative;
+    margin-top:auto;
+    margin-bottom:auto;
+    line-height: 7rem;
+    padding:0 1.5rem;
+    height:100%;
     box-sizing: border-box;
 }
+header .menu ul>li a{
+    display:inline-block;
+    height:100%;
+}
 header .menu ul li:hover{
-    background-color:#090968;
+    background-color:#1a3884;
+}
+header .menu ul li:active{
+    background-color:#1e3266;
 }
 header .menu ul li a{
     color:white;
     text-decoration:none;
-    font-size:20px;
+    font-size:1.2rem;
     font-weight: 500;
+    width:100%;
+    height:100%;
 }
-header .menu .sub-menu {
+header .menu .li-close{
+    display:none;
+}
+/*header .menu .sub-menu {
     position:relative;
 }
 header .menu .sub-menu .sub-content{
     display:none;
     position:absolute;
     left:0px;
+    
 }
 header .menu .sub-menu:hover .sub-content{
     display:block;
@@ -73,13 +93,16 @@ header .menu .sub-menu .sub-content li{
 }
 header .menu .sub-menu .sub-content li:hover{
     background-color:rgb(71, 47, 148);
-}
-header .menu .fa-bars{
+}*/
+.icon-nav{
     display:none;
 }
+/*about*/
 #about{
+    padding:2rem 4rem;
+    box-sizing: border-box;
     width:100%;
-    height:700px;
+    height:auto;
     background-image: linear-gradient(to bottom,#2D063A 0%,#3542B4 55%,#544AAB 100%);
     background-repeat:no-repeat;
     display:flex;
@@ -87,70 +110,79 @@ header .menu .fa-bars{
 }
 
 #about .img{
-    flex-basis: 50%;
+    width:50%;
+    height:auto;
     display:flex;
-    justify-content:center;
+    justify-content:flex-end;
     align-items: center;
 }
 #about .img img{
+    width:80%;
+    height:auto;
+    background-size: contain;
     border-radius:999px;
-    margin-left:50px;
-    transition:0.5;
+    object-fit:contain;
 }
 #about .text{
-    width:70%;
+    margin:7rem;
+    width:50%;
     align-self: center;
     box-sizing: border-box;
     margin-right:100px;
 }
-#about .text h1,h2,p{
+#about .text>h1,h2,p{
     color:var(--color-primary-font);
     align-self: flex-end;
     flex-wrap: wrap;
-    margin:20px;
+    margin:1rem;
     text-align: left;
 }
 #about .text h1{
-    font-size:100px;
+    font-size:6rem;
     font-weight: 600;
 }
 #about .text h2{
-    font-size:80px;
+    font-size:4.5rem;
     font-weight:500;
     -webkit-text-fill-color:transparent;
     background:var(--color-font-back);
     background-clip:text;
 }
 #about .text p{
-    font-size:20px;
+    font-size:1.5rem;
     font-weight:300;
 }
-
+/*information*/
 #information{
-    height:430px;
+    width:100%;
+    height:auto;
 }
 #information .container{
     margin-left:auto;
     margin-right:auto;
-    margin-top:100px;
-    width:70%;
+    margin-top:4rem;
+    margin-bottom:4rem;
+    width:50%;
     height:80%;
     background:linear-gradient(to bottom,rgba(202,230,255,0.2) 0%,rgba(126,126,255,0.2) 60%,rgba(64,12,255,0.2) 100%);
     backdrop-filter: blur(100);
     border-radius:50px;
 }
 #information .container{
-    padding:50px;
+    padding:4rem;
+}
+#information .container .item1{
+    margin:1rem;
 }
 #information .container .item1 p{
-    font-size:20px;
+    font-size:1.6rem;
     font-weight:500;
     color:var(--color-primary-font);
     text-align:center;
 }
 #information .container .item1 hr{
     color:var(--color-primary-font);
-    width:30%;
+    width:25%;
     border:1px solid white;
     border-radius: 1px;
 }
@@ -158,17 +190,17 @@ header .menu .fa-bars{
     font-size:20px;
     font-weight:300;
 }
+/*skill*/
 #skill{
-    margin-top:100px;
     margin-left:auto;
     margin-right:auto;
     width:70%;
     height:80%;
-    padding-bottom: 300px;
+    margin-bottom:4rem;
 }
 #skill .text p{
     text-align: center;
-    font-size:20px;
+    font-size:1.6rem;
     font-weight:500;
     color:var(--color-primary-font);
 }
@@ -179,6 +211,8 @@ header .menu .fa-bars{
     border-radius: 1px;
 }
 #skill .container{
+    width:100%;
+    height:auto;
     display:flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -188,106 +222,180 @@ header .menu .fa-bars{
     display:flex;
     flex-direction: row;
     justify-content: center;
+    gap:10rem;
 }
 #skill .dong .icon{
-    width:130px;
-    height:130px;
+    width:8rem;
+    height:8rem;
     background:linear-gradient(rgba(229,241,252,0.3) 0%,rgba(141,187,255,0.3) 100%);
     border-radius: 20px;
     display:flex;
     justify-content:center;
     align-items: center;
-    margin-top: 50px;
-    margin-bottom:50px;
-}
-#skill .dong .icon:nth-child(2){
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-top:2rem;
+    margin-bottom:2rem;
 }
 #skill .dong .icon img{
-    height:100px;
+    height:6rem;
     background-size:contain;
 }
+#skill .dong .icon img:hover{
+    opacity:0.6;
+}
+
+/*footer*/
 footer{
     background:linear-gradient(rgba(105, 62, 226, 0.5) 0%,rgba(30, 23, 92, 0.8) 100%);
-    height:250px;   
+    height:auto;
     width:100%;
     backdrop-filter: drop-shadow(4px 4px 10px rgba(77, 68, 133, 0.5));
+    display:flex;
+    padding:8rem;
+    box-sizing: border-box;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    gap:10px;
 }
 footer .logo{
     display:flex;
     justify-content: center;
-    padding-top:100px;
+    align-items: center;
+    gap:8px;
 }
 footer .logo a{
     color:rgb(228, 218, 249);
     font-size: xx-large;
-    margin:5px;
 }
 footer .logo a:hover{
     color:rgb(146, 124, 194);
 }
 footer p{
-    margin-top:10px;
-    display:flex;
-    justify-content: center;
     font-weight: 300;
     font-size:large;
+    margin:0px;
+    color:white;
+    align-self: center;
 }
 
     /*color:rgb(228, 218, 249);*/
 
     /*color:rgb(146, 124, 194);*/
+
+    @media only screen and (max-width: 740px) {
+        header {
+            height: 100%;
+            width: 30rem;
+            display: flex;
+            justify-content: space-between;
+            position: fixed;
+            right: 0px;
+            top: 0px;
+            box-sizing: border-box;
+            background-color: transparent;
+            backdrop-filter: blur(0px);
+        }
     
-@media only screen and (max-width: 740px){
-   #desktop{
-    width:100%;
-    height:100%;
-    background-image:var(--color-back-mobile);
-    background-repeat:no-repeat;
-    margin:0px;
-    overflow: hidden;
-   }
-   header{
-    height:5rem;
-    position:relative;
-    margin-top: 0px;
-    display:flex;
-    justify-content: space-between;
-   }
-   header .logo{
-    margin-left:0px;
-    height:70%;
-    background-size:contain;
-   }
-   header .menu ul{
-    display:none;
-   }
-   header .menu .fa-bars{
-    display:inline-block;
-    font-size:2rem;
-    line-height: 2rem;
-    color:white;
-    margin-right:1rem;
-   }
-   
+        header #logo-personal {
+            height: 10rem;
+            width: 10rem;
+            background-size: contain;
+            display: none;
+        }
+    
+        header .menu {
+            height: 100%;
+            width: 100%; /* Điều chỉnh độ rộng của slide bar */
+            display: block;
+            position: fixed;
+            right: -100%; /* Đưa menu ra khỏi màn hình */
+            transition: right 0.5s ease;
+            background-color: #1e3582;
+            z-index: 10;
+        }
+    
+        header .menu ul {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            right: 0px;
+        }
+    
+        header .menu ul li {
+            margin: 0;
+            padding: 0px;
+            height: 8%;
+            text-align: center;
+        }
+    
+        header .menu ul li a {
+            width: 100%;
+            height: 2rem;
+            font-size: 2rem;
+            color: white;
+            text-decoration: none;
+        }
+    
+        .icon-nav {
+            display: inline-block;
+            font-size: 4rem;
+            color: white;
+            position: fixed;
+            right: 2rem;
+            top: 4rem;
+            z-index: 20;
+            transition: opacity 1s ease; /* Thêm chuyển tiếp để làm mờ */
+            opacity: 1;
+        }
+        header .menu .li-close{
+            display:block;
+        }
+        .close {
+            position: absolute;
+            left: -10rem;
+            top: 3rem;
+        }
+    
+        .close i {
+            font-size: 4rem;
+            color: white;
+        } 
+        header .menu ul li:hover{
+            background-color: #274aa1;
+        }
+        header .menu ul li:active{
+            background-color: #193272;
+        }
+        header .menu ul .li-close{
+            background: none !important;
+        }
+        header .menu ul .li-close a:hover{
+            opacity:0.8;
+        }
    #about{
     /*position:relative;
     top:5rem;*/
     background:none;
     display:block;
-    height:100%;
+    width:100%;
+    height:auto;
+    padding:0px;
+    margin:0px;
    }
    #about .img{
     display:flex;
     width:100%;
-    height:30rem;
+    height:auto;
     justify-content: center;
     align-items: center;
+    margin-top:3rem;
+    margin-bottom:3rem;
    }
    #about .img img{
-    width:20rem;
-    height:20rem;
+    width:40rem;
+    height:40rem;
     text-align: center;
     margin-left: 0px;
    }
@@ -301,52 +409,59 @@ footer p{
    }
    #about .text h1,h2,p{
     align-self: center;
-    margin-top:0.4rem;
-    margin-bottom:0.4rem;
+    margin:2rem;
     text-align: justify;
    }
    #about .text h1{
-    font-size: 5.5rem;
+    font-size: 8rem;
    }
    #about .text h2{
-    font-size: 3rem;
+    font-size: 7rem;
     flex-wrap: nowrap;
    }
    #about .text p{
     text-align:justify;
-    margin-top:1rem;
-    margin-bottom:1rem;
-    margin-left:2rem;
-    margin-right:2rem;
-    font-size:1rem;
+    font-size:2rem;
     font-weight: 300;
     background:var(--color-back-content);
     backdrop-filter: var(--blur-back);
-    padding:3rem;
+    padding:2rem;
     border-radius:3rem;
     height:100%;
+    width:60%;
+    box-sizing: border-box;
    }
    #information{
-    height:20rem;
+    height:auto;
+    width:80%;
+    margin-right:auto;
+    margin-left:auto;
    }
    #information .container{
-    padding:2rem 1rem;
+    width:80%;
     margin-top: 1rem;
     display:flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding:2rem;
+    box-sizing: border-box;
+    border-radius: 16px;
    }
    #information .container .item1{
-    padding-bottom:1rem;
+    padding-bottom:0rem;
    }
    #information .container .item1 hr{
     width:90%;
    }
+   #information .container .item2 p{
+    font-size:2rem;
+    text-align: center;
+   }
    #skill{
     margin-top:2rem;
-    width:80%;
-    height:30rem;
+    width:50%;
+    height:auto;
     background:var(--color-back-content);
     backdrop-filter: var(--blur-back);
     border-radius:3rem;
@@ -355,10 +470,10 @@ footer p{
    }
    #skill .dong {
     display:flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
    }
    #skill .text hr{
-    width:30%;
+    width:10%;
    }
    #skill .dong .icon{
     background:none;
@@ -367,15 +482,15 @@ footer p{
     background-size:contain;
     margin:3rem;
    }
-   #skill .dong .icon:nth-child(2){
-    margin-left:2.5rem;
-    margin-right:2.5rem;
-   }
    #skill .dong .icon img{
-    height:3.5rem;
+    height:5.5rem;
     background-size:contain;
    }
-   #footer{
-    margin-top:3rem;
+    
+   #footer .logo a{
+    font-size:x-large;
+   }
+   #footer p{
+    font-size: 4rem;
    }
 }
