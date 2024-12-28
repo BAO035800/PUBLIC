@@ -249,7 +249,7 @@ button:active {
                     case'*':kq=a*b;break;
                     case'/':kq=a/b;break;
                 }
-                kq.value = Math.round(kq * 1e10)/1e10;
+                kq = Math.round(kq * 1e10)/1e10;
                 return so.push(kq);
             }
             for(let i=0;i<a.length;i++){
@@ -268,7 +268,6 @@ button:active {
                 else{
                     while(dau.length&&thutu[dau[dau.length-1]]>=thutu[a[i]]){
                         tinh()
-                        dau.pop()
                     }
                     dau.push(a[i])
                 }
