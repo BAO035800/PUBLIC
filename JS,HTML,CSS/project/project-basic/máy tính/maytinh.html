@@ -193,7 +193,9 @@ button:active {
             output.value=output.value.slice(0,-1);
             mangall.pop()
             j--;
-            return caculator(arr)
+            let arr=[]
+            arr=chuyendoi(mangall,mangso)
+            return calculator(arr)
         })    
         function chuyendoi(a,b){
             for(let i=0;i<a.length;i++){
@@ -220,7 +222,7 @@ button:active {
                             arr.push(parseFloat(temp))
                         }
                         else{
-                            arr.push(parseInt(temp,10))
+                            arr.push(parseFloat(temp,10))
                         }
                         temp=''
                     }
@@ -228,7 +230,7 @@ button:active {
                 } 
             }
             if(temp!==''){
-                arr.push(parseInt(temp,10))
+                arr.push(parseFloat(temp,10))
             }
             return arr
         }
@@ -247,7 +249,8 @@ button:active {
                     case'*':kq=a*b;break;
                     case'/':kq=a/b;break;
                 }
-                return so.push(kq)
+                kq.value = Math.round(kq * 1e10)/1e10;
+                return so.push(kq);
             }
             for(let i=0;i<a.length;i++){
                 if(typeof a[i]==='number'){
