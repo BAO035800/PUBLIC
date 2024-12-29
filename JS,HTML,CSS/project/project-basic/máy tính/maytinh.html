@@ -182,13 +182,33 @@ button:active {
                 mangso[j++]=num
             })
         } 
-        clearall.addEventListener('click',function(){
+        /*clearall.addEventListener('click',function(){
             output.value=''
             result=0
             ketqua.value=''
             mangall=[]
             j=0
-        })
+        })*/
+        clear.addEventListener('click', function () {
+            if (mangall.length > 0) {
+        // Xóa phần tử cuối cùng trong mảng và giao diện
+                mangall.pop();
+                output.value = mangall.join('');
+                j--;
+        // Cập nhật lại kết quả sau khi xóa
+                try {
+                    let arr = chuyendoi(mangall, mangso);
+                    ketqua.value = calculator(arr); // Cập nhật giá trị kết quả
+                } 
+                catch (error) {
+                   ketqua.value = ''; // Đặt trống nếu xảy ra lỗi
+                }
+           } 
+           else {
+                ketqua.value = ''; // Không có gì để xóa
+            }
+        });
+
         clear.addEventListener('click',function(){
             output.value=output.value.slice(0,-1);
             mangall.pop()
