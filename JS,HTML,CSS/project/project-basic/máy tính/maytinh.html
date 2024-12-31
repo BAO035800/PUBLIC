@@ -167,13 +167,16 @@ button:active {
         let tinhieu=document.getElementById('tin')
         let mangall=[],j=0,mangso=[]
         for(let i=0;i<input.length;i++){
-            input[i].addEventListener('click',function(){
-                let giatri=input[i].textContent;
-                output.value+= giatri
+            input[i].addEventListener('click', function () {
+                let giatri = input[i].textContent.trim();
+                if (giatri !== '' && giatri !== undefined) { // Chỉ thêm giá trị hợp lệ
+                    mangall[j++] = giatri;
+                output.value += giatri; // Hiển thị trên màn hình
+                }
+                input[i].style.color='white';
                 output.style.color='white'
-                mangall[j++]=giatri
-                console.log(mangall)
-            })
+            });
+
         }
         for(let i=0;i<number.length;i++){
             number[i].addEventListener('click',function(){
