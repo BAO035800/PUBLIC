@@ -1,8 +1,8 @@
-package test1;
+package exercise;
 
 import java.util.Scanner;
 
-public class TEST2 {
+public class account {
     public static void main(String[] args) {
         Scanner nhap = new Scanner(System.in);
         Bank thongtin = new Bank();
@@ -20,6 +20,7 @@ public class TEST2 {
         thongtin.setRutTk(nhap.nextFloat());
 
         thongtin.setTien(thongtin.getSoduTk(), thongtin.getRutTk());
+
         System.out.println("So tai khoan: " + thongtin.getSoTk());
         System.out.println("Ten tai khoan: " + thongtin.getTenTk());
         System.out.println("So du tai khoan: " + thongtin.getTien());

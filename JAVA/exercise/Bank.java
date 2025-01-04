@@ -1,4 +1,4 @@
-package test1;
+package exercise;
 
 public class Bank {
     private int soTk;
