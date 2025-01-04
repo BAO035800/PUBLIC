@@ -1,8 +1,20 @@
 package test1;
 
 public class TEST1 {
-    public int a = 10;
-    int b = 9;// default//
-    protected int c = 8;
-    private int d = 7;
+    private int sodu;
+    public int taikhoan;
+
+    public int getTk() {
+        return sodu;
+    }
+
+    public void setTk(int sodu) {
+        this.sodu = sodu;
+    }
+
+    public static void main(String[] args) {
+        TEST1 taoTk = new TEST1();
+        taoTk.setTk(1000);
+        System.out.println("Số dư:" + taoTk.getTk());
+    }
 }
