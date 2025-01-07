@@ -1,49 +1,28 @@
 package exercise;
 
+import java.util.Scanner;
+
 public class Bank {
-    private int soTk;
-    private String tenTk;
-    private float soduTk;
-    private float rutTk;
-    private float tien;
+    public static void main(String[] args) {
+        Scanner nhap = new Scanner(System.in);
+        Bank thongtin = new Bank();
+        System.out.println("So tai khoan: ");
+        thongtin.setSoTk(nhap.nextInt());
+        nhap.nextLine();
 
-    public void setSoTk(int soTk) {
-        this.soTk = soTk;
-    }
+        System.out.println("Ten tai khoan: ");
+        thongtin.setTenTk(nhap.nextLine());
 
-    public int getSoTk() {
-        return soTk;
-    }
+        System.out.println("So du tai khoan: ");
+        thongtin.setSoduTk(nhap.nextFloat());
 
-    public void setTenTk(String tenTk) {
-        this.tenTk = tenTk;
-    }
+        System.out.println("Tien rut: ");
+        thongtin.setRutTk(nhap.nextFloat());
 
-    public String getTenTk() {
-        return tenTk;
-    }
+        thongtin.setTien(thongtin.getSoduTk(), thongtin.getRutTk());
 
-    public void setSoduTk(float soduTk) {
-        this.soduTk = soduTk;
-    }
-
-    public float getSoduTk() {
-        return soduTk;
-    }
-
-    public void setRutTk(float rutTk) {
-        this.rutTk = rutTk;
-    }
-
-    public float getRutTk() {
-        return rutTk;
-    }
-
-    public void setTien(float soduTk, float rutTk) {
-        this.tien = soduTk - rutTk;
-    }
-
-    public float getTien() {
-        return tien;
+        System.out.println("So tai khoan: " + thongtin.getSoTk());
+        System.out.println("Ten tai khoan: " + thongtin.getTenTk());
+        System.out.println("So du tai khoan: " + thongtin.getTien());
     }
 }
