@@ -1,4 +1,4 @@
-package exercise;
+package exercise.donggoi;
 
 import java.util.Scanner;
 

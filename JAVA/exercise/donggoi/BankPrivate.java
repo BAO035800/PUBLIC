@@ -1,6 +1,6 @@
-package exercise;
+package exercise.donggoi;
 
-public class BankPPrivate {
+public class BankPrivate {
     private int soTk;
     private String tenTk;
     private float soduTk;
