@@ -1,3 +1,7 @@
 {
-    "java.debug.settings.onBuildFailureProceed": true
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.project.referencedLibraries": [
+        "E:/CODE/PUBLIC/JAVA/mysql-connector-j-9.1.0.jar"
+    ]
 }
+
