@@ -1,4 +1,4 @@
-package ql_nhahang.src.view;
+package View;
 import java.awt.*;
 import javax.swing.*;
 
