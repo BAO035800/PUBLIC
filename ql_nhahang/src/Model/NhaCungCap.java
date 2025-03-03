@@ -1,13 +1,13 @@
-package Model;
+package model;
 
 public class NhaCungCap {
-    private int MaNhaCungCap;
+    private String MaNhaCungCap;
     private String TenNhaCungCap;
     private String LienHe;
-    public int getMaNhaCungCap() {
+    public String getMaNhaCungCap() {
         return MaNhaCungCap;
     }
-    public void setMaNhaCungCap(int maNhaCungCap) {
+    public void setMaNhaCungCap(String maNhaCungCap) {
         MaNhaCungCap = maNhaCungCap;
     }
     public String getTenNhaCungCap() {

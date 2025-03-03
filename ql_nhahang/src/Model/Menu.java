@@ -1,16 +1,17 @@
-package Model;
+package model;
+import java.math.BigDecimal;
 public class Menu{
-    private int MaMon;
+    private String  MaMon;
     private String TenMon;
-    private float GiaTien;
+    private BigDecimal GiaTien;
     private String TinhTrangMon;
     private int SoLuong;
     
-    public int getMaMon() {
+    public String getMaMon() {
         return MaMon;
     }
 
-    public void setMaMon(int maMon) {
+    public void setMaMon(String maMon) {
         MaMon = maMon;
     }
 
@@ -22,11 +23,11 @@ public class Menu{
         TenMon = tenMon;
     }
 
-    public float getGiaTien() {
+    public BigDecimal getGiaTien() {
         return GiaTien;
     }
 
-    public void setGiaTien(float giaTien) {
+    public void setGiaTien(BigDecimal giaTien) {
         GiaTien = giaTien;
     }
 

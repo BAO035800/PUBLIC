@@ -1,18 +1,25 @@
-package Model;
+package model;
 
 import java.math.BigDecimal;
 
 public class TienLuong {
-    private int MaNhanVien;
+    private String MaLuong;
+    private String MaNhanVien;
     private String TenNhanVien;
     private BigDecimal TongTienLuong;
     private String TinhTrangLuong;
     private int NgayCong;
-    private String SoTienThanhToan;
-    public int getMaNhanVien() {
+    private BigDecimal SoTienThanhToan;
+    public String getMaLuong() {
+        return MaLuong;
+    }
+    public void setMaLuong(String maLuong) {
+        MaLuong = maLuong;
+    }
+    public String getMaNhanVien() {
         return MaNhanVien;
     }
-    public void setMaNhanVien(int maNhanVien) {
+    public void setMaNhanVien(String maNhanVien) {
         MaNhanVien = maNhanVien;
     }
     public String getTenNhanVien() {
@@ -39,12 +46,11 @@ public class TienLuong {
     public void setNgayCong(int ngayCong) {
         NgayCong = ngayCong;
     }
-    public String getSoTienThanhToan() {
+    public BigDecimal getSoTienThanhToan() {
         return SoTienThanhToan;
     }
-    public void setSoTienThanhToan(String soTienThanhToan) {
+    public void setSoTienThanhToan(BigDecimal soTienThanhToan) {
         SoTienThanhToan = soTienThanhToan;
     }
-   
     
 }

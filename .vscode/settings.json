@@ -1,5 +1,6 @@
 {
     "java.project.referencedLibraries": [
-        "ql_nhahang/lib/mysql-connector-j-9.2.0.jar"
+        "ql_nhahang/lib/mysql-connector-j-9.2.0.jar",
+        "test-lib\\**\\*.jar"
     ]
 }

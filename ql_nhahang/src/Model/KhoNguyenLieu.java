@@ -1,15 +1,15 @@
-package Model;
+package model;
 import java.math.BigDecimal;
 public class KhoNguyenLieu {
-    private int MaNguyenLieu;
+    private String MaNguyenLieu;
     private String TenNguyenLieu;
-    private int MaNhaCungCap;
+    private String MaNhaCungCap;
     private int SoLuong;
-    private BigDecimal GiaNHap;
-    public int getMaNguyenLieu() {
+    private BigDecimal GiaNhap;
+    public String getMaNguyenLieu() {
         return MaNguyenLieu;
     }
-    public void setMaNguyenLieu(int maNguyenLieu) {
+    public void setMaNguyenLieu(String maNguyenLieu) {
         MaNguyenLieu = maNguyenLieu;
     }
     public String getTenNguyenLieu() {
@@ -18,10 +18,10 @@ public class KhoNguyenLieu {
     public void setTenNguyenLieu(String tenNguyenLieu) {
         TenNguyenLieu = tenNguyenLieu;
     }
-    public int getMaNhaCungCap() {
+    public String getMaNhaCungCap() {
         return MaNhaCungCap;
     }
-    public void setMaNhaCungCap(int maNhaCungCap) {
+    public void setMaNhaCungCap(String maNhaCungCap) {
         MaNhaCungCap = maNhaCungCap;
     }
     public int getSoLuong() {
@@ -30,11 +30,11 @@ public class KhoNguyenLieu {
     public void setSoLuong(int soLuong) {
         SoLuong = soLuong;
     }
-    public BigDecimal getGiaNHap() {
-        return GiaNHap;
+    public BigDecimal getGiaNhap() {
+        return GiaNhap;
     }
-    public void setGiaNHap(BigDecimal giaNHap) {
-        GiaNHap = giaNHap;
+    public void setGiaNhap(BigDecimal giaNhap) {
+        GiaNhap = giaNhap;
     }
     public static void main(String[] args) {
         System.out.println("Hello");

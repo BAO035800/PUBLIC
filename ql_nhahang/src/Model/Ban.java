@@ -1,10 +1,18 @@
-package Model;
+package model;
 
 public class Ban {
     private int SoBan;
     private String TrangThaiBan;
     private String GhiChu;
-    //chua co bang ghi chu
+    public Ban() {
+        super();
+    }
+    public Ban(int soBan, String trangThaiBan, String ghiChu) {
+        super();
+        SoBan = soBan;
+        TrangThaiBan = trangThaiBan;
+        GhiChu = ghiChu;
+    }
     public int getSoBan() {
         return SoBan;
     }

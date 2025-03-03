@@ -1,24 +1,23 @@
-package Model;
-
+package model;
+import java.math.BigDecimal;
 public class HoaDonBanHang {
-    private int MaHoaDonBanHang;
-    private int MaMon;
+    private String MaHoaDonBanHang;
+    private String MaMon;
     private String TenMon;
-    private String GiaTien;
+    private BigDecimal GiaTien;
     private int SoBan;
-    private int TongTienHoaDon;
+    private BigDecimal TongTienHoaDon;
     private String GhiChu;
-    //chua co bang ghi chu
-    public int getMaHoaDonBanHang() {
+    public String getMaHoaDonBanHang() {
         return MaHoaDonBanHang;
     }
-    public void setMaHoaDonBanHang(int maHoaDonBanHang) {
+    public void setMaHoaDonBanHang(String maHoaDonBanHang) {
         MaHoaDonBanHang = maHoaDonBanHang;
     }
-    public int getMaMon() {
+    public String getMaMon() {
         return MaMon;
     }
-    public void setMaMon(int maMon) {
+    public void setMaMon(String maMon) {
         MaMon = maMon;
     }
     public String getTenMon() {
@@ -27,10 +26,10 @@ public class HoaDonBanHang {
     public void setTenMon(String tenMon) {
         TenMon = tenMon;
     }
-    public String getGiaTien() {
+    public BigDecimal getGiaTien() {
         return GiaTien;
     }
-    public void setGiaTien(String giaTien) {
+    public void setGiaTien(BigDecimal giaTien) {
         GiaTien = giaTien;
     }
     public int getSoBan() {
@@ -39,10 +38,10 @@ public class HoaDonBanHang {
     public void setSoBan(int soBan) {
         SoBan = soBan;
     }
-    public int getTongTienHoaDon() {
+    public BigDecimal getTongTienHoaDon() {
         return TongTienHoaDon;
     }
-    public void setTongTienHoaDon(int tongTienHoaDon) {
+    public void setTongTienHoaDon(BigDecimal tongTienHoaDon) {
         TongTienHoaDon = tongTienHoaDon;
     }
     public String getGhiChu() {

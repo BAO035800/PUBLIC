@@ -1,0 +1,64 @@
+package model;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+public class BanDAO {
+    public void themBan(Ban ban){
+        String sql="insert into ban(SoBan, TrangThaiBan, GhiChu) values(?,?,?)";
+        try(Connection conn=Connect.getConnect();
+            PreparedStatement ps=conn.prepareStatement(sql)){
+            ps.setInt(1, ban.getSoBan());
+            ps.setString(2, ban.getTrangThaiBan());
+            ps.setString(3, ban.getGhiChu());
+            System.out.println("Thêm bàn thành công");
+            ps.executeUpdate();
+        }catch(Exception e){
+            System.out.println("Thêm bàn thất bại");
+            e.printStackTrace();
+        }   
+    }
+    public void suaBan(Ban ban){
+        String sql="update ban set TrangThaiBan=?, GhiChu=? where SoBan=?";
+        try(Connection conn=Connect.getConnect();
+            PreparedStatement ps=conn.prepareStatement(sql)){
+            ps.setString(1, ban.getTrangThaiBan());
+            ps.setString(2, ban.getGhiChu());
+            ps.setInt(3, ban.getSoBan());
+            System.out.println("Sửa bàn thành công");
+            ps.executeUpdate();
+        }catch(Exception e){
+            System.out.println("Sửa bàn thất bại");
+            e.printStackTrace();
+        }
+    }
+    public void xoaBan(int SoBan){
+        String sql="delete from ban where SoBan=?";
+        try(Connection conn=Connect.getConnect();
+            PreparedStatement ps=conn.prepareStatement(sql)){
+            ps.setInt(1, SoBan);
+            System.out.println("Xóa bàn thành công");
+            ps.executeUpdate();
+        }catch(Exception e){
+            System.out.println("Xóa bàn thất bại");
+            e.printStackTrace();
+        }
+    }
+    public List<Ban> getBan(){
+        List<Ban> list=new ArrayList<>();
+        String sql="select * from ban";
+        try(Connection conn=Connect.getConnect();
+            PreparedStatement ps=conn.prepareStatement(sql);
+            ResultSet rs=ps.executeQuery()){
+            while(rs.next()){
+                Ban ban=new Ban();
+                ban.setSoBan(rs.getInt("SoBan"));
+                ban.setTrangThaiBan(rs.getString("TrangThaiBan"));
+                ban.setGhiChu(rs.getString("GhiChu"));
+                list.add(ban);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+}

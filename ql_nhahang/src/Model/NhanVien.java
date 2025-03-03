@@ -1,19 +1,18 @@
-package Model;
-
+package model;
+import java.math.BigDecimal;
+import java.sql.*;
 public class NhanVien {
-    private int MaNhanVien;
+    private String MaNhanVien;
     private String TenNhanVien;
-    private String NgaySinh;
+    private Date NgaySinh;
     private String GioiTinh;
-    private int SoDienThoai;
+    private BigDecimal SoDienThoai;
     private String ChucVu;
-    private String Luong1Gio;
-    public int getMaNhanVien() {
+    private BigDecimal Luong1Gio;
+    public String getMaNhanVien() {
         return MaNhanVien;
     }
-
-
-    public void setMaNhanVien(int maNhanVien) {
+    public void setMaNhanVien(String maNhanVien) {
         MaNhanVien = maNhanVien;
     }
 
@@ -28,12 +27,12 @@ public class NhanVien {
     }
 
 
-    public String getNgaySinh() {
+    public Date getNgaySinh() {
         return NgaySinh;
     }
 
 
-    public void setNgaySinh(String ngaySinh) {
+    public void setNgaySinh(Date ngaySinh) {
         NgaySinh = ngaySinh;
     }
 
@@ -48,12 +47,12 @@ public class NhanVien {
     }
 
 
-    public int getSoDienThoai() {
+    public BigDecimal getSoDienThoai() {
         return SoDienThoai;
     }
 
 
-    public void setSoDienThoai(int soDienThoai) {
+    public void setSoDienThoai(BigDecimal soDienThoai) {
         SoDienThoai = soDienThoai;
     }
 
@@ -68,12 +67,12 @@ public class NhanVien {
     }
 
 
-    public String getLuong1Gio() {
+    public BigDecimal getLuong1Gio() {
         return Luong1Gio;
     }
 
 
-    public void setLuong1Gio(String luong1Gio) {
+    public void setLuong1Gio(BigDecimal luong1Gio) {
         Luong1Gio = luong1Gio;
     }
 

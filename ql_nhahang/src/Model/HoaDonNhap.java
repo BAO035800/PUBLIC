@@ -1,22 +1,30 @@
-package Model;
+package model;
 import java.math.BigDecimal;
+import java.sql.*;
 public class HoaDonNhap {
-    private int MaHoaDonKho;
-    private int MaNguyenLieu;
+    private String MaHoaDonKho;
+    private String MaNguyenLieu;
+    private String MaNhaCungCap;
     private int SoLuong;
-    private String NgayNhap;
+    private Date NgayNhap;
     private BigDecimal TongTienNhap;
-    public int getMaHoaDonKho() {
+    public String getMaHoaDonKho() {
         return MaHoaDonKho;
     }
-    public void setMaHoaDonKho(int maHoaDonKho) {
+    public void setMaHoaDonKho(String maHoaDonKho) {
         MaHoaDonKho = maHoaDonKho;
     }
-    public int getMaNguyenLieu() {
+    public String getMaNguyenLieu() {
         return MaNguyenLieu;
     }
-    public void setMaNguyenLieu(int maNguyenLieu) {
+    public void setMaNguyenLieu(String maNguyenLieu) {
         MaNguyenLieu = maNguyenLieu;
+    }
+    public String getMaNhaCungCap() {
+        return MaNhaCungCap;
+    }
+    public void setMaNhaCungCap(String maNhaCungCap) {
+        MaNhaCungCap = maNhaCungCap;
     }
     public int getSoLuong() {
         return SoLuong;
@@ -24,10 +32,10 @@ public class HoaDonNhap {
     public void setSoLuong(int soLuong) {
         SoLuong = soLuong;
     }
-    public String getNgayNhap() {
+    public Date getNgayNhap() {
         return NgayNhap;
     }
-    public void setNgayNhap(String ngayNhap) {
+    public void setNgayNhap(Date ngayNhap) {
         NgayNhap = ngayNhap;
     }
     public BigDecimal getTongTienNhap() {
@@ -36,7 +44,6 @@ public class HoaDonNhap {
     public void setTongTienNhap(BigDecimal tongTienNhap) {
         TongTienNhap = tongTienNhap;
     }
-    public static void main(String[] args) {
-        System.out.println("Hello");
-    }
+    
+    
 }
