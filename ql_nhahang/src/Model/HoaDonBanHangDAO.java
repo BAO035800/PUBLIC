@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HoaDonBanHangDAO {
-    
     // Thêm hóa đơn bán hàng
     public void themHoaDon(HoaDonBanHang hoaDon) {
         String sql = "INSERT INTO hoadonbanhang(MaHoaDonBanHang, MaMon, TenMon, GiaTien, SoBan, TongTienHoaDon, GhiChu) VALUES(?, ?, ?, ?, ?, ?, ?)";
@@ -59,7 +58,6 @@ public class HoaDonBanHangDAO {
             e.printStackTrace();
         }
     }
-
     // Lấy danh sách hóa đơn
     public List<HoaDonBanHang> getDanhSachHoaDon() {
         List<HoaDonBanHang> list = new ArrayList<>();

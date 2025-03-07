@@ -6,27 +6,46 @@ public class Main extends JFrame {
     private JPanel contentPanel; // Khu vực hiển thị nội dung
     private CardLayout cardLayout; // Điều khiển chuyển đổi nội dung
     // Hàm tùy chỉnh button
+// Biến để lưu button đang được nhấn
+private JButton currentButton = null;
+
 private void styleButton(JButton button) {
-    button.setFocusPainted(false); // Xóa viền focus
-    button.setBorderPainted(false); // Xóa viền button
-    button.setContentAreaFilled(false); // Xóa nền mặc định
-    button.setOpaque(true); // Để đổi màu nền có hiệu lực
+    button.setFocusPainted(false);
+    button.setBorderPainted(false);
+    button.setContentAreaFilled(false);
+    button.setOpaque(true);
     button.setBackground(new Color(194, 239, 255)); // Màu nền mặc định (xanh nhạt)
     button.setFont(new Font("Arial", Font.BOLD, 12));
 
-    // Xử lý hover: đổi màu khi di chuột vào
+    // Sự kiện hover
     button.addMouseListener(new java.awt.event.MouseAdapter() {
         @Override
         public void mouseEntered(java.awt.event.MouseEvent evt) {
-            button.setBackground(new Color(111, 205, 240)); // Xanh dương sáng khi hover
+            if (button != currentButton) { // Chỉ đổi màu hover nếu chưa được chọn
+                button.setBackground(new Color(111, 205, 240)); // Xanh dương sáng khi hover
+            }
         }
 
         @Override
         public void mouseExited(java.awt.event.MouseEvent evt) {
-            button.setBackground(new Color(194, 239, 255)); // Trả lại màu gốc
+            if (button != currentButton) { // Không đổi màu nếu đang được chọn
+                button.setBackground(new Color(194, 239, 255)); // Trả lại màu gốc
+            }
         }
     });
+
+    // Xử lý sự kiện click
+    button.addActionListener(e -> {
+        // Nếu có button khác đang được chọn, đổi nó về màu gốc
+        if (currentButton != null && currentButton != button) {
+            currentButton.setBackground(new Color(194, 239, 255)); // Màu gốc
+        }
+
+        currentButton = button;
+        button.setBackground(new Color(111, 205, 240)); // Màu  khi được chọn
+    });
 }
+
 
     public Main() {
         // Cấu hình JFrame
@@ -34,6 +53,19 @@ private void styleButton(JButton button) {
         setSize(800, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        //Menu tổng
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Accout");
+        JMenuItem menuItem = new JMenuItem("Đăng xuất");
+        JMenuItem menuItem1 = new JMenuItem("Thoát");
+        menu.add(menuItem);
+        menu.add(menuItem1);
+        menuBar.add(menu);
+        setJMenuBar(menuBar);
+        // Panel chính
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        add(panel);
 
         // Panel menu bên trái
         JPanel menuPanel = new JPanel();
@@ -47,17 +79,19 @@ private void styleButton(JButton button) {
         menuPanel.add(adminLabel);
 
         // Nút bấm
-        
+        JButton btnTrangChu = new JButton("TRANG CHỦ");
         JButton btnBanHang = new JButton("QUẢN LÝ BÁN HÀNG");
         
         JButton btnNhanSu = new JButton("QUẢN LÝ NHÂN SỰ");
         
-        JButton btnKho = new JButton("QUẢN LÝ KHO NGUYÊN LIỆU");
+        JButton btnKho = new JButton("QUẢN LÝ KHO");
+        styleButton(btnTrangChu);
         styleButton(btnBanHang);
         styleButton(btnNhanSu);
         styleButton(btnKho);
 
         // Thêm nút vào menu
+        menuPanel.add(btnTrangChu);
         menuPanel.add(btnBanHang);
         menuPanel.add(btnNhanSu);
         menuPanel.add(btnKho);
@@ -68,8 +102,8 @@ private void styleButton(JButton button) {
 
         // Thêm các panel từ file khác
         contentPanel.add(new QLbanhang(), "BanHang");
-        contentPanel.add(new QLkho(), "NhanSu");
-        contentPanel.add(new QLnhansu(), "Kho");
+        contentPanel.add(new QLkho(), "Kho");
+        contentPanel.add(new QLnhansu(), "NhanSu");
 
         // Xử lý sự kiện khi bấm nút
         btnBanHang.addActionListener(e -> cardLayout.show(contentPanel, "BanHang"));

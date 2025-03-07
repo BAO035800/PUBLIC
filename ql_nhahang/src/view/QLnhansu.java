@@ -3,13 +3,17 @@ import java.awt.*;
 import javax.swing.*;
 
 public class QLnhansu extends JPanel {
+
     public QLnhansu() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 2));
-        panel.add(new JLabel("Họ tên"));
-        panel.add(new JTextField());
-        panel.add(new JLabel("Tuổi"));
-        panel.add(new JTextField());
-        add(panel);
+        setLayout(new BorderLayout());
+
+        // Tạo thanh tab full màn hình
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setPreferredSize(new Dimension(1000, 600)); // Điều chỉnh kích thước theo màn hình
+        tabbedPane.addTab("Nhân viên", new nhansuNhanVien());
+        tabbedPane.addTab("Tiền lương", new nhansuTienLuong());
+
+        // Thêm vào giao diện chính, đặt ở CENTER để chiếm full màn hình
+        add(tabbedPane, BorderLayout.CENTER);
     }
 }

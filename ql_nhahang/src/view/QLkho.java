@@ -2,13 +2,21 @@ package view;
 import java.awt.*;
 import javax.swing.*;
 
+
 public class QLkho extends JPanel {
+    
+
     public QLkho() {
         setLayout(new BorderLayout());
-        
-        JLabel label = new JLabel("📌 Giao diện quản lý kho nguyên liệu", SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        
-        add(label, BorderLayout.CENTER);
+
+        // Tạo thanh tab full màn hình
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setPreferredSize(new Dimension(1000, 600)); // Điều chỉnh kích thước theo màn hình
+        tabbedPane.addTab("Nhà cung cấp", new khoNhaCungCap());
+        tabbedPane.addTab("Kho nguyên liệu", new khoNguyenLieu());
+        tabbedPane.addTab("Hóa đơn nhập", new khoHoaDonNhap());
+
+        // Thêm vào giao diện chính, đặt ở CENTER để chiếm full màn hình
+        add(tabbedPane, BorderLayout.CENTER);
     }
 }
