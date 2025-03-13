@@ -1,7 +1,6 @@
 package view;
 import java.awt.*;
 import javax.swing.*;
-
 public class QLnhansu extends JPanel {
 
     public QLnhansu() {

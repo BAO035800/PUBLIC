@@ -1,20 +1,23 @@
 package model;
 import java.math.BigDecimal;
-import java.sql.*;
 public class NhanVien {
     private String MaNhanVien;
     private String TenNhanVien;
-    private Date NgaySinh;
+    private int Tuoi;
     private String GioiTinh;
-    private BigDecimal SoDienThoai;
+    private String SoDienThoai;
     private String ChucVu;
     private BigDecimal Luong1Gio;
     public String getMaNhanVien() {
         return MaNhanVien;
     }
+
+
+
     public void setMaNhanVien(String maNhanVien) {
         MaNhanVien = maNhanVien;
     }
+
 
 
     public String getTenNhanVien() {
@@ -22,19 +25,23 @@ public class NhanVien {
     }
 
 
+
     public void setTenNhanVien(String tenNhanVien) {
         TenNhanVien = tenNhanVien;
     }
 
 
-    public Date getNgaySinh() {
-        return NgaySinh;
+
+    public int getTuoi() {
+        return Tuoi;
     }
 
 
-    public void setNgaySinh(Date ngaySinh) {
-        NgaySinh = ngaySinh;
+
+    public void setTuoi(int tuoi) {
+        Tuoi = tuoi;
     }
+
 
 
     public String getGioiTinh() {
@@ -42,19 +49,23 @@ public class NhanVien {
     }
 
 
+
     public void setGioiTinh(String gioiTinh) {
         GioiTinh = gioiTinh;
     }
 
 
-    public BigDecimal getSoDienThoai() {
+
+    public String getSoDienThoai() {
         return SoDienThoai;
     }
 
 
-    public void setSoDienThoai(BigDecimal soDienThoai) {
+
+    public void setSoDienThoai(String soDienThoai) {
         SoDienThoai = soDienThoai;
     }
+
 
 
     public String getChucVu() {
@@ -62,9 +73,11 @@ public class NhanVien {
     }
 
 
+
     public void setChucVu(String chucVu) {
         ChucVu = chucVu;
     }
+
 
 
     public BigDecimal getLuong1Gio() {
@@ -72,9 +85,11 @@ public class NhanVien {
     }
 
 
+
     public void setLuong1Gio(BigDecimal luong1Gio) {
         Luong1Gio = luong1Gio;
     }
+
 
 
     public static void main(String[] args) {
