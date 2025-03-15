@@ -1,6 +1,11 @@
 package controller;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import model.Connect;
 import model.NhanVien;
 import model.NhanVienDAO;
 import view.nhansuNhanVien;
@@ -18,9 +23,9 @@ public class NhanVienController {
     public void themNhanVien() {
         String maNV = view.getTxtMaNhanVien().getText();
         String tenNV = view.getTxtTen().getText();
-        String chucVu = view.getTxtChucVu().getText();
-        String tuoiStr = view.getTxtTuoi().getText(); // Cần parse thành Date
-        String luongStr = view.getTxtLuong().getText();   // Cần parse thành BigDecimal
+        String chucVu = view.getCbChucVu().getSelectedItem().toString();
+        String tuoiStr = view.getTxtTuoi().getText();
+        String luongStr = view.getTxtLuong().getText();  
         String soDienThoai = view.getTxtSoDienThoai().getText();
         String gioiTinh = view.getRadNam().isSelected() ? "Nam" : "Nữ";
         if (maNV.isEmpty() || tenNV.isEmpty() || chucVu.isEmpty() || tuoiStr.isEmpty() || luongStr.isEmpty() || soDienThoai.isEmpty()) {
@@ -45,7 +50,7 @@ public class NhanVienController {
             model.themNhanVien(nhanVien);
             JOptionPane.showMessageDialog(view, "Thêm nhân viên thành công!");
         } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(view, "Định dạng ngày sinh hoặc lương không hợp lệ! Vui lòng kiểm tra lại.");
+            JOptionPane.showMessageDialog(view, "Định dạng không hợp lệ! Vui lòng kiểm tra lại.");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(view, "Lỗi khi thêm nhân viên: " + e.getMessage());
             e.printStackTrace();
@@ -54,20 +59,18 @@ public class NhanVienController {
     public void suaNhanVien() {
         String maNV = view.getTxtMaNhanVien().getText();
         String tenNV = view.getTxtTen().getText();
-        String chucVu = view.getTxtChucVu().getText();
-        String tuoiStr = view.getTxtTuoi().getText(); // Cần parse thành Date
-        String luongStr = view.getTxtLuong().getText();   // Cần parse thành BigDecimal
+        String chucVu = view.getCbChucVu().getSelectedItem().toString();
+        String tuoiStr = view.getTxtTuoi().getText(); 
+        String luongStr = view.getTxtLuong().getText();   
         String soDienThoai = view.getTxtSoDienThoai().getText();
         String gioiTinh = view.getRadNam().isSelected() ? "Nam" : "Nữ";
         if (maNV.isEmpty() || tenNV.isEmpty() || chucVu.isEmpty() || tuoiStr.isEmpty() || luongStr.isEmpty() || soDienThoai.isEmpty()) {
             JOptionPane.showMessageDialog(view, "Vui lòng nhập đầy đủ thông tin!");
             return;
         }
-
         try {
             BigDecimal luong = new BigDecimal(luongStr);
             int tuoi = Integer.parseInt(tuoiStr);
-
             // Tạo đối tượng nhân viên
             NhanVien nhanVien = new NhanVien();
             nhanVien.setMaNhanVien(maNV);
@@ -77,29 +80,50 @@ public class NhanVienController {
             nhanVien.setLuong1Gio(luong);
             nhanVien.setGioiTinh(gioiTinh);
             nhanVien.setSoDienThoai(soDienThoai);
+            if (!kiemTraNhanVienTonTai(maNV)) {
+                JOptionPane.showMessageDialog(view, "Không tìm thấy nhân viên!");
+                return;
+            }
             // Gọi model để thêm nhân viên vào database
             model.suaNhanVien(nhanVien);
             JOptionPane.showMessageDialog(view, "Sửa nhân viên thành công!");
         } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(view, "Định dạng ngày sinh hoặc lương không hợp lệ! Vui lòng kiểm tra lại.");
+            JOptionPane.showMessageDialog(view, "Định dạng không hợp lệ! Vui lòng kiểm tra lại.");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(view, "Lỗi khi sửa nhân viên: " + e.getMessage());
             e.printStackTrace();
         }
     }
-    public void xoaNhanVien() {
-        String maNV = view.getTxtMaNhanVien().getText();
-        if (maNV.isEmpty()) {
-            JOptionPane.showMessageDialog(view, "Vui lòng nhập mã nhân viên cần xóa!");
-            return;
-        }
-        try {
-            // Gọi model để xóa nhân viên khỏi database
-            model.xoaNhanVien(maNV);
-            JOptionPane.showMessageDialog(view, "Xóa nhân viên thành công!");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(view, "Lỗi khi xóa nhân viên: " + e.getMessage());
+    public boolean kiemTraNhanVienTonTai(String maNV) {
+        String sql = "SELECT COUNT(*) FROM nhanvien WHERE MaNhanVien = ?";
+        try (Connection conn = Connect.getConnect();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maNV);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Lỗi kiểm tra nhân viên: " + e.getMessage());
             e.printStackTrace();
+        }
+        return false;
+    }
+    
+
+    public boolean xoaNhanVien(String maNV) {
+        if (maNV == null || maNV.isEmpty()) {
+            JOptionPane.showMessageDialog(view, "Vui lòng chọn nhân viên cần xóa!");
+            return false;
+        }
+    
+        boolean isDeleted = model.xoaNhanVien(maNV);
+        if (isDeleted) {
+            JOptionPane.showMessageDialog(view, "Xóa nhân viên thành công!");
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(view, "Không tìm thấy nhân viên cần xóa!");
+            return false;
         }
     }
 }

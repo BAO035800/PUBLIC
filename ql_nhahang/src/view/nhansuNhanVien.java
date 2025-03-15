@@ -9,10 +9,16 @@ public class nhansuNhanVien extends JPanel implements connectData {
     private DefaultTableModel tableModel;
     private JPanel formPanel;
     private JTextField txtTen, txtTuoi, txtChucVu, txtLuong, txtSoDienThoai, txtMaNhanVien;
+    private JComboBox<String> cbChucVu;
     private JRadioButton radNam, radNu;
-    private JButton btnLuuThem, btnHuy,btnLuuXoa,btnLuuSua;
+    private JButton btnLuuThem, btnHuy,btnLuuSua;
     private int selectedRow = -1;
-
+    public JComboBox<String> getCbChucVu() {
+        return cbChucVu;
+    }
+    public void setCbChucVu(JComboBox<String> cbChucVu) {
+        this.cbChucVu = cbChucVu;
+    }
     public JTextField getTxtTen() {
         return txtTen;
     }
@@ -62,6 +68,7 @@ public class nhansuNhanVien extends JPanel implements connectData {
         this.radNu = radNu;
     }
     public nhansuNhanVien() {
+        String[] nvColumns = {"Mã NV", "Tên Nhân Viên", "Chức Vụ", "Lương 1 giờ", "Giới Tính","SĐT","Tuổi"};
         setLayout(new BorderLayout(10,10));
 
         // Panel chứa nút chức năng
@@ -69,6 +76,12 @@ public class nhansuNhanVien extends JPanel implements connectData {
         JButton btnThem = new JButton("Thêm");
         JButton btnSua = new JButton("Sửa");
         JButton btnXoa = new JButton("Xóa");
+        btnThem.setBackground(new Color(72, 201, 176));
+        btnSua.setBackground(new Color(255, 193, 7));
+        btnXoa.setBackground(new Color(220, 53, 69));
+        btnThem.setForeground(Color.WHITE);
+        btnSua.setForeground(Color.WHITE);
+        btnXoa.setForeground(Color.WHITE);
         controlPanel.add(btnThem);
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
@@ -77,23 +90,32 @@ public class nhansuNhanVien extends JPanel implements connectData {
         // Bảng dữ liệu nhân viên
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
+        table.setRowHeight(25);
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        loadData(tableModel, "SELECT * FROM nhanvien");
+        loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(4, 4, 10, 10));
+        formPanel = new JPanel(new GridLayout(5,4, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin nhân viên"));
+        formPanel.setBackground(Color.WHITE);
 
         // Các input field
         txtMaNhanVien = new JTextField();
         txtTen = new JTextField();
         txtTuoi = new JTextField();
-        txtChucVu = new JTextField();
         txtLuong = new JTextField();
         txtSoDienThoai = new JTextField();
+        //Combo box chức vụ
+        txtChucVu = new JTextField();
+        cbChucVu = new JComboBox<>(new String[]{"Quản lý", "Phục vụ", "Thu Ngân", "Bảo vệ"});
+        cbChucVu.setSelectedIndex(0);
+        cbChucVu.addActionListener(e -> {
+            txtChucVu.setText(cbChucVu.getSelectedItem().toString());
+        });
 
         // Nhóm radio button cho giới tính
         radNam = new JRadioButton("Nam");
@@ -102,7 +124,7 @@ public class nhansuNhanVien extends JPanel implements connectData {
         group.add(radNam);
         group.add(radNu);
 
-        // Panel chứa radio button để bố trí gọn hơn
+        // Panel chứa radio button giới tính
         JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         genderPanel.add(radNam);
         genderPanel.add(radNu);
@@ -110,8 +132,13 @@ public class nhansuNhanVien extends JPanel implements connectData {
         // Các nút
         btnLuuThem = new JButton("Lưu");
         btnHuy = new JButton("Hủy");
-        btnLuuXoa=new JButton("Lưu");
         btnLuuSua=new JButton("Lưu");
+        btnLuuThem.setBackground(new Color(40, 167, 69));
+        btnLuuThem.setForeground(Color.WHITE);
+        btnLuuSua.setBackground(new Color(23, 162, 184));
+        btnLuuSua.setForeground(Color.WHITE);
+        btnHuy.setBackground(new Color(108, 117, 125));
+        btnHuy.setForeground(Color.WHITE);
 
         // Thêm các thành phần vào form
         formPanel.add(new JLabel("Mã nhân viên:"));
@@ -121,7 +148,7 @@ public class nhansuNhanVien extends JPanel implements connectData {
         formPanel.add(new JLabel("Tuổi:"));
         formPanel.add(txtTuoi);
         formPanel.add(new JLabel("Chức vụ:"));
-        formPanel.add(txtChucVu);
+        formPanel.add(cbChucVu);
         formPanel.add(new JLabel("Lương 1 giờ:"));
         formPanel.add(txtLuong);
         formPanel.add(new JLabel("Số điện thoại:"));
@@ -130,9 +157,8 @@ public class nhansuNhanVien extends JPanel implements connectData {
         formPanel.add(genderPanel); // Chỉ add panel chứa radio button, không có JTextField dư thừa
 
         // Thêm nút Lưu và Hủy
-        formPanel.add(btnLuuThem);
         formPanel.add(btnHuy);
-        formPanel.add(btnLuuXoa);
+        formPanel.add(btnLuuThem);
         formPanel.add(btnLuuSua);
 
         formPanel.setVisible(false);
@@ -145,7 +171,6 @@ public class nhansuNhanVien extends JPanel implements connectData {
             formPanel.setVisible(true);
             btnLuuThem.setVisible(true);
             btnLuuSua.setVisible(false);
-            btnLuuXoa.setVisible(false);
         });
         // Sự kiện "Sửa"
         btnSua.addActionListener(e -> {
@@ -156,56 +181,51 @@ public class nhansuNhanVien extends JPanel implements connectData {
                 formPanel.setVisible(true);
                 btnLuuThem.setVisible(false);
                 btnLuuSua.setVisible(true);
-                btnLuuXoa.setVisible(false);
+            }
+            txtMaNhanVien.setText(table.getValueAt(selectedRow, 0).toString());
+            txtTen.setText(table.getValueAt(selectedRow, 1).toString());
+            cbChucVu.setSelectedItem(table.getValueAt(selectedRow, 2).toString());
+            txtTuoi.setText(table.getValueAt(selectedRow, 6).toString());
+            txtLuong.setText(table.getValueAt(selectedRow, 3).toString());
+            txtSoDienThoai.setText(table.getValueAt(selectedRow, 5).toString());
+            
+            String gioiTinh = table.getValueAt(selectedRow, 4).toString();
+            if (gioiTinh.equals("Nam")) {
+                radNam.setSelected(true);
+            } else {
+                radNu.setSelected(true);
             }
         });
         // Sự kiện "Xóa"
-        // btnXoa.addActionListener(e -> {
-        //     int row = table.getSelectedRow();
-        //     if (row == -1) {
-        //         JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa!");
-        //         return;
-        //     }
+        btnXoa.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa!");
+                return;
+            }
         
-        //     // Xác nhận trước khi xóa
-        //     int confirm = JOptionPane.showConfirmDialog(this, 
-        //         "Bạn có chắc chắn muốn xóa nhân viên này không?", 
-        //         "Xác nhận xóa", 
-        //         JOptionPane.YES_NO_OPTION);
-        
-        //     if (confirm == JOptionPane.YES_OPTION) {
-        //         // Lấy mã nhân viên từ JTable
-        //         String maNV = table.getValueAt(row, 0).toString(); // Giả sử cột 0 là mã nhân viên
-                
-        //         // Gọi controller để xóa
-        //         NhanVienController controller = new NhanVienController(this, new NhanVienDAO());
-        //         boolean success = controller.xoaNhanVien(maNV);
-        
-        //         if (success) {
-        //             JOptionPane.showMessageDialog(this, "Xóa nhân viên thành công!");
-        //             loadData(tableModel, "SELECT * FROM nhanvien"); // Load lại bảng
-        //         } else {
-        //             JOptionPane.showMessageDialog(this, "Xóa nhân viên thất bại! Kiểm tra ràng buộc dữ liệu.");
-        //         }
-        //     }
-        // });
-        
-
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa nhân viên này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Lấy mã nhân viên từ bảng
+                String maNV = tableModel.getValueAt(selectedRow, 0).toString();
+                // Gọi controller để xóa (Dùng controller có sẵn, không khởi tạo lại)
+                NhanVienController controller = new NhanVienController(nhansuNhanVien.this , new NhanVienDAO());
+                if (controller.xoaNhanVien(maNV)) {
+                    loadData(tableModel, "SELECT * FROM nhanvien", nvColumns); // Load lại bảng nếu xóa thành công
+                }
+            }
+        });
         // Sự kiện "Lưu Thêm"
         btnLuuThem.addActionListener(e -> {
             NhanVienController controller = new NhanVienController(nhansuNhanVien.this , new NhanVienDAO());
             controller.themNhanVien();
-            loadData(tableModel, "SELECT * FROM nhanvien");
+            loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
         });
         // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
             NhanVienController controller = new NhanVienController(nhansuNhanVien.this , new NhanVienDAO());
             controller.suaNhanVien();
-            loadData(tableModel, "SELECT * FROM nhanvien");
-        });
-        // Sự kiện "Lưu Xóa"
-        btnLuuXoa.addActionListener(e -> {
-            
+            loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
         });
         // Sự kiện "Hủy"
         btnHuy.addActionListener(e -> {
@@ -221,4 +241,5 @@ public class nhansuNhanVien extends JPanel implements connectData {
         txtSoDienThoai.setText("");
         radNam.setSelected(true);
     }
+    
 }

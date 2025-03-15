@@ -5,34 +5,36 @@ import java.util.List;
 
 public class NhanVienDAO {
     public void themNhanVien(NhanVien nhanvien){
-        String sql = "INSERT INTO nhanvien(MaNhanVien,TenNhanVien,ChucVu,Tuoi,Luong1Gio,GioiTinh,SoDienThoai) VALUES(?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO nhanvien(MaNhanVien,TenNhanVien,ChucVu,Luong1Gio,GioiTinh,SoDienThoai,Tuoi) VALUES(?,?,?,?,?,?,?)";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nhanvien.getMaNhanVien());
             ps.setString(2, nhanvien.getTenNhanVien());
             ps.setString(3, nhanvien.getChucVu()); 
-            ps.setInt(4, nhanvien.getTuoi());
-            ps.setBigDecimal(5, nhanvien.getLuong1Gio());
-            ps.setString(6, nhanvien.getGioiTinh());
-            ps.setString( 7, nhanvien.getSoDienThoai());
+            ps.setBigDecimal(4, nhanvien.getLuong1Gio());
+            ps.setInt(7, nhanvien.getTuoi());
+            ps.setString(5, nhanvien.getGioiTinh());
+            ps.setString( 6, nhanvien.getSoDienThoai());
             ps.executeUpdate();
             System.out.println("Thêm nhân viên thành công!");
         } catch (Exception e) {
-            System.out.println("Thêm nhân viênviên thất bại!");
+            System.out.println("Thêm nhân viên thất bại!");
             e.printStackTrace();
         }
     }
-    public void suaNhanVien(NhanVien nhanvien){
-        String sql = "UPDATE nhanvien SET TenNhanVien = ?, ChucVu = ?, Tuoi = ?, Luong1Gio = ?, GioiTinh = ?, SoDienThoai = ? WHERE MaNhanVien = ?";
+    public void suaNhanVien(NhanVien nhanvien) {
+        String sql = "UPDATE nhanvien SET TenNhanVien = ?, ChucVu = ?, Luong1Gio = ?, GioiTinh = ?, SoDienThoai = ?, Tuoi = ? WHERE MaNhanVien = ?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, nhanvien.getTenNhanVien());
-            ps.setString(2, nhanvien.getChucVu());
-            ps.setInt(3, nhanvien.getTuoi());
-            ps.setBigDecimal(4, nhanvien.getLuong1Gio());
-            ps.setString(5, nhanvien.getGioiTinh());
-            ps.setString(6, nhanvien.getSoDienThoai());
-            ps.setString(7, nhanvien.getMaNhanVien());
+    
+            ps.setString(1, nhanvien.getTenNhanVien());  // TenNhanVien
+            ps.setString(2, nhanvien.getChucVu());       // ChucVu
+            ps.setBigDecimal(3, nhanvien.getLuong1Gio());// Luong1Gio
+            ps.setString(4, nhanvien.getGioiTinh());     // GioiTinh
+            ps.setString(5, nhanvien.getSoDienThoai());  // SoDienThoai
+            ps.setInt(6, nhanvien.getTuoi());            // Tuoi
+            ps.setString(7, nhanvien.getMaNhanVien());   // WHERE MaNhanVien = ?
+    
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("✅ Cập nhật nhân viên thành công!");
@@ -44,7 +46,7 @@ public class NhanVienDAO {
             e.printStackTrace();
         }
     }
-    public boolean xoaNhanVien(String maNhanVien) {
+        public boolean xoaNhanVien(String maNhanVien) {
         String sql = "DELETE FROM nhanvien WHERE MaNhanVien = ?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {

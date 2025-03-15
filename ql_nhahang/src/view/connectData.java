@@ -18,22 +18,26 @@ public interface connectData {
         }
     }
     // Phương thức load dữ liệu vào JTable cụ thể
-    default void loadData(DefaultTableModel model, String query) {
+    default void loadData(DefaultTableModel model, String query, String[] customColumnNames) {
         model.setRowCount(0); // Xóa dữ liệu cũ
-
+    
         try (Connection conn = connect();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
-
+    
             int columnCount = rs.getMetaData().getColumnCount();
             Object[] columnNames = new Object[columnCount];
-
-            // Lấy tên cột từ database
-            for (int i = 0; i < columnCount; i++) {
-                columnNames[i] = rs.getMetaData().getColumnName(i + 1);
+    
+            // Sử dụng tên cột tùy chỉnh nếu có, ngược lại lấy từ database
+            if (customColumnNames != null && customColumnNames.length == columnCount) {
+                columnNames = customColumnNames;
+            } else {
+                for (int i = 0; i < columnCount; i++) {
+                    columnNames[i] = rs.getMetaData().getColumnName(i + 1);
+                }
             }
             model.setColumnIdentifiers(columnNames);
-
+    
             // Đổ dữ liệu vào bảng
             while (rs.next()) {
                 Object[] rowData = new Object[columnCount];
@@ -45,5 +49,9 @@ public interface connectData {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }   
+    default void loadData(DefaultTableModel model, String query) {
+        loadData(model, query, null); // Gọi lại phương thức có 3 tham số
     }
+    
 }
