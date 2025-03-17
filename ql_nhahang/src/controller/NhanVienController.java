@@ -1,25 +1,17 @@
 package controller;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import model.Connect;
 import model.NhanVien;
 import model.NhanVienDAO;
 import view.nhansuNhanVien;
-public class NhanVienController {
+public class NhanVienController implements KTNhanSu {
     private nhansuNhanVien view;
     private NhanVienDAO model;
-
-
     public NhanVienController(nhansuNhanVien view, NhanVienDAO model) {
         this.view = view;
         this.model = model;
         
     }
-
     public void themNhanVien() {
         String maNV = view.getTxtMaNhanVien().getText();
         String tenNV = view.getTxtTen().getText();
@@ -48,6 +40,7 @@ public class NhanVienController {
             nhanVien.setSoDienThoai(soDienThoai);
             // Gọi model để thêm nhân viên vào database
             model.themNhanVien(nhanVien);
+            System.out.println("ChucVu nhận được: " + chucVu);
             JOptionPane.showMessageDialog(view, "Thêm nhân viên thành công!");
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(view, "Định dạng không hợp lệ! Vui lòng kiểm tra lại.");
@@ -94,29 +87,11 @@ public class NhanVienController {
             e.printStackTrace();
         }
     }
-    public boolean kiemTraNhanVienTonTai(String maNV) {
-        String sql = "SELECT COUNT(*) FROM nhanvien WHERE MaNhanVien = ?";
-        try (Connection conn = Connect.getConnect();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, maNV);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Lỗi kiểm tra nhân viên: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-
     public boolean xoaNhanVien(String maNV) {
         if (maNV == null || maNV.isEmpty()) {
             JOptionPane.showMessageDialog(view, "Vui lòng chọn nhân viên cần xóa!");
             return false;
         }
-    
         boolean isDeleted = model.xoaNhanVien(maNV);
         if (isDeleted) {
             JOptionPane.showMessageDialog(view, "Xóa nhân viên thành công!");

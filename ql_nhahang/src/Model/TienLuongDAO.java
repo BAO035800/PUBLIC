@@ -2,6 +2,7 @@ package model;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 public class TienLuongDAO {
     public void themTienLuong(TienLuong tienluong){
         String sql = "INSERT INTO tienluong(MaLuong,MaNhanVien,TenNhanVien,TongTienLuong,TinhTrangLuong,NgayCong,SoTienThanhToan) VALUES(?,?,?,?,?,?,?)";
@@ -45,23 +46,28 @@ public class TienLuongDAO {
         }
     }
     
-    public void xoaTienLuong(String maLuong) {
-        String sql = "DELETE FROM tienluong WHERE MaLuong = ?";
-        try (Connection conn = Connect.getConnect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, maLuong);
-            
-            int rowsDeleted = ps.executeUpdate();
-            if (rowsDeleted > 0) {
-                System.out.println("Xóa thông tin lương thành công!");
-            } else {
-                System.out.println("Không tìm thấy bản ghi để xóa!");
-            }
-        } catch (Exception e) {
-            System.out.println("Xóa thông tin lương thất bại!");
-            e.printStackTrace();
+    public boolean xoaTienLuong(String maLuong) {    
+    String sql = "DELETE FROM tienluong WHERE MaLuong = ?";
+    try (Connection conn = Connect.getConnect();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, maLuong);
+
+        // Thực hiện câu lệnh xóa
+        int rowsDeleted = ps.executeUpdate();
+        if (rowsDeleted > 0) {
+            JOptionPane.showMessageDialog(null, "Xóa thông tin tiền lương thành công!");
+            return true;
+        } else {
+            System.out.println("Không tìm thấy bản ghi để xóa!");
+            return false;
         }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Xóa thông tin tiền lương thất bại! Lỗi: " + e.getMessage());
+        e.printStackTrace();
+        return false;
     }
+}
+
     public List<TienLuong> getTienLuong() {
         List<TienLuong> list = new ArrayList<>();
         String sql = "SELECT * FROM tienluong";

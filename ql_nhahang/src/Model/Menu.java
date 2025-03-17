@@ -6,7 +6,8 @@ public class Menu{
     private BigDecimal GiaTien;
     private String TinhTrangMon;
     private int SoLuong;
-    
+    public Menu() {
+    }
     public String getMaMon() {
         return MaMon;
     }

@@ -1,67 +1,190 @@
 package view;
+import controller.BanController;
 import java.awt.*;
-import java.sql.Connection;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
+import model.BanDAO;
 public class banhangBan extends JPanel implements connectData {
     private JTable table;
     private DefaultTableModel tableModel;
-    private Connection conn;
-
+    private JPanel formPanel;
+    private JTextField txtBan,txtTinhTrang,txtGhiChu ;
+    private JComboBox<String> cbTinhTrang;
+    private JButton btnLuuThem, btnHuy,btnLuuSua,btnRefresh;
+    private int selectedRow = -1;
+    
+    public JTextField getTxtBan() {
+        return txtBan;
+    }
+    public void setTxtBan(JTextField txtBan) {
+        this.txtBan = txtBan;
+    }
+    public JTextField getTxtTinhTrang() {
+        return txtTinhTrang;
+    }
+    public void setTxtTinhTrang(JTextField txtTinhTrang) {
+        this.txtTinhTrang = txtTinhTrang;
+    }
+    public JTextField getTxtGhiChu() {
+        return txtGhiChu;
+    }
+    public void setTxtGhiChu(JTextField txtGhiChu) {
+        this.txtGhiChu = txtGhiChu;
+    }
+    public JComboBox<String> getCbTinhTrang() {
+        return cbTinhTrang;
+    }
+    public void setCbTinhTrang(JComboBox<String> cbTinhTrang) {
+        this.cbTinhTrang = cbTinhTrang;
+    }
     public banhangBan() {
-        setLayout(new BorderLayout());
+        String[] nvColumns = {"Số bàn", "Tình trạng", "Ghi chú"};
+        setLayout(new BorderLayout(10,10));
 
-        // Panel chứa bàn ăn
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        JPanel dataPanel = new JPanel(new BorderLayout());
-
-        // Tạo panel chứa bàn và nút
-        JPanel panelBan = new JPanel(new GridLayout(3, 4, 30, 30));
-        JPanel panelNut = new JPanel(new GridLayout(3, 1, 30, 30));
-        JPanel panelNote = new JPanel(new GridLayout(1, 1, 30, 30));
-        panelBan.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 20));
-        panelNut.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        // Tạo bàn
-        for (int i = 1; i <= 10; i++) {
-            JButton btnBan = new JButton("B" + i);
-            btnBan.setFont(new Font("Arial", Font.BOLD, 14));
-            btnBan.setPreferredSize(new Dimension(80, 60));
-            btnBan.setMinimumSize(new Dimension(60, 50));
-            btnBan.setFocusable(false);
-            btnBan.setBackground(new Color(173, 172, 172));
-            panelBan.add(btnBan);
-        }
-        contentPanel.add(panelBan, BorderLayout.CENTER);
-
-        // Tạo nút
+        // Panel chứa nút chức năng
+        JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         JButton btnThem = new JButton("Thêm");
         JButton btnSua = new JButton("Sửa");
         JButton btnXoa = new JButton("Xóa");
-        panelNut.add(btnThem);
-        panelNut.add(btnSua);
-        panelNut.add(btnXoa);
-        contentPanel.add(panelNut, BorderLayout.EAST);
+        btnThem.setBackground(new Color(72, 201, 176));
+        btnSua.setBackground(new Color(255, 193, 7));
+        btnXoa.setBackground(new Color(220, 53, 69));
+        btnThem.setForeground(Color.WHITE);
+        btnSua.setForeground(Color.WHITE);
+        btnXoa.setForeground(Color.WHITE);
+        controlPanel.add(btnThem);
+        controlPanel.add(btnSua);
+        controlPanel.add(btnXoa);
+        add(controlPanel, BorderLayout.NORTH);
 
-        // Tạo note
-        JLabel note = new JLabel("Ghi chú: Bàn màu xanh là bàn trống, bàn màu đỏ là bàn đã có người");
-        panelNote.add(note);
-        contentPanel.add(panelNote, BorderLayout.SOUTH);
-
-        // **Tạo JTable riêng**
+        // Bảng dữ liệu nhân viên
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
+        table.setRowHeight(25);
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(table);
-        dataPanel.add(scrollPane, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.CENTER);
 
-        // Kết nối database và load dữ liệu
-        conn = connect();
-        loadData(tableModel, "SELECT * FROM ban");  // Gửi tableModel vào phương thức loadData()
+        // Load dữ liệu từ database
+        loadData(tableModel, "SELECT * FROM ban", nvColumns);
 
-        // Chia giao diện thành 2 phần
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, contentPanel, dataPanel);
-        splitPane.setResizeWeight(0.5);
-        add(splitPane, BorderLayout.CENTER);
+        // Panel nhập liệu
+        formPanel = new JPanel(new GridLayout(5,4, 10, 10));
+        formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin nhân viên"));
+        formPanel.setBackground(Color.WHITE);
+
+        // Các input field
+        txtBan = new JTextField();
+        txtTinhTrang = new JTextField();
+        txtGhiChu = new JTextField();
+        cbTinhTrang = new JComboBox<>(new String[] {"Trống", "Đã đặt", "Đang phục vụ"});
+        cbTinhTrang.setSelectedIndex(0);
+        cbTinhTrang.addActionListener(e -> {
+            txtTinhTrang.setText(cbTinhTrang.getSelectedItem().toString());
+        });
+        // Tạo các button chức năng
+        btnLuuThem = new JButton("Lưu");
+        btnLuuSua = new JButton("Sửa");
+        btnHuy = new JButton("Hủy");
+        btnRefresh = new JButton("Refresh");
+        btnRefresh.setBackground(new Color(23, 162, 184));
+        btnRefresh.setForeground(Color.WHITE);
+        btnLuuThem.setBackground(new Color(40, 167, 69));
+        btnLuuThem.setForeground(Color.WHITE);
+        btnLuuSua.setBackground(new Color(23, 162, 184));
+        btnLuuSua.setForeground(Color.WHITE);
+        btnHuy.setBackground(new Color(108, 117, 125));
+        btnHuy.setForeground(Color.WHITE);
+
+        // Thêm các thành phần vào form
+        formPanel.add(new JLabel("Số bàn"));
+        formPanel.add(txtBan);
+        formPanel.add(new JLabel("Tình trạng"));
+        formPanel.add(cbTinhTrang);
+        formPanel.add(new JLabel("Ghi chú"));
+        formPanel.add(txtGhiChu);
+
+        // Thêm nút Lưu và Hủy
+        formPanel.add(btnHuy);
+        formPanel.add(btnLuuThem);
+        formPanel.add(btnLuuSua);
+        formPanel.add(btnRefresh);
+
+        add(formPanel, BorderLayout.SOUTH);
+        formPanel.setVisible(false);
+        // Sự kiện "Thêm"
+        btnThem.addActionListener(e -> {
+            selectedRow = -1;
+            clearForm();
+            formPanel.setVisible(true);
+        });
+
+        // Sự kiện "Sửa"
+        btnSua.addActionListener(e -> {
+            selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần sửa!");
+            } else {
+                formPanel.setVisible(true);
+            }
+            fillForm(selectedRow);
+        });
+
+        // Sự kiện "Xóa"
+        btnXoa.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn bàn cần xóa!");
+                return;
+            }
+        
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa bàn này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Lấy bàn từ bảng
+                int soBan = Integer.parseInt(table.getValueAt(selectedRow, 0).toString());
+                // Xóa bàn
+                BanController banController = new BanController(banhangBan.this,new BanDAO());
+                if(banController.xoaBan(soBan)){
+                    JOptionPane.showMessageDialog(this, "Xóa bàn thành công!");
+                    loadData(tableModel, "SELECT * FROM ban", nvColumns);   
+                }else{
+                    JOptionPane.showMessageDialog(this, "Xóa bàn thất bại!");
+                }
+            }
+            clearForm();
+        });
+
+        // Sự kiện "Lưu Thêm"
+        btnLuuThem.addActionListener(e -> {
+            BanController banController = new BanController(banhangBan.this,new BanDAO());
+            banController.themBan();
+            loadData(tableModel, "SELECT * FROM ban", nvColumns);
+        });
+        // Sự kiện "Lưu Sửa"
+        btnLuuSua.addActionListener(e -> {
+            BanController banController = new BanController(banhangBan.this,new BanDAO());
+            banController.suaBan();
+            loadData(tableModel, "SELECT * FROM ban", nvColumns);
+        });
+        
+        // Sự kiện "Hủy"
+        btnHuy.addActionListener(e -> {
+            formPanel.setVisible(false);
+        });
+        // Sự kiện "Refresh"
+        btnRefresh.addActionListener(e -> {
+            loadData(tableModel, "SELECT * FROM ban", nvColumns);
+        });
+    }
+    private void clearForm() {
+        txtBan.setText("");
+        txtTinhTrang.setText("");
+        txtGhiChu.setText("");
+        cbTinhTrang.setSelectedIndex(0);
+    }
+    private void fillForm(int row) {
+        txtBan.setText(table.getValueAt(row, 0).toString());
+        txtTinhTrang.setText(table.getValueAt(row, 1).toString());
+        txtGhiChu.setText(table.getValueAt(row, 2).toString());
     }
 }

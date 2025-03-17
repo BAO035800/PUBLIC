@@ -11,7 +11,7 @@ public class nhansuNhanVien extends JPanel implements connectData {
     private JTextField txtTen, txtTuoi, txtChucVu, txtLuong, txtSoDienThoai, txtMaNhanVien;
     private JComboBox<String> cbChucVu;
     private JRadioButton radNam, radNu;
-    private JButton btnLuuThem, btnHuy,btnLuuSua;
+    private JButton btnLuuThem, btnHuy,btnLuuSua,btnRefresh;
     private int selectedRow = -1;
     public JComboBox<String> getCbChucVu() {
         return cbChucVu;
@@ -129,10 +129,13 @@ public class nhansuNhanVien extends JPanel implements connectData {
         genderPanel.add(radNam);
         genderPanel.add(radNu);
 
-        // Các nút
+        // Tạo các button chức năng
         btnLuuThem = new JButton("Lưu");
+        btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
-        btnLuuSua=new JButton("Lưu");
+        btnRefresh = new JButton("Refresh");
+        btnRefresh.setBackground(new Color(23, 162, 184));
+        btnRefresh.setForeground(Color.WHITE);
         btnLuuThem.setBackground(new Color(40, 167, 69));
         btnLuuThem.setForeground(Color.WHITE);
         btnLuuSua.setBackground(new Color(23, 162, 184));
@@ -154,33 +157,28 @@ public class nhansuNhanVien extends JPanel implements connectData {
         formPanel.add(new JLabel("Số điện thoại:"));
         formPanel.add(txtSoDienThoai);
         formPanel.add(new JLabel("Giới tính:"));
-        formPanel.add(genderPanel); // Chỉ add panel chứa radio button, không có JTextField dư thừa
+        formPanel.add(genderPanel); 
 
         // Thêm nút Lưu và Hủy
         formPanel.add(btnHuy);
         formPanel.add(btnLuuThem);
         formPanel.add(btnLuuSua);
-
-        formPanel.setVisible(false);
+        formPanel.add(btnRefresh);
         add(formPanel, BorderLayout.SOUTH);
-
+        formPanel.setVisible(false);
         // Sự kiện "Thêm"
         btnThem.addActionListener(e -> {
             selectedRow = -1;
             clearForm();
             formPanel.setVisible(true);
-            btnLuuThem.setVisible(true);
-            btnLuuSua.setVisible(false);
         });
         // Sự kiện "Sửa"
         btnSua.addActionListener(e -> {
             selectedRow = table.getSelectedRow();
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần sửa!");
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần sửa!");
             } else {
                 formPanel.setVisible(true);
-                btnLuuThem.setVisible(false);
-                btnLuuSua.setVisible(true);
             }
             txtMaNhanVien.setText(table.getValueAt(selectedRow, 0).toString());
             txtTen.setText(table.getValueAt(selectedRow, 1).toString());
@@ -214,6 +212,7 @@ public class nhansuNhanVien extends JPanel implements connectData {
                     loadData(tableModel, "SELECT * FROM nhanvien", nvColumns); // Load lại bảng nếu xóa thành công
                 }
             }
+            clearForm();
         });
         // Sự kiện "Lưu Thêm"
         btnLuuThem.addActionListener(e -> {
@@ -230,6 +229,9 @@ public class nhansuNhanVien extends JPanel implements connectData {
         // Sự kiện "Hủy"
         btnHuy.addActionListener(e -> {
             formPanel.setVisible(false);
+        });
+        btnRefresh.addActionListener(e -> {
+            loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
         });
     }
     private void clearForm() {

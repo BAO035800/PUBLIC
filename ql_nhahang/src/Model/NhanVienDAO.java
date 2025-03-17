@@ -46,7 +46,7 @@ public class NhanVienDAO {
             e.printStackTrace();
         }
     }
-        public boolean xoaNhanVien(String maNhanVien) {
+    public boolean xoaNhanVien(String maNhanVien) {
         String sql = "DELETE FROM nhanvien WHERE MaNhanVien = ?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {

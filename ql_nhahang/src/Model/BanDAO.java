@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 public class BanDAO {
     public void themBan(Ban ban){
-        String sql="insert into ban(SoBan, TrangThaiBan, GhiChu) values(?,?,?)";
+        String sql="insert into ban(SoBan, TinhTrangBan, GhiChu) values(?,?,?)";
         try(Connection conn=Connect.getConnect();
             PreparedStatement ps=conn.prepareStatement(sql)){
             ps.setInt(1, ban.getSoBan());
@@ -18,7 +18,7 @@ public class BanDAO {
         }   
     }
     public void suaBan(Ban ban){
-        String sql="update ban set TrangThaiBan=?, GhiChu=? where SoBan=?";
+        String sql="update ban set TinhTrangBan=?, GhiChu=? where SoBan=?";
         try(Connection conn=Connect.getConnect();
             PreparedStatement ps=conn.prepareStatement(sql)){
             ps.setString(1, ban.getTrangThaiBan());
@@ -31,18 +31,29 @@ public class BanDAO {
             e.printStackTrace();
         }
     }
-    public void xoaBan(int SoBan){
-        String sql="delete from ban where SoBan=?";
-        try(Connection conn=Connect.getConnect();
-            PreparedStatement ps=conn.prepareStatement(sql)){
+    public boolean xoaBan(int SoBan) {
+        String sql = "DELETE FROM ban WHERE SoBan = ?";
+        try (Connection conn = Connect.getConnect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
             ps.setInt(1, SoBan);
-            System.out.println("Xóa bàn thành công");
-            ps.executeUpdate();
-        }catch(Exception e){
+            int rowsAffected = ps.executeUpdate(); // Kiểm tra số dòng bị ảnh hưởng
+            
+            if (rowsAffected > 0) {
+                System.out.println("Xóa bàn thành công");
+                return true; // Trả về true nếu có dòng bị xóa
+            } else {
+                System.out.println("Không tìm thấy bàn để xóa");
+                return false; // Trả về false nếu không có dòng nào bị xóa
+            }
+            
+        } catch (Exception e) {
             System.out.println("Xóa bàn thất bại");
             e.printStackTrace();
+            return false; // Trả về false nếu có lỗi xảy ra
         }
     }
+    
     public List<Ban> getBan(){
         List<Ban> list=new ArrayList<>();
         String sql="select * from ban";

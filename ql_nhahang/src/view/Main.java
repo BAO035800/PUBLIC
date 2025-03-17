@@ -8,7 +8,19 @@ public class Main extends JFrame {
     // Hàm tùy chỉnh button
 // Biến để lưu button đang được nhấn
 private JButton currentButton = null;
+private void setButtonFocus(JButton selectedButton) {
+    // Đổi font in đậm và màu nền của nút hiện tại
+    selectedButton.setFont(new Font("Arial", Font.BOLD, 14));
+    selectedButton.setBackground(new Color(111, 205, 240)); // Màu khi được chọn
 
+    // Đặt lại font và màu nền của các nút khác
+    for (Component component : selectedButton.getParent().getComponents()) {
+        if (component instanceof JButton && component != selectedButton) {
+            component.setFont(new Font("Arial", Font.PLAIN, 12)); // Trả về font thường
+            component.setBackground(new Color(194, 239, 255)); // Màu mặc định
+        }
+    }
+}
 private void styleButton(JButton button) {
     button.setFocusPainted(false);
     button.setBorderPainted(false);
@@ -101,14 +113,31 @@ private void styleButton(JButton button) {
         contentPanel = new JPanel(cardLayout);
 
         // Thêm các panel từ file khác
+        contentPanel.add(new Home(), "TrangChu");
         contentPanel.add(new QLbanhang(), "BanHang");
         contentPanel.add(new QLkho(), "Kho");
         contentPanel.add(new QLnhansu(), "NhanSu");
 
         // Xử lý sự kiện khi bấm nút
-        btnBanHang.addActionListener(e -> cardLayout.show(contentPanel, "BanHang"));
-        btnNhanSu.addActionListener(e -> cardLayout.show(contentPanel, "NhanSu"));
-        btnKho.addActionListener(e -> cardLayout.show(contentPanel, "Kho"));
+        btnTrangChu.addActionListener(e -> {
+            cardLayout.show(contentPanel, "TrangChu");
+            setButtonFocus(btnTrangChu); // Đổi màu và in đậm
+        });
+        btnBanHang.addActionListener(e -> {
+            cardLayout.show(contentPanel, "BanHang");
+            setButtonFocus(btnBanHang); // Đổi màu và in đậm
+        });
+        btnNhanSu.addActionListener(e -> {
+            cardLayout.show(contentPanel, "NhanSu");
+            setButtonFocus(btnNhanSu); // Đổi màu và in đậm
+        });
+        btnKho.addActionListener(e -> {
+            cardLayout.show(contentPanel, "Kho");
+            setButtonFocus(btnKho); // Đổi màu và in đậm
+        });
+        setButtonFocus(btnTrangChu);
+    cardLayout.show(contentPanel, "TrangChu");
+
 
         // Thêm vào JFrame
         add(menuPanel, BorderLayout.WEST);
