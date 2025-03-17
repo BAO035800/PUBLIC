@@ -15,7 +15,7 @@ public class QLbanhang extends JPanel {
         tabbedPane.addTab("Menu", new banhangMenu());
         tabbedPane.addTab("Hóa đơn bán hàng", new banhangHoaDonBanHang());
         
-        tabbedPane.setFont(new Font("Arial", Font.BOLD, 12));
+        tabbedPane.setFont(new Font("Arial", Font.BOLD, 14));
         tabbedPane.setForeground(Color.BLACK);
         tabbedPane.setBackground(new Color(173, 216, 230));
         

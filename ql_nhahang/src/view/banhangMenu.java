@@ -1,9 +1,9 @@
 package view;
 
+import controller.MenuController;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import controller.MenuController;
 import model.MenuDAO;
 public class banhangMenu extends JPanel implements connectData {
     private JTable table;
@@ -168,7 +168,7 @@ public class banhangMenu extends JPanel implements connectData {
                 if (confirm == JOptionPane.YES_OPTION) {
                     String maMon = table.getValueAt(selectedRow, 0).toString();
                     MenuController controller = new MenuController(banhangMenu.this, new MenuDAO());
-                    controller.xoaMenu(maMon);
+                    controller.xoaMenu();
                     loadData(tableModel, "SELECT * FROM menu", menuColumns);
                 }
             }

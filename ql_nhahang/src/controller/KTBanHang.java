@@ -18,5 +18,19 @@ public interface KTBanHang {
         }
         return false;
     }
-    
+    default boolean kiemTraMonTonTai(String maMon) {
+        String sql = "SELECT COUNT(*) FROM ban WHERE MaMon = ?";
+        try (Connection conn = Connect.getConnect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maMon);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Lỗi kiểm tra món: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
