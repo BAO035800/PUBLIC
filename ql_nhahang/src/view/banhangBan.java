@@ -70,7 +70,7 @@ public class banhangBan extends JPanel implements connectData {
 
         // Panel nhập liệu
         formPanel = new JPanel(new GridLayout(5,4, 10, 10));
-        formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin nhân viên"));
+        formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin bàn"));
         formPanel.setBackground(Color.WHITE);
 
         // Các input field

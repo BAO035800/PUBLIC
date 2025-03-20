@@ -110,7 +110,7 @@ public class nhansuTienLuong extends JPanel implements connectData {
         loadData(tableModel, "SELECT * FROM tienluong",nvColumns);
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(5, 5, 10, 10));
+        formPanel = new JPanel(new GridLayout(5, 4, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin lương"));
         formPanel.setBackground(Color.WHITE);
         // Tạo các control nhập liệu
@@ -155,6 +155,8 @@ public class nhansuTienLuong extends JPanel implements connectData {
         formPanel.add(txtNgayCong);
         formPanel.add(new JLabel("Số tiền đã thanh toán:"));
         formPanel.add(txtSoTienThanhToan);
+        formPanel.add(new JLabel(""));
+        formPanel.add(new JLabel(""));
         formPanel.add(btnLuuThem);
         formPanel.add(btnLuuSua);
         formPanel.add(btnHuy);

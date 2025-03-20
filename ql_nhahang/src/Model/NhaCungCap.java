@@ -4,6 +4,8 @@ public class NhaCungCap {
     private String MaNhaCungCap;
     private String TenNhaCungCap;
     private String LienHe;
+    public NhaCungCap() {
+    }
     public String getMaNhaCungCap() {
         return MaNhaCungCap;
     }

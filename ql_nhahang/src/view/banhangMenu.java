@@ -94,8 +94,8 @@ public class banhangMenu extends JPanel implements connectData {
         loadData(tableModel, "SELECT * FROM menu", menuColumns);
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(5, 4, 10, 10));
-        formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin món ăn"));
+        formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
+        formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin menu"));
         formPanel.setBackground(Color.WHITE);
 
         // Các input field
@@ -168,7 +168,7 @@ public class banhangMenu extends JPanel implements connectData {
                 if (confirm == JOptionPane.YES_OPTION) {
                     String maMon = table.getValueAt(selectedRow, 0).toString();
                     MenuController controller = new MenuController(banhangMenu.this, new MenuDAO());
-                    controller.xoaMenu();
+                    controller.xoaMenu(maMon);
                     loadData(tableModel, "SELECT * FROM menu", menuColumns);
                 }
             }

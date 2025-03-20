@@ -158,7 +158,8 @@ public class nhansuNhanVien extends JPanel implements connectData {
         formPanel.add(txtSoDienThoai);
         formPanel.add(new JLabel("Giới tính:"));
         formPanel.add(genderPanel); 
-
+        formPanel.add(new JLabel(""));
+        formPanel.add(new JLabel(""));
         // Thêm nút Lưu và Hủy
         formPanel.add(btnHuy);
         formPanel.add(btnLuuThem);

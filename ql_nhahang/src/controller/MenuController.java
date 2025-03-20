@@ -67,8 +67,7 @@ public class MenuController implements KTBanHang {
             e.printStackTrace();
         }
     }
-    public void xoaMenu() {
-        String maMon = view.getTxtMaMon().getText();
+    public void xoaMenu(String maMon) {
         if (maMon.isEmpty()) {
             JOptionPane.showMessageDialog(view, "Vui lòng nhập mã món cần xóa!");
             return;

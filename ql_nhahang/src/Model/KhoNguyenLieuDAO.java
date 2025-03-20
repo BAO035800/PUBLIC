@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 public class KhoNguyenLieuDAO {
     public void themNguyenLieu(KhoNguyenLieu khonguyenlieu) {
-        String sql = "INSERT INTO khonguyenlieu (MaNguyenLieu, TenNguyenLieu, MaNhaCungCap, SoLuong, GiaNhap) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO khonguyenlieu (MaNguyenLieu, TenNguyenLieu, MaNhaCungCap, SoLuong) VALUES (?, ?, ?, ?)";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, khonguyenlieu.getMaNguyenLieu());
             ps.setString(2, khonguyenlieu.getTenNguyenLieu());
             ps.setString(3, khonguyenlieu.getMaNhaCungCap());
             ps.setInt(4, khonguyenlieu.getSoLuong());
-            ps.setBigDecimal(5, khonguyenlieu.getGiaNhap());
             ps.executeUpdate();
             System.out.println("Thêm nguyên liệu thành công!");
         } catch (Exception e) {
@@ -21,14 +20,14 @@ public class KhoNguyenLieuDAO {
     }
     
     public void suaNguyenLieu(KhoNguyenLieu khonguyenlieu) {
-        String sql = "UPDATE khonguyenlieu SET TenNguyenLieu = ?, MaNhaCungCap = ?, SoLuong = ?, GiaNhap = ? WHERE MaNguyenLieu = ?";
+        String sql = "UPDATE khonguyenlieu SET TenNguyenLieu = ?, MaNhaCungCap = ?, SoLuong = ? WHERE MaNguyenLieu = ?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, khonguyenlieu.getMaNguyenLieu());
-            ps.setString(2, khonguyenlieu.getTenNguyenLieu());
-            ps.setString(3, khonguyenlieu.getMaNhaCungCap());
-            ps.setInt(4, khonguyenlieu.getSoLuong());
-            ps.setBigDecimal(5, khonguyenlieu.getGiaNhap());
+                ps.setString(1, khonguyenlieu.getTenNguyenLieu());
+                ps.setString(2, khonguyenlieu.getMaNhaCungCap());
+                ps.setInt(3, khonguyenlieu.getSoLuong());
+                ps.setString(4, khonguyenlieu.getMaNguyenLieu()); 
+                
             
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
@@ -42,11 +41,11 @@ public class KhoNguyenLieuDAO {
         }
     }
     
-    public void xoaNguyenLieu(int maNguyenLieu) {
-        String sql = "DELETE FROM nguyenlieu WHERE MaNguyenLieu = ?";
+    public void xoaNguyenLieu(String maNguyenLieu) {
+        String sql = "DELETE FROM khonguyenlieu WHERE MaNguyenLieu = ?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, maNguyenLieu);
+            ps.setString(1, maNguyenLieu);
             int rowsDeleted = ps.executeUpdate();
             if (rowsDeleted > 0) {
                 System.out.println("Xóa nguyên liệu thành công!");
@@ -70,7 +69,6 @@ public class KhoNguyenLieuDAO {
                 khonguyenlieu.setTenNguyenLieu(rs.getString("TenNguyenLieu"));
                 khonguyenlieu.setMaNhaCungCap(rs.getString("MaNhaCungCap"));
                 khonguyenlieu.setSoLuong(rs.getInt("SoLuong"));
-                khonguyenlieu.setGiaNhap(rs.getBigDecimal("GiaNhap"));
                 list.add(khonguyenlieu);
             }
         } catch (Exception e) {
