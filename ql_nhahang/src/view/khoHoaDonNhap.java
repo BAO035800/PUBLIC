@@ -5,7 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import model.HoaDonNhapDAO;
-public class khoHoaDonNhap extends JPanel implements connectData {
+import model.connectData;
+public class khoHoaDonNhap extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
@@ -83,7 +84,7 @@ public class khoHoaDonNhap extends JPanel implements connectData {
         add(scrollPane, BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
+        connectData.loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
 
         // Panel nhập liệu
         formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
@@ -161,14 +162,14 @@ public class khoHoaDonNhap extends JPanel implements connectData {
                 controller.xoaHDNhap();
                 clearForm();
             }
-            loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
+            connectData.loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
         });
 
         // Sự kiện "Lưu Thêm"
         btnLuuThem.addActionListener(e -> {
            HDNhapController controller = new HDNhapController(khoHoaDonNhap.this, new HoaDonNhapDAO());
            controller.themHDNhap();
-           loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
+           connectData.loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
         });
 
         // Sự kiện "Lưu Sửa"
@@ -176,7 +177,7 @@ public class khoHoaDonNhap extends JPanel implements connectData {
             HDNhapController controller = new HDNhapController(khoHoaDonNhap.this, new HoaDonNhapDAO());
             controller.suaHDNhap();
             clearForm();
-            loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
+            connectData.loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
         });
 
         // Sự kiện "Hủy"
@@ -187,7 +188,7 @@ public class khoHoaDonNhap extends JPanel implements connectData {
 
         // Sự kiện "Refresh"
         btnRefresh.addActionListener(e -> {
-            loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
+            connectData.loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
         });
     }
 

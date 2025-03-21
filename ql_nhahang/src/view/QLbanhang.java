@@ -13,6 +13,7 @@ public class QLbanhang extends JPanel {
         // Các panel cho từng tab
         tabbedPane.addTab("Bàn", new banhangBan());
         tabbedPane.addTab("Menu", new banhangMenu());
+        tabbedPane.addTab("Hóa đơn chi tiết",new banhangChiTiet());
         tabbedPane.addTab("Hóa đơn bán hàng", new banhangHoaDonBanHang());
         
         tabbedPane.setFont(new Font("Arial", Font.BOLD, 14));

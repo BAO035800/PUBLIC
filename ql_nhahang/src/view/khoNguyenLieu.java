@@ -5,7 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import model.KhoNguyenLieuDAO;
-public class khoNguyenLieu extends JPanel implements connectData {
+import model.connectData;
+public class khoNguyenLieu extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
@@ -75,7 +76,7 @@ public class khoNguyenLieu extends JPanel implements connectData {
         add(scrollPane, BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
+        connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
 
         // Panel nhập liệu
         formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
@@ -150,7 +151,7 @@ public class khoNguyenLieu extends JPanel implements connectData {
             String MaNguyenLieu = tableModel.getValueAt(selectedRow, 0).toString();
             NguyenLieuController controller = new NguyenLieuController(khoNguyenLieu.this, new KhoNguyenLieuDAO());
             controller.xoaNguyenLieu(MaNguyenLieu); 
-            loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
+            connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
             
         });
         
@@ -160,14 +161,14 @@ public class khoNguyenLieu extends JPanel implements connectData {
         btnLuuThem.addActionListener(e -> {
             NguyenLieuController controller = new NguyenLieuController(khoNguyenLieu.this, new KhoNguyenLieuDAO());
             controller.themNguyenLieu();
-            loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
+            connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
         });
 
         // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
             NguyenLieuController controller = new NguyenLieuController(khoNguyenLieu.this, new KhoNguyenLieuDAO());
             controller.suaNguyenLieu();
-            loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
+            connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
         });
 
         // Sự kiện "Hủy"
@@ -178,7 +179,7 @@ public class khoNguyenLieu extends JPanel implements connectData {
 
         // Sự kiện "Refresh"
         btnRefresh.addActionListener(e -> {
-            loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
+            connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
         });
     }
 

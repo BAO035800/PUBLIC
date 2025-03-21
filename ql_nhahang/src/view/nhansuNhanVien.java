@@ -4,7 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import model.NhanVienDAO;
-public class nhansuNhanVien extends JPanel implements connectData {
+import model.connectData;
+public class nhansuNhanVien extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
@@ -96,7 +97,7 @@ public class nhansuNhanVien extends JPanel implements connectData {
         add(scrollPane, BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
+        connectData.loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
 
         // Panel nhập liệu
         formPanel = new JPanel(new GridLayout(5,4, 10, 10));
@@ -210,7 +211,7 @@ public class nhansuNhanVien extends JPanel implements connectData {
                 // Gọi controller để xóa (Dùng controller có sẵn, không khởi tạo lại)
                 NhanVienController controller = new NhanVienController(nhansuNhanVien.this , new NhanVienDAO());
                 if (controller.xoaNhanVien(maNV)) {
-                    loadData(tableModel, "SELECT * FROM nhanvien", nvColumns); // Load lại bảng nếu xóa thành công
+                    connectData.loadData(tableModel, "SELECT * FROM nhanvien", nvColumns); // Load lại bảng nếu xóa thành công
                 }
             }
             clearForm();
@@ -219,20 +220,20 @@ public class nhansuNhanVien extends JPanel implements connectData {
         btnLuuThem.addActionListener(e -> {
             NhanVienController controller = new NhanVienController(nhansuNhanVien.this , new NhanVienDAO());
             controller.themNhanVien();
-            loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
+            connectData.loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
         });
         // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
             NhanVienController controller = new NhanVienController(nhansuNhanVien.this , new NhanVienDAO());
             controller.suaNhanVien();
-            loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
+            connectData.loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
         });
         // Sự kiện "Hủy"
         btnHuy.addActionListener(e -> {
             formPanel.setVisible(false);
         });
         btnRefresh.addActionListener(e -> {
-            loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
+            connectData.loadData(tableModel, "SELECT * FROM nhanvien", nvColumns);
         });
     }
     private void clearForm() {

@@ -1,28 +1,35 @@
 package view;
 import javax.swing.*;
 
-public class Test {
+public class Test{
     public static void main(String[] args) {
-        JFrame frame = new JFrame("JProgressBar Update");
-        frame.setSize(400, 200);
+        JFrame frame = new JFrame("GroupLayout Example");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        GroupLayout layout = new GroupLayout(panel);
+        panel.setLayout(layout);
 
-        JProgressBar progressBar = new JProgressBar(0, 100);
-        progressBar.setStringPainted(true); // Hiển thị phần trăm
+        JButton btn1 = new JButton("Button 1");
+        JButton btn2 = new JButton("Button 2");
 
-        frame.add(progressBar);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+
+        layout.setHorizontalGroup(
+            layout.createParallelGroup()
+                .addComponent(btn1)
+                .addComponent(btn2)
+        );
+
+        layout.setVerticalGroup(
+            layout.createSequentialGroup()
+                .addComponent(btn1)
+                .addComponent(btn2)
+        );
+
+        frame.add(panel);
+        frame.pack();
         frame.setVisible(true);
-
-        // Tạo luồng cập nhật tiến trình
-        new Thread(() -> {
-            for (int i = 0; i <= 100; i++) {
-                try {
-                    Thread.sleep(50); // Giả lập tiến trình chạy chậm
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                progressBar.setValue(i); // Cập nhật tiến trình
-            }
-        }).start();
     }
 }

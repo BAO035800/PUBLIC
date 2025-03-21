@@ -5,7 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import model.NhaCungCapDAO;
-public class khoNhaCungCap extends JPanel implements connectData {
+import model.connectData;
+public class khoNhaCungCap extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
@@ -67,7 +68,7 @@ public class khoNhaCungCap extends JPanel implements connectData {
         add(scrollPane, BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        loadData(tableModel, "SELECT * FROM nhacungcap", nccColumns);
+        connectData.loadData(tableModel, "SELECT * FROM nhacungcap", nccColumns);
 
         // Panel nhập liệu
         formPanel = new JPanel(new GridLayout(5, 4, 10, 10));
@@ -138,7 +139,7 @@ public class khoNhaCungCap extends JPanel implements connectData {
                 controller.xoaNhaCungCap(maNCC);
                 clearForm();
             }
-            loadData(tableModel, "SELECT * FROM nhacungcap", nccColumns);
+            connectData.loadData(tableModel, "SELECT * FROM nhacungcap", nccColumns);
         });
 
         // Sự kiện "Lưu Thêm"
@@ -146,7 +147,7 @@ public class khoNhaCungCap extends JPanel implements connectData {
             NCCController controller = new NCCController(khoNhaCungCap.this, new NhaCungCapDAO());
             controller.themNhaCungCap();
             clearForm();
-            loadData(tableModel, "SELECT * FROM nhacungcap", nccColumns);
+            connectData.loadData(tableModel, "SELECT * FROM nhacungcap", nccColumns);
         });
 
         // Sự kiện "Lưu Sửa"
@@ -154,7 +155,7 @@ public class khoNhaCungCap extends JPanel implements connectData {
             NCCController controller = new NCCController(khoNhaCungCap.this, new NhaCungCapDAO());
             controller.suaNhaCungCap();
             clearForm();
-            loadData(tableModel, "SELECT * FROM nhacungcap", nccColumns);
+            connectData.loadData(tableModel, "SELECT * FROM nhacungcap", nccColumns);
         });
 
         // Sự kiện "Hủy"
@@ -165,7 +166,7 @@ public class khoNhaCungCap extends JPanel implements connectData {
 
         // Sự kiện "Refresh"
         btnRefresh.addActionListener(e -> {
-            loadData(tableModel, "SELECT * FROM nhacungcap", nccColumns);
+            connectData.loadData(tableModel, "SELECT * FROM nhacungcap", nccColumns);
         });
     }
 

@@ -148,6 +148,6 @@ private void styleButton(JButton button) {
     }
 
     public static void main(String[] args) {
-        Main mainFrame = new Main();
+        Login loginForm = new Login();
     }
 }

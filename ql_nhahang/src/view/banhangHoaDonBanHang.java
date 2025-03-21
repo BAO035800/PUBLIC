@@ -3,7 +3,7 @@ import java.awt.*;
 import java.sql.Connection;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-public class banhangHoaDonBanHang extends JPanel implements connectData{
+public class banhangHoaDonBanHang extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private Connection conn;
@@ -48,9 +48,8 @@ public class banhangHoaDonBanHang extends JPanel implements connectData{
         JScrollPane scrollPane = new JScrollPane(table);
         dataPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Kết nối database và load dữ liệu
-        conn = connect();
-        loadData(tableModel, "SELECT * FROM hoadonbanhang");  // Gửi tableModel vào phương thức loadData()
+        // Kết nối database và load dữ liệu     
+        // connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang");  // Gửi tableModel vào phương thức loadData()
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, contentPanel, dataPanel);
         splitPane.setResizeWeight(0.5);
         add(splitPane, BorderLayout.CENTER);

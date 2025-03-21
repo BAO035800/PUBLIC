@@ -5,7 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import model.MenuDAO;
-public class banhangMenu extends JPanel implements connectData {
+import model.connectData;
+public class banhangMenu extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
@@ -91,7 +92,7 @@ public class banhangMenu extends JPanel implements connectData {
         add(scrollPane, BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        loadData(tableModel, "SELECT * FROM menu", menuColumns);
+        connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
 
         // Panel nhập liệu
         formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
@@ -138,7 +139,6 @@ public class banhangMenu extends JPanel implements connectData {
         formPanel.add(btnRefresh);
 
         add(formPanel, BorderLayout.SOUTH);
-        formPanel.setVisible(false);
 
         // Sự kiện "Thêm"
         btnThem.addActionListener(e -> {
@@ -169,7 +169,7 @@ public class banhangMenu extends JPanel implements connectData {
                     String maMon = table.getValueAt(selectedRow, 0).toString();
                     MenuController controller = new MenuController(banhangMenu.this, new MenuDAO());
                     controller.xoaMenu(maMon);
-                    loadData(tableModel, "SELECT * FROM menu", menuColumns);
+                    connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
                 }
             }
             clearForm();
@@ -179,14 +179,14 @@ public class banhangMenu extends JPanel implements connectData {
         btnLuuThem.addActionListener(e -> {
             MenuController controller = new MenuController(banhangMenu.this, new MenuDAO());
             controller.themMenu();
-            loadData(tableModel, "SELECT * FROM menu", menuColumns);
+            connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
         });
 
         // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
             MenuController controller = new MenuController(banhangMenu.this, new MenuDAO());
             controller.suaMenu();
-            loadData(tableModel, "SELECT * FROM menu", menuColumns);
+            connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
         });
 
         // Sự kiện "Hủy"
@@ -197,7 +197,7 @@ public class banhangMenu extends JPanel implements connectData {
 
         // Sự kiện "Refresh"
         btnRefresh.addActionListener(e -> {
-            loadData(tableModel, "SELECT * FROM menu", menuColumns);
+            connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
         });
     }
 

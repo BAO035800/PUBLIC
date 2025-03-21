@@ -4,7 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import model.BanDAO;
-public class banhangBan extends JPanel implements connectData {
+import model.connectData;
+public class banhangBan extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
@@ -66,7 +67,7 @@ public class banhangBan extends JPanel implements connectData {
         add(scrollPane, BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        loadData(tableModel, "SELECT * FROM ban", nvColumns);
+        connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
 
         // Panel nhập liệu
         formPanel = new JPanel(new GridLayout(5,4, 10, 10));
@@ -146,7 +147,7 @@ public class banhangBan extends JPanel implements connectData {
                 BanController banController = new BanController(banhangBan.this,new BanDAO());
                 if(banController.xoaBan(soBan)){
                     JOptionPane.showMessageDialog(this, "Xóa bàn thành công!");
-                    loadData(tableModel, "SELECT * FROM ban", nvColumns);   
+                    connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);   
                 }else{
                     JOptionPane.showMessageDialog(this, "Xóa bàn thất bại!");
                 }
@@ -158,13 +159,13 @@ public class banhangBan extends JPanel implements connectData {
         btnLuuThem.addActionListener(e -> {
             BanController banController = new BanController(banhangBan.this,new BanDAO());
             banController.themBan();
-            loadData(tableModel, "SELECT * FROM ban", nvColumns);
+            connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
         });
         // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
             BanController banController = new BanController(banhangBan.this,new BanDAO());
             banController.suaBan();
-            loadData(tableModel, "SELECT * FROM ban", nvColumns);
+            connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
         });
         
         // Sự kiện "Hủy"
@@ -173,7 +174,7 @@ public class banhangBan extends JPanel implements connectData {
         });
         // Sự kiện "Refresh"
         btnRefresh.addActionListener(e -> {
-            loadData(tableModel, "SELECT * FROM ban", nvColumns);
+            connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
         });
     }
     private void clearForm() {

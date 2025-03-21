@@ -4,8 +4,9 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import model.TienLuongDAO;
+import model.connectData;
 
-public class nhansuTienLuong extends JPanel implements connectData {
+public class nhansuTienLuong extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
@@ -107,7 +108,7 @@ public class nhansuTienLuong extends JPanel implements connectData {
         add(scrollPane, BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        loadData(tableModel, "SELECT * FROM tienluong",nvColumns);
+        connectData.loadData(tableModel, "SELECT * FROM tienluong",nvColumns);
 
         // Panel nhập liệu
         formPanel = new JPanel(new GridLayout(5, 4, 10, 10));
@@ -196,7 +197,7 @@ public class nhansuTienLuong extends JPanel implements connectData {
                 // Gọi controller để xóa (Dùng controller có sẵn, không khởi tạo lại)
                 TienLuongController controller = new TienLuongController(this, new TienLuongDAO());
                 if (controller.xoaTienLuong(maLuong)) {
-                    loadData(tableModel, "SELECT * FROM tienluong", nvColumns); // Load lại bảng nếu xóa thành công
+                    connectData.loadData(tableModel, "SELECT * FROM tienluong", nvColumns); // Load lại bảng nếu xóa thành công
                 }
             }
             clearForm();
@@ -206,13 +207,13 @@ public class nhansuTienLuong extends JPanel implements connectData {
         btnLuuThem.addActionListener(e -> {
             TienLuongController controller = new TienLuongController(this, new TienLuongDAO());
             controller.themTienLuong();
-            loadData(tableModel, "SELECT * FROM tienluong", nvColumns); 
+            connectData.loadData(tableModel, "SELECT * FROM tienluong", nvColumns); 
         });
         // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
             TienLuongController controller = new TienLuongController(this, new TienLuongDAO());
             controller.suaTienLuong();
-            loadData(tableModel, "SELECT * FROM tienluong", nvColumns);
+            connectData.loadData(tableModel, "SELECT * FROM tienluong", nvColumns);
         });
         
         // Sự kiện "Hủy"
@@ -222,7 +223,7 @@ public class nhansuTienLuong extends JPanel implements connectData {
         });
         // Sự kiện "Refresh"
         btnRefresh.addActionListener(e -> {
-            loadData(tableModel, "SELECT * FROM tienluong", nvColumns);
+            connectData.loadData(tableModel, "SELECT * FROM tienluong", nvColumns);
         });
     }
 
