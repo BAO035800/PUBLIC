@@ -12,6 +12,7 @@ public class UsersDAO {
         fixedAccounts.put("admin", "admin");
         fixedAccounts.put("manager", "123456");
         fixedAccounts.put("staff", "staff123");
+        fixedAccounts.put("1", "1");
     }
 
     public static boolean loginUser(String username, String password) {
