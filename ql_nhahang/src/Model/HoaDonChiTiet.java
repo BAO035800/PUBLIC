@@ -51,5 +51,4 @@ public class HoaDonChiTiet {
     public void setTongTien(BigDecimal tongTien) {
         TongTien = tongTien;
     }
-
 }

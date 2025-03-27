@@ -1,57 +1,200 @@
 package view;
+
+import controller.HDBanHangController;
 import java.awt.*;
-import java.sql.Connection;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-public class banhangHoaDonBanHang extends JPanel{
+import model.HoaDonBanHangDAO;
+import model.connectData;
+public class banhangHoaDonBanHang extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
-    private Connection conn;
-    public banhangHoaDonBanHang(){
-        setLayout(new BorderLayout());
-        // Panel chứa hóa đơn
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        JPanel dataPanel = new JPanel(new BorderLayout());
-        // Tạo panel chứa hóa đơn và nút
-        JPanel panelHoaDon = new JPanel(new GridLayout(3, 4, 30, 30)); // 3 hàng, 4 cột, khoảng cách 30px
-        JPanel panelNut = new JPanel(new GridLayout(3,1,30,30)); // 3 hàng, 1 cột, khoảng cách 
-        JPanel panelNote = new JPanel(new GridLayout(1,1,30,30)); // 1 hàng, 1 cột, khoảng cách
-        panelHoaDon.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 20));
-        panelNut.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        // Tạo hóa đơn
-        for (int i = 1; i <= 10; i++) {
-            JButton btnHoaDon = new JButton("HD" + i);
-            btnHoaDon.setFont(new Font("Arial", Font.BOLD, 14)); // Chữ đậm hơn
-            btnHoaDon.setPreferredSize(new Dimension(80, 60)); // Kích thước
-            btnHoaDon.setMinimumSize(new Dimension(60, 50)); // Kích thước tối thiểu
-            // btnHoaDon.setEnabled(false); // Ngăn chặn bấm
-            btnHoaDon.setFocusable(false); // Ngăn bị focus
-            btnHoaDon.setBackground(new Color(173, 172, 172)); // Màu nền xám
-            panelHoaDon.add(btnHoaDon);
-        }
-        contentPanel.add(panelHoaDon, BorderLayout.CENTER);
-        // Tạo nút
+    private JPanel formPanel;
+    private JTextField txtMaHD, txtSoBan, txtTongTien,txtGhiChu;
+    private JButton btnLuuThem, btnHuy, btnLuuSua, btnRefresh;
+    private int selectedRow = -1;
+    
+    public JTextField getTxtMaHD() {
+        return txtMaHD;
+    }
+
+    public void setTxtMaHD(JTextField txtMaHD) {
+        this.txtMaHD = txtMaHD;
+    }
+
+    public JTextField getTxtSoBan() {
+        return txtSoBan;
+    }
+
+    public void setTxtSoBan(JTextField txtSoBan) {
+        this.txtSoBan = txtSoBan;
+    }
+
+    public JTextField getTxtTongTien() {
+        return txtTongTien;
+    }
+
+    public void setTxtTongTien(JTextField txtTongTien) {
+        this.txtTongTien = txtTongTien;
+    }
+
+    public JTextField getTxtGhiChu() {
+        return txtGhiChu;
+    }
+
+    public void setTxtGhiChu(JTextField txtGhiChu) {
+        this.txtGhiChu = txtGhiChu;
+    }
+
+    public banhangHoaDonBanHang() {
+        String[] hoaDonColumns = {"Mã hóa đơn", "Số bàn", "Tổng tiền","Ghi chú"};
+        setLayout(new BorderLayout(10, 10));
+
+        // Panel chứa nút chức năng
+        JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         JButton btnThem = new JButton("Thêm");
         JButton btnSua = new JButton("Sửa");
         JButton btnXoa = new JButton("Xóa");
-        panelNut.add(btnThem);
-        panelNut.add(btnSua);
-        panelNut.add(btnXoa);
-        contentPanel.add(panelNut, BorderLayout.EAST);
-        //Tạo note
-        JLabel note = new JLabel("Ghi chú: Màu xám là hóa đơn chưa được chọn, màu đỏ là hóa đơn đã được chọn");
-        panelNote.add(note);
-        contentPanel.add(panelNote, BorderLayout.SOUTH);
-        // Tạo bảng
-        tableModel = new DefaultTableModel();
-        table = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
-        dataPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Kết nối database và load dữ liệu     
-        // connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang");  // Gửi tableModel vào phương thức loadData()
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, contentPanel, dataPanel);
-        splitPane.setResizeWeight(0.5);
-        add(splitPane, BorderLayout.CENTER);
+        btnThem.setBackground(new Color(72, 201, 176));
+        btnSua.setBackground(new Color(255, 193, 7));
+        btnXoa.setBackground(new Color(220, 53, 69));
+
+        btnThem.setForeground(Color.WHITE);
+        btnSua.setForeground(Color.WHITE);
+        btnXoa.setForeground(Color.WHITE);
+
+        controlPanel.add(btnThem);
+        controlPanel.add(btnSua);
+        controlPanel.add(btnXoa);
+        add(controlPanel, BorderLayout.NORTH);
+
+        // Tạo bảng
+        tableModel = new DefaultTableModel(hoaDonColumns, 0);
+        table = new JTable(tableModel);
+        add(new JScrollPane(table), BorderLayout.CENTER);
+
+        // Load dữ liệu từ database
+        connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang", hoaDonColumns);
+
+        // Panel nhập liệu
+        formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        formPanel.setBorder(BorderFactory.createTitledBorder("Nhập hóa đơn"));
+        formPanel.setBackground(Color.WHITE);
+
+        // Các input field
+        txtMaHD = new JTextField();
+        txtSoBan = new JTextField();
+        txtTongTien = new JTextField();
+        txtGhiChu =new JTextField();
+
+        // Tạo các button chức năng
+        btnLuuThem = new JButton("Thêm");
+        btnLuuSua = new JButton("Sửa");
+        btnHuy = new JButton("Hủy");
+        btnRefresh = new JButton("Refresh");
+
+        btnRefresh.setBackground(new Color(23, 162, 184));
+        btnRefresh.setForeground(Color.WHITE);
+        btnLuuThem.setBackground(new Color(40, 167, 69));
+        btnLuuThem.setForeground(Color.WHITE);
+        btnLuuSua.setBackground(new Color(23, 162, 184));
+        btnLuuSua.setForeground(Color.WHITE);
+        btnHuy.setBackground(new Color(108, 117, 125));
+        btnHuy.setForeground(Color.WHITE);
+
+        // Thêm các thành phần vào form
+        formPanel.add(new JLabel("Mã hóa đơn:"));
+        formPanel.add(txtMaHD);
+        formPanel.add(new JLabel("Số bàn:"));
+        formPanel.add(txtSoBan);
+        formPanel.add(new JLabel("Tổng tiền:"));
+        formPanel.add(txtTongTien);
+        formPanel.add(new JLabel("Ghi chú"));
+        formPanel.add(txtGhiChu);
+
+
+        // Thêm nút Lưu và Hủy
+        formPanel.add(btnHuy);
+        formPanel.add(btnLuuThem);
+        formPanel.add(btnLuuSua);
+        formPanel.add(btnRefresh);
+
+        add(formPanel, BorderLayout.SOUTH);
+        formPanel.setVisible(false);
+
+        // Sự kiện "Thêm"
+        btnThem.addActionListener(e -> {
+            selectedRow = -1;
+            clearForm();
+            formPanel.setVisible(true);
+        });
+
+        // Sự kiện "Sửa"
+        btnSua.addActionListener(e -> {
+            selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn cần sửa!");
+            } else {
+                formPanel.setVisible(true);
+                fillForm(selectedRow);
+            }
+        });
+
+        // Sự kiện "Xóa"
+        btnXoa.addActionListener(e -> {
+            selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa!");
+            } else {
+                int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa món này?");
+                if (confirm == JOptionPane.YES_OPTION) {
+                    // String maHD = table.getValueAt(selectedRow, 0).toString();
+                    HDBanHangController controller=new HDBanHangController(banhangHoaDonBanHang.this,new HoaDonBanHangDAO());
+                    controller.xoaHDBanHang();
+                    connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang", hoaDonColumns);
+                }
+            }
+            clearForm();
+        });
+
+        // Sự kiện "Lưu Thêm"
+        btnLuuThem.addActionListener(e -> {
+            HDBanHangController controller=new HDBanHangController(banhangHoaDonBanHang.this,new HoaDonBanHangDAO());
+            controller.themHDBanHang();
+            connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang", hoaDonColumns);
+        });
+
+        // Sự kiện "Lưu Sửa"
+        btnLuuSua.addActionListener(e -> {
+            HDBanHangController controller=new HDBanHangController(banhangHoaDonBanHang.this,new HoaDonBanHangDAO());
+            controller.suaHDBanHang();
+            connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang", hoaDonColumns);
+        });
+
+        // Sự kiện "Hủy"
+        btnHuy.addActionListener(e -> {
+            formPanel.setVisible(false);
+            clearForm();
+        });
+
+        // Sự kiện "Refresh"
+        btnRefresh.addActionListener(e -> {
+            connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang", hoaDonColumns);
+        });
+    }
+
+    public void clearForm() {
+        txtMaHD.setText("");
+        txtSoBan.setText("");
+        txtTongTien.setText("");
+        txtGhiChu.setText("");
+    }
+
+    public void fillForm(int row) {
+        txtMaHD.setText(tableModel.getValueAt(row, 0).toString());
+        txtSoBan.setText(tableModel.getValueAt(row, 1).toString());
+        txtTongTien.setText(tableModel.getValueAt(row, 2).toString());
+        txtGhiChu.setText(tableModel.getValueAt(row,3).toString());
     }
 }

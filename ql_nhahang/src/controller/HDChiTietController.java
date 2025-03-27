@@ -3,6 +3,7 @@ package controller;
 import model.HoaDonChiTiet;
 import model.HoaDonChiTietDAO;
 import model.MenuDAO;
+import model.Menu;
 import view.banhangChiTiet;
 import javax.swing.JOptionPane;
 import java.math.BigDecimal;
@@ -12,11 +13,12 @@ public class HDChiTietController {
     private banhangChiTiet view;
     private HoaDonChiTietDAO model;
     private MenuDAO menuModel;
+    private Menu menu;
 
-    public HDChiTietController(banhangChiTiet view, HoaDonChiTietDAO model ,MenuDAO menuModel) {
+    public HDChiTietController(banhangChiTiet view, HoaDonChiTietDAO model ,Menu menu) {
         this.view = view;
         this.model = model;
-        this.menuModel=menuModel;
+        this.menu=menu;
     }
 
     public void themHDChiTiet() {
@@ -25,7 +27,7 @@ public class HDChiTietController {
             String maMon = view.getTxtMaMon().getText();
             String maHD = view.getTxtMaHoaDonBanHang().getText();
             int soBan = Integer.parseInt(view.getTxtSoBan().getText());
-            BigDecimal giaTien = menuModel.getGiaTien(giaTien);
+            BigDecimal giaTien = menu.getGiaTien();
             int soLuongDat = Integer.parseInt(view.getTxtSoLuongDat().getText());
             BigDecimal tongTien = new BigDecimal(view.getTxtTongTien().getText());
             
@@ -50,18 +52,21 @@ public class HDChiTietController {
             String maMon = view.getTxtMaMon().getText();
             String maHD = view.getTxtMaHoaDonBanHang().getText();
             int soBan = Integer.parseInt(view.getTxtSoBan().getText());
-            BigDecimal giaTien = new BigDecimal(view.getTxtGiaTien().getText());
             int soLuongDat = Integer.parseInt(view.getTxtSoLuongDat().getText());
             BigDecimal tongTien = new BigDecimal(view.getTxtTongTien().getText());
-            
-            List<HoaDonChiTiet> danhSach = model.layDanhSachHoaDonChiTiet();
-            boolean tonTai = danhSach.stream().anyMatch(h -> h.getID() == id);
-            
-            if (!tonTai) {
+    
+            // Lấy hóa đơn chi tiết từ DB theo ID
+            HoaDonChiTiet hdctExist = model.layHoaDonChiTiet(id);
+
+            if (hdctExist == null) {
                 JOptionPane.showMessageDialog(view, "Hóa đơn chi tiết không tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+    
+            // Giữ nguyên giá tiền như khi thêm
+            BigDecimal giaTien = hdctExist.getGiaTien();
+    
+            // Cập nhật thông tin
             HoaDonChiTiet hdct = new HoaDonChiTiet();
             hdct.setID(id);
             hdct.setMaMon(maMon);
@@ -70,29 +75,38 @@ public class HDChiTietController {
             hdct.setGiaTien(giaTien);
             hdct.setSoLuongDat(soLuongDat);
             hdct.setTongTien(tongTien);
+    
             model.suaHDChiTiet(hdct);
             JOptionPane.showMessageDialog(view, "Sửa hóa đơn chi tiết thành công!");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(view, "Vui lòng nhập đúng định dạng số!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(view, "Lỗi khi sửa hóa đơn chi tiết: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
     public void xoaHDChiTiet() {
         try {
             int id = Integer.parseInt(view.getTxtID().getText());
-            
-            List<HoaDonChiTiet> danhSach = model.layDanhSachHoaDonChiTiet();
-            boolean tonTai = danhSach.stream().anyMatch(h -> h.getID() == id);
-            
-            if (!tonTai) {
+    
+            // Lấy hóa đơn chi tiết từ DB theo ID
+            HoaDonChiTiet hdctExist = model.layHoaDonChiTietById(id);
+            if (hdctExist == null) {
                 JOptionPane.showMessageDialog(view, "Hóa đơn chi tiết không tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
-            model.xoaHDChiTiet(String.valueOf(id));
-            JOptionPane.showMessageDialog(view, "Xóa hóa đơn chi tiết thành công!");
+    
+            // Xác nhận trước khi xóa
+            int confirm = JOptionPane.showConfirmDialog(view, "Bạn có chắc muốn xóa hóa đơn chi tiết này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                model.xoaHDChiTiet(id);
+                JOptionPane.showMessageDialog(view, "Xóa hóa đơn chi tiết thành công!");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(view, "Vui lòng nhập đúng định dạng số!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(view, "Lỗi khi xóa hóa đơn chi tiết: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
 }

@@ -1,9 +1,11 @@
 package view;
+import controller.HDChiTietController;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import model.HoaDonChiTietDAO;
+import model.Menu;
 import model.connectData;
-
 public class banhangChiTiet extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
@@ -89,12 +91,8 @@ public class banhangChiTiet extends JPanel {
         txtGiaTien=new JTextField();
         txtSoLuongDat=new JTextField();
         txtTongTien=new JTextField();
-        btnLuuThem = new JButton("Lưu thêm");
-        btnHuy = new JButton("Hủy");
-        btnLuuSua = new JButton("Lưu sửa");
-        btnRefresh = new JButton("Refresh");
          // Tạo các button chức năng
-        btnLuuThem = new JButton("Lưu");
+        btnLuuThem = new JButton("Thêm");
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
         btnRefresh = new JButton("Refresh");
@@ -115,16 +113,10 @@ public class banhangChiTiet extends JPanel {
         formPanel.add(txtMaHoaDonBanHang);
         formPanel.add(new JLabel("Số bàn:"));
         formPanel.add(txtSoBan);
-        formPanel.add(new JLabel("Giá tiền:"));
-        formPanel.add(txtGiaTien);
         formPanel.add(new JLabel("Số lượng đặt:"));
         formPanel.add(txtSoLuongDat);
         formPanel.add(new JLabel("Tổng tiền:"));
         formPanel.add(txtTongTien);
-        formPanel.add(btnLuuThem);
-        formPanel.add(btnHuy);
-        formPanel.add(btnLuuSua);
-        formPanel.add(btnRefresh);
 
          // Thêm nút Lưu và Hủy
         formPanel.add(btnHuy);
@@ -152,9 +144,20 @@ public class banhangChiTiet extends JPanel {
             }
         });
         btnXoa.addActionListener(e->{
+            HDChiTietController controller =new HDChiTietController(banhangChiTiet.this,new HoaDonChiTietDAO(),new Menu());
+            controller.xoaHDChiTiet();
+            connectData.loadData(tableModel, "SELECT * FROM hoadonbanhangchitiet", chitietColumns);
 
         });
         btnLuuThem.addActionListener(e->{
+            HDChiTietController controller =new HDChiTietController(banhangChiTiet.this,new HoaDonChiTietDAO(),new Menu());
+            controller.themHDChiTiet();
+            connectData.loadData(tableModel, "SELECT * FROM hoadonbanhangchitiet", chitietColumns);
+        });
+        btnLuuSua.addActionListener(e->{
+            HDChiTietController controller =new HDChiTietController(banhangChiTiet.this,new HoaDonChiTietDAO(),new Menu());
+            controller.suaHDChiTiet();
+            connectData.loadData(tableModel, "SELECT * FROM hoadonbanhangchitiet", chitietColumns);
 
         });
         btnHuy.addActionListener(e->{
