@@ -18,7 +18,7 @@ public class Main extends JFrame {
 
         // Thanh Menu
         setJMenuBar(createMenuBar());
-        
+
         // Menu bên trái
         JPanel menuPanel = createMenuPanel();
 
@@ -35,24 +35,12 @@ public class Main extends JFrame {
         add(contentPanel, BorderLayout.CENTER);
 
         // Mặc định hiển thị trang chủ
-        setButtonFocus((JButton) menuPanel.getComponent(1));
+        // Mặc định hiển thị trang chủ
+        setButtonFocus((JButton) menuPanel.getComponent(1));  // Hiển thị nút "Trang Chủ" ban đầu
+        // Hiển thị nút "Trang Chủ" ban đầu
         cardLayout.show(contentPanel, "TrangChu");
 
         setVisible(true);
-    }
-
-    // Tạo thanh menu
-    private JMenuBar createMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Account");
-        JMenuItem logoutItem = new JMenuItem("Đăng xuất");
-        JMenuItem exitItem = new JMenuItem("Thoát");
-
-        exitItem.addActionListener(e -> System.exit(0));
-        menu.add(logoutItem);
-        menu.add(exitItem);
-        menuBar.add(menu);
-        return menuBar;
     }
 
     // Tạo menu bên trái
@@ -65,16 +53,23 @@ public class Main extends JFrame {
         adminLabel.setFont(new Font("Arial", Font.BOLD, 14));
         menuPanel.add(adminLabel);
 
-        String[] buttonNames = {"TRANG CHỦ", "QUẢN LÝ BÁN HÀNG", "QUẢN LÝ NHÂN SỰ", "QUẢN LÝ KHO"};
-        String[] panelKeys = {"TrangChu", "BanHang", "NhanSu", "Kho"};
-        
+        String[] buttonNames = {"TRANG CHỦ", "QUẢN LÝ BÁN HÀNG", "QUẢN LÝ NHÂN SỰ", "QUẢN LÝ KHO", "THOÁT"};
+        String[] panelKeys = {"TrangChu", "BanHang", "NhanSu", "Kho", null}; // null cho nút Thoát vì không cần chuyển panel
+
         for (int i = 0; i < buttonNames.length; i++) {
             JButton button = createStyledButton(buttonNames[i]);
-            final String panelKey = panelKeys[i];
-            button.addActionListener(e -> {
-                cardLayout.show(contentPanel, panelKey);
-                setButtonFocus(button);
-            });
+
+            // Kiểm tra nếu nút là "Thoát", gọi phương thức thoát trực tiếp
+            if (i == buttonNames.length - 1) {
+                button.addActionListener(e -> System.exit(0)); // Gọi System.exit(0) để thoát ngay lập tức
+            } else {
+                final String panelKey = panelKeys[i];
+                button.addActionListener(e -> {
+                    cardLayout.show(contentPanel, panelKey);
+                    setButtonFocus(button);
+                });
+            }
+
             menuPanel.add(button);
         }
         return menuPanel;
@@ -119,7 +114,19 @@ public class Main extends JFrame {
         currentButton = selectedButton;
     }
 
+    // Tạo thanh menu
+    private JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem exitItem = new JMenuItem("Exit");
+        exitItem.addActionListener(e -> System.exit(0)); // Thoát ứng dụng
+        fileMenu.add(exitItem);
+        menuBar.add(fileMenu);
+        return menuBar;
+    }
+
     public static void main(String[] args) {
+        // Khởi tạo giao diện đăng nhập
         Login loginForm = new Login();
     }
 }
