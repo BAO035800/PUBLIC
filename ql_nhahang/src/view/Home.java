@@ -1,33 +1,79 @@
 package view;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
+
 public class Home extends JPanel {
     public Home() {
         setLayout(new BorderLayout());
-        // Tạo JTabbedPane
-        JTabbedPane tabbedPane = new JTabbedPane();
-        
-        // Thiết lập các tab
-        tabbedPane.addTab("Nhân viên", new JLabel("Quản lý nhân viên"));
-        tabbedPane.addTab("Bán hàng", new JLabel("Quản lý bán hàng"));
-        tabbedPane.addTab("Kho", new JLabel("Quản lý kho"));
-        tabbedPane.addTab("Thống kê", new JLabel("Thống kê số liệu"));
-        tabbedPane.addTab("Tài khoản", new JLabel("Quản lý tài khoản"));
-        tabbedPane.addTab("Cài đặt", new JLabel("Cài đặt hệ thống"));
 
-        // Tùy chỉnh giao diện của JTabbedPane
-        tabbedPane.setFont(new Font("Arial", Font.BOLD, 12));
-        tabbedPane.setForeground(Color.BLACK);
-        tabbedPane.setBackground(new Color(173, 216, 230));
+        // Tạo tiêu đề
+        JLabel titleLabel = new JLabel("HỆ THỐNG QUẢN LÝ NHÀ HÀNG", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        titleLabel.setForeground(new Color(30, 144, 255));
+        add(titleLabel, BorderLayout.NORTH);
 
-        UIManager.put("TabbedPane.selected", new Color(30, 144, 255)); // Màu khi chọn tab
-        UIManager.put("TabbedPane.contentAreaColor", new Color(63, 186, 231)); // Màu nền vùng nội dung
-        UIManager.put("TabbedPane.borderHightlightColor", new Color(30, 144, 255)); // Màu viền tab
-        UIManager.put("TabbedPane.darkShadow", new Color(30, 144, 255)); // Màu shadow của tab
-        UIManager.put("TabbedPane.focus", new Color(30, 144, 255)); // Màu focus
+        // Panel chứa các nút chức năng
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 3, 10, 10));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
-        // Thêm JTabbedPane vào JPanel
-        setLayout(new BorderLayout());
-        add(tabbedPane, BorderLayout.CENTER);
+        JButton btnBaoCaoNhanVien = new JButton("Báo cáo nhân viên");
+        JButton btnBaoCaoBanHang = new JButton("Báo cáo bán hàng");
+        JButton btnBaoCaoNhapHang = new JButton("Báo cáo nhập hàng");
+        JButton btnThongKeDoanhThu = new JButton("Thống kê doanh thu");
+
+        styleButton(btnBaoCaoNhanVien);
+        styleButton(btnBaoCaoBanHang);
+        styleButton(btnBaoCaoNhapHang);
+        styleButton(btnThongKeDoanhThu);
+
+        buttonPanel.add(btnBaoCaoNhanVien);
+        buttonPanel.add(btnBaoCaoBanHang);
+        buttonPanel.add(btnBaoCaoNhapHang);
+        buttonPanel.add(btnThongKeDoanhThu);
+
+        add(buttonPanel, BorderLayout.CENTER);
+
+        // Thêm sự kiện cho các nút báo cáo
+        btnBaoCaoNhanVien.addActionListener(new ReportActionListener());
+        btnBaoCaoBanHang.addActionListener(new ReportActionListener());
+        btnBaoCaoNhapHang.addActionListener(new ReportActionListener());
+        btnThongKeDoanhThu.addActionListener(new ReportActionListener());
+    }
+
+    private void styleButton(JButton button) {
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setBackground(new Color(111, 205, 240));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setOpaque(true);
+        button.setPreferredSize(new Dimension(200, 50));
+    }
+
+    private class ReportActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String[] options = {"Excel", "PDF"};
+            int choice = JOptionPane.showOptionDialog(
+                Home.this,
+                "Chọn định dạng báo cáo:",
+                "Xuất báo cáo",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]
+            );
+
+            if (choice == 0) {
+                JOptionPane.showMessageDialog(Home.this, "Xuất báo cáo dạng Excel");
+                // Gọi hàm xuất Excel ở đây
+            } else if (choice == 1) {
+                JOptionPane.showMessageDialog(Home.this, "Xuất báo cáo dạng PDF");
+                // Gọi hàm xuất PDF ở đây
+            }
+        }
     }
 }

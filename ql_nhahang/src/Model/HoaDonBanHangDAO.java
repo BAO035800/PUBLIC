@@ -7,13 +7,12 @@ import java.util.List;
 public class HoaDonBanHangDAO {
     // Thêm hóa đơn bán hàng
     public void themHoaDon(HoaDonBanHang hoaDon) {
-        String sql = "INSERT INTO hoadonbanhang(MaHoaDonBanHang, SoBan, TongTienHoaDon, GhiChu) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO hoadonbanhang(MaHoaDonBanHang, SoBan, GhiChu) VALUES(?, ?, ?)";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, hoaDon.getMaHoaDonBanHang());
             ps.setInt(2, hoaDon.getSoBan());
-            ps.setBigDecimal(3, hoaDon.getTongTienHoaDon());
-            ps.setString(4, hoaDon.getGhiChu());
+            ps.setString(3, hoaDon.getGhiChu());
             ps.executeUpdate();
             System.out.println("✅ Thêm hóa đơn thành công!");
         } catch (SQLException e) {
@@ -24,7 +23,7 @@ public class HoaDonBanHangDAO {
 
     // Sửa hóa đơn bán hàng
     public void suaHoaDon(HoaDonBanHang hoaDon) {
-        String sql = "UPDATE hoadonbanhang SET SoBan=?, TongTienHoaDon=?, GhiChu=? WHERE MaHoaDonBanHang=?";
+        String sql = "UPDATE hoadonbanhang SET SoBan=?, GhiChu=? WHERE MaHoaDonBanHang=?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, hoaDon.getSoBan());

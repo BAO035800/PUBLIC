@@ -5,13 +5,15 @@ import model.Ban;
 import model.BanDAO;
 import view.banhangBan;
 
-public class BanController implements KTBanHang {
+public class BanController {
     private banhangBan view;
     private BanDAO model;
+    private KTBanHang ktBanHang; // Thêm kiểm tra bàn
 
     public BanController(banhangBan view, BanDAO model) {
         this.view = view;
         this.model = model;
+        this.ktBanHang = new KTBanHang(); // Khởi tạo kiểm tra bàn
     }
 
     public void themBan() {
@@ -27,7 +29,7 @@ public class BanController implements KTBanHang {
         try {
             int soBanInt = Integer.parseInt(soBan);
             // Kiểm tra bàn đã tồn tại chưa
-            if (kiemTraBanTonTai(String.valueOf(soBanInt))) {
+            if (ktBanHang.kiemTraBanTonTai(soBan)) {
                 JOptionPane.showMessageDialog(view, "Bàn đã tồn tại!");
                 return;
             }
@@ -38,12 +40,11 @@ public class BanController implements KTBanHang {
                 return;
             }
 
-            Ban ban=new Ban();
+            Ban ban = new Ban();
             ban.setSoBan(soBanInt);
             ban.setTrangThaiBan(tinhTrang);
             ban.setGhiChu(ghiChu);
             model.themBan(ban);
-            System.out.println("TinhTrangBan nhận được: " + tinhTrang);
 
             JOptionPane.showMessageDialog(view, "Thêm bàn thành công!");
         } catch (NumberFormatException e) {
@@ -66,10 +67,11 @@ public class BanController implements KTBanHang {
         
         try {
             int soBanInt = Integer.parseInt(soBan);
-            if (!kiemTraBanTonTai(String.valueOf(soBanInt))) {
+            if (!ktBanHang.kiemTraBanTonTai(soBan)) {
                 JOptionPane.showMessageDialog(view, "Không tìm thấy bàn!");
                 return;
             }
+
             Ban ban = new Ban(soBanInt, tinhTrang, ghiChu);
             model.suaBan(ban);
             JOptionPane.showMessageDialog(view, "Sửa bàn thành công!");
@@ -81,18 +83,19 @@ public class BanController implements KTBanHang {
         }
     }
 
-    public boolean xoaBan(int soBan) {
-        if (!kiemTraBanTonTai(String.valueOf(soBan))) {
-            JOptionPane.showMessageDialog(view, "Không tìm thấy bàn!");
-            return false;
+    public void xoaBan(int soBan) {
+        if (!ktBanHang.kiemTraBanTonTai(String.valueOf(soBan))) {
+            JOptionPane.showMessageDialog(view, "⚠️ Không tìm thấy bàn!");
+            return;
         }
-        boolean isDeleted = model.xoaBan(soBan);
-        if (isDeleted) {
-            return true;
-        } else {
-            JOptionPane.showMessageDialog(view, "Không tìm thấy bàn để xóa!");
-            return false;
+    
+        int confirm = JOptionPane.showConfirmDialog(view, "Bạn có chắc chắn muốn xóa bàn này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
         }
+    
+        model.xoaBan(soBan);
+        JOptionPane.showMessageDialog(view, "✅ Xóa bàn thành công!");
     }
     
 }

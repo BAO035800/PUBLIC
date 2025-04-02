@@ -1,11 +1,9 @@
 package controller;
 
-import java.math.BigDecimal;
 import javax.swing.JOptionPane;
 import model.HoaDonBanHang;
 import model.HoaDonBanHangDAO;
 import view.banhangHoaDonBanHang;
-
 public class HDBanHangController {
     private banhangHoaDonBanHang view;
     private HoaDonBanHangDAO model;
@@ -18,51 +16,52 @@ public class HDBanHangController {
     public void themHDBanHang() {
         String maHD = view.getTxtMaHD().getText();
         String soBan = view.getTxtSoBan().getText();
-        String tongTienStr = view.getTxtTongTien().getText();
         String ghiChu = view.getTxtGhiChu().getText();
-
-        if (maHD.isEmpty() || soBan.isEmpty() || tongTienStr.isEmpty()) {
-            JOptionPane.showMessageDialog(view, "Vui lòng nhập đầy đủ thông tin!");
+    
+        if (maHD.isEmpty() || soBan.isEmpty()) {
+            JOptionPane.showMessageDialog(view, "⚠️ Vui lòng nhập đầy đủ thông tin!");
             return;
         }
-        
+    
         try {
-            int soBanInt = Integer.parseInt(soBan);
-            BigDecimal tongTien = new BigDecimal(tongTienStr);
+            int soBanInt = Integer.parseInt(soBan); // Chuyển String -> int
+            
+            KTBanHang controller = new KTBanHang();
+        
+            // Kiểm tra xem bàn có tồn tại không
+            if (!controller.kiemTraBanTonTai(soBan)) {  // Truyền soBan dạng String vào
+                JOptionPane.showMessageDialog(view, "❌ Không tìm thấy bàn số " + soBan + " trong hệ thống!");
+                return;
+            }
+        
             HoaDonBanHang hoaDon = new HoaDonBanHang();
             hoaDon.setMaHoaDonBanHang(maHD);
-            hoaDon.setSoBan(soBanInt);
-            hoaDon.setTongTienHoaDon(tongTien);
+            hoaDon.setSoBan(soBanInt); 
             hoaDon.setGhiChu(ghiChu);
+            
             model.themHoaDon(hoaDon);
-            JOptionPane.showMessageDialog(view, "Thêm hóa đơn bán hàng thành công!");
+            JOptionPane.showMessageDialog(view, "✅ Thêm hóa đơn bán hàng thành công!");
+        
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(view, "Định dạng số không hợp lệ!");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(view, "Lỗi khi thêm hóa đơn: " + e.getMessage());
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(view, "⚠️ Định dạng số bàn không hợp lệ!");
         }
+        
     }
-
     public void suaHDBanHang() {
         String maHD = view.getTxtMaHD().getText();
         String soBan = view.getTxtSoBan().getText();
-        String tongTienStr = view.getTxtTongTien().getText();
         String ghiChu = view.getTxtGhiChu().getText();
 
-        if (maHD.isEmpty() || soBan.isEmpty() || tongTienStr.isEmpty()) {
+        if (maHD.isEmpty() || soBan.isEmpty() ) {
             JOptionPane.showMessageDialog(view, "Vui lòng nhập đầy đủ thông tin!");
             return;
         }
         
         try {
             int soBanInt = Integer.parseInt(soBan);
-            BigDecimal tongTien = new BigDecimal(tongTienStr);
-            
             HoaDonBanHang hoaDon = new HoaDonBanHang();
             hoaDon.setMaHoaDonBanHang(maHD);
             hoaDon.setSoBan(soBanInt);
-            hoaDon.setTongTienHoaDon(tongTien);
             hoaDon.setGhiChu(ghiChu);
             model.suaHoaDon(hoaDon);
             JOptionPane.showMessageDialog(view, "Cập nhật hóa đơn thành công!");
@@ -74,25 +73,19 @@ public class HDBanHangController {
         }
     }
 
-    public void xoaHDBanHang() {
-        String maHD = view.getTxtMaHD().getText();
-    
-        if (maHD.isEmpty()) {
+    public void xoaHDBanHang(String maHD) {
+        if (maHD == null || maHD.trim().isEmpty()) {
             JOptionPane.showMessageDialog(view, "Vui lòng chọn hóa đơn cần xóa!");
             return;
         }
-    
-        int confirm = JOptionPane.showConfirmDialog(view, "Bạn có chắc muốn xóa hóa đơn này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) {
-            return;
-        }
-    
         try {
-            model.xoaHoaDon(maHD); 
+            model.xoaHoaDon(maHD);
             JOptionPane.showMessageDialog(view, "Xóa hóa đơn thành công!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(view, "Lỗi khi xóa hóa đơn: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+    
     
 }

@@ -75,10 +75,20 @@ public class banhangHoaDonBanHang extends JPanel {
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang", hoaDonColumns);
+        connectData.loadData(tableModel, """
+            SELECT hd.MaHoaDonBanHang, hd.SoBan, 
+            SUM(m.GiaTien * cthd.SoLuongDat) AS TongTien,hd.GhiChu
+            FROM hoadonbanhangchitiet cthd
+            JOIN menu m ON cthd.MaMon = m.MaMon
+            JOIN hoadonbanhang hd 
+            ON cthd.MaHoaDonBanHang = hd.MaHoaDonBanHang
+            AND cthd.SoBan = hd.SoBan
+            GROUP BY hd.MaHoaDonBanHang, hd.SoBan, hd.GhiChu
+            """, hoaDonColumns);
+
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        formPanel = new JPanel(new GridLayout(3, 4, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập hóa đơn"));
         formPanel.setBackground(Color.WHITE);
 
@@ -94,24 +104,31 @@ public class banhangHoaDonBanHang extends JPanel {
         btnHuy = new JButton("Hủy");
         btnRefresh = new JButton("Refresh");
 
-        btnRefresh.setBackground(new Color(23, 162, 184));
-        btnRefresh.setForeground(Color.WHITE);
-        btnLuuThem.setBackground(new Color(40, 167, 69));
+        // Màu xanh lá cho nút Thêm (Thành công)
+        btnLuuThem.setBackground(new Color(76, 175, 80)); 
         btnLuuThem.setForeground(Color.WHITE);
-        btnLuuSua.setBackground(new Color(23, 162, 184));
-        btnLuuSua.setForeground(Color.WHITE);
+
+        // Màu cam cho nút Sửa (Cảnh báo nhẹ)
+        btnLuuSua.setBackground(new Color(255, 193, 7)); 
+        btnLuuSua.setForeground(Color.BLACK);
+
+        // Màu đỏ cho nút Hủy (Nguy hiểm)
         btnHuy.setBackground(new Color(108, 117, 125));
         btnHuy.setForeground(Color.WHITE);
+
+        // Màu xanh dương cho nút Refresh (Hiện đại)
+        btnRefresh.setBackground(new Color(0, 123, 255)); 
+        btnRefresh.setForeground(Color.WHITE);
 
         // Thêm các thành phần vào form
         formPanel.add(new JLabel("Mã hóa đơn:"));
         formPanel.add(txtMaHD);
         formPanel.add(new JLabel("Số bàn:"));
         formPanel.add(txtSoBan);
-        formPanel.add(new JLabel("Tổng tiền:"));
-        formPanel.add(txtTongTien);
         formPanel.add(new JLabel("Ghi chú"));
         formPanel.add(txtGhiChu);
+        formPanel.add(new JLabel(""));
+        formPanel.add(new JLabel(""));
 
 
         // Thêm nút Lưu và Hủy
@@ -146,30 +163,60 @@ public class banhangHoaDonBanHang extends JPanel {
             selectedRow = table.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa!");
+                return;
             } else {
                 int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa món này?");
                 if (confirm == JOptionPane.YES_OPTION) {
-                    // String maHD = table.getValueAt(selectedRow, 0).toString();
-                    HDBanHangController controller=new HDBanHangController(banhangHoaDonBanHang.this,new HoaDonBanHangDAO());
-                    controller.xoaHDBanHang();
-                    connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang", hoaDonColumns);
+                    String maHD = table.getValueAt(selectedRow, 0).toString();
+                    HDBanHangController controller = new HDBanHangController(banhangHoaDonBanHang.this, new HoaDonBanHangDAO());
+                    controller.xoaHDBanHang(maHD);
+                    connectData.loadData(tableModel, """
+                        SELECT hd.MaHoaDonBanHang, hd.SoBan, 
+                        SUM(m.GiaTien * cthd.SoLuongDat) AS TongTien,hd.GhiChu
+                        FROM hoadonbanhangchitiet cthd
+                        JOIN menu m ON cthd.MaMon = m.MaMon
+                        JOIN hoadonbanhang hd 
+                        ON cthd.MaHoaDonBanHang = hd.MaHoaDonBanHang
+                        AND cthd.SoBan = hd.SoBan
+                        GROUP BY hd.MaHoaDonBanHang, hd.SoBan, hd.GhiChu
+                        """, hoaDonColumns);
                 }
             }
             clearForm();
         });
+        
 
         // Sự kiện "Lưu Thêm"
         btnLuuThem.addActionListener(e -> {
             HDBanHangController controller=new HDBanHangController(banhangHoaDonBanHang.this,new HoaDonBanHangDAO());
             controller.themHDBanHang();
-            connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang", hoaDonColumns);
+            connectData.loadData(tableModel, """
+                    SELECT hd.MaHoaDonBanHang, hd.SoBan, 
+                    SUM(m.GiaTien * cthd.SoLuongDat) AS TongTien, hd.GhiChu
+                    FROM hoadonbanhangchitiet cthd
+                    JOIN menu m ON cthd.MaMon = m.MaMon
+                    JOIN hoadonbanhang hd 
+                    ON cthd.MaHoaDonBanHang = hd.MaHoaDonBanHang
+                    AND cthd.SoBan = hd.SoBan
+                    GROUP BY hd.MaHoaDonBanHang, hd.SoBan, hd.GhiChu
+                    """, hoaDonColumns);
+            tableModel.fireTableDataChanged(); 
         });
 
         // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
             HDBanHangController controller=new HDBanHangController(banhangHoaDonBanHang.this,new HoaDonBanHangDAO());
             controller.suaHDBanHang();
-            connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang", hoaDonColumns);
+            connectData.loadData(tableModel, """
+            SELECT hd.MaHoaDonBanHang, hd.SoBan, 
+            SUM(m.GiaTien * cthd.SoLuongDat) AS TongTien,hd.GhiChu
+            FROM hoadonbanhangchitiet cthd
+            JOIN menu m ON cthd.MaMon = m.MaMon
+            JOIN hoadonbanhang hd 
+            ON cthd.MaHoaDonBanHang = hd.MaHoaDonBanHang
+            AND cthd.SoBan = hd.SoBan
+            GROUP BY hd.MaHoaDonBanHang, hd.SoBan, hd.GhiChu
+            """, hoaDonColumns);
         });
 
         // Sự kiện "Hủy"
@@ -180,7 +227,16 @@ public class banhangHoaDonBanHang extends JPanel {
 
         // Sự kiện "Refresh"
         btnRefresh.addActionListener(e -> {
-            connectData.loadData(tableModel, "SELECT * FROM hoadonbanhang", hoaDonColumns);
+            connectData.loadData(tableModel, """
+                SELECT hd.MaHoaDonBanHang, hd.SoBan, 
+                SUM(m.GiaTien * cthd.SoLuongDat) AS TongTien,hd.GhiChu
+                FROM hoadonbanhangchitiet cthd
+                JOIN menu m ON cthd.MaMon = m.MaMon
+                JOIN hoadonbanhang hd 
+                ON cthd.MaHoaDonBanHang = hd.MaHoaDonBanHang
+                AND cthd.SoBan = hd.SoBan
+                GROUP BY hd.MaHoaDonBanHang, hd.SoBan, hd.GhiChu
+                """, hoaDonColumns);
         });
     }
 

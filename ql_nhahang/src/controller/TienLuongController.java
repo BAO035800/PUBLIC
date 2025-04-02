@@ -1,12 +1,13 @@
 package controller;
-import java.math.BigDecimal;
+
 import java.sql.*;
 import javax.swing.*;
 import model.Connect;
 import model.TienLuong;
 import model.TienLuongDAO;
 import view.nhansuTienLuong;
-public class TienLuongController implements KTNhanSu {
+
+public class TienLuongController {
     private nhansuTienLuong view;
     private TienLuongDAO model;
 
@@ -14,117 +15,83 @@ public class TienLuongController implements KTNhanSu {
         this.view = view;
         this.model = model;
     }
+
     public void themTienLuong() {
-        String maLuong = view.getTxtMaLuong().getText();
-        String maNhanVien = view.getTxtMaNV().getText();
+        String maLuong = view.getTxtMaLuong().getText().trim();
+        String maNhanVien = view.getTxtMaNV().getText().trim();
+        
+        if (maLuong.isEmpty() || maNhanVien.isEmpty()) {
+            JOptionPane.showMessageDialog(view, "Mã lương và mã nhân viên không được để trống!");
+            return;
+        }
+        
         if (!kiemTraNhanVienTonTai(maNhanVien)) {
             JOptionPane.showMessageDialog(view, "Mã nhân viên không tồn tại!");
             return;
         }
-        String tenNhanVien = view.getTxtTenNV().getText();
-        String ngayCongStr = view.getTxtNgayCong().getText();
-        String tongTienStr = view.getTxtTongTienLuong().getText();
-        String soTienThanhToanStr = view.getTxtSoTienThanhToan().getText();
-        String tinhTrangLuong = view.getCbTinhTrangLuong().getSelectedItem().toString();
-    
-        // Kiểm tra nhập đủ thông tin
-        if (maLuong.isEmpty() || maNhanVien.isEmpty() || tenNhanVien.isEmpty() || ngayCongStr.isEmpty() || tongTienStr.isEmpty() || soTienThanhToanStr.isEmpty()) {
-            JOptionPane.showMessageDialog(view, "Vui lòng nhập đầy đủ thông tin!");
-            return;
-        }
-    
+        
         try {
-            int ngayCong = Integer.parseInt(ngayCongStr);
-            BigDecimal tongTienLuong = new BigDecimal(tongTienStr);
-            BigDecimal soTienThanhToan = new BigDecimal(soTienThanhToanStr);
-    
-            // Tạo đối tượng tiền lương và thêm vào
+            int gioLam = Integer.parseInt(view.getTxtGioLam().getText().trim());
+            String tinhTrangLuong = view.getCbTinhTrangLuong().getSelectedItem().toString();
+            String ghiChu = view.getTxtGhiChu().getText().trim();
+            
+            // Sử dụng setter thay vì constructor
             TienLuong tienLuong = new TienLuong();
             tienLuong.setMaLuong(maLuong);
             tienLuong.setMaNhanVien(maNhanVien);
-            tienLuong.setTenNhanVien(tenNhanVien);
-            tienLuong.setNgayCong(ngayCong);
-            tienLuong.setTongTienLuong(tongTienLuong);
-            tienLuong.setSoTienThanhToan(soTienThanhToan);
+            tienLuong.setTenNhanVien(view.getTxtTenNV().getText().trim());
             tienLuong.setTinhTrangLuong(tinhTrangLuong);
-    
-            model.themTienLuong(tienLuong); // Gọi phương thức thêm tiền lương
+            tienLuong.setGioLamViec(gioLam);
+            tienLuong.setGhiChu(ghiChu);
+            
+            model.themTienLuong(tienLuong);
             JOptionPane.showMessageDialog(view, "Thêm tiền lương thành công!");
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(view, "Định dạng không hợp lệ! Vui lòng kiểm tra lại.");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(view, "Lỗi khi thêm tiền lương: " + e.getMessage());
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Dữ liệu không hợp lệ! Vui lòng kiểm tra lại.");
         }
     }
-    
 
     public void suaTienLuong() {
-        String maLuong = view.getTxtMaLuong().getText();
-        
-        // Kiểm tra nếu mã lương không tồn tại
+        String maLuong = view.getTxtMaLuong().getText().trim();
         if (!kiemTraTienLuongTonTai(maLuong)) {
             JOptionPane.showMessageDialog(view, "Không tìm thấy bản ghi tiền lương!");
             return;
         }
-    
-        String maNhanVien = view.getTxtMaNV().getText();
-        if (!kiemTraNhanVienTonTai(maNhanVien)) {
-            JOptionPane.showMessageDialog(view, "Mã nhân viên không tồn tại!");
-            return;
-        }
         
-        String tenNhanVien = view.getTxtTenNV().getText();
-        String ngayCongStr = view.getTxtNgayCong().getText();
-        String tongTienStr = view.getTxtTongTienLuong().getText();
-        String soTienThanhToanStr = view.getTxtSoTienThanhToan().getText();
-        String tinhTrangLuong = view.getCbTinhTrangLuong().getSelectedItem().toString();
-        
-        // Kiểm tra nhập đủ thông tin
-        if (maLuong.isEmpty() || maNhanVien.isEmpty() || tenNhanVien.isEmpty() || ngayCongStr.isEmpty() || tongTienStr.isEmpty() || soTienThanhToanStr.isEmpty()) {
-            JOptionPane.showMessageDialog(view, "Vui lòng nhập đầy đủ thông tin!");
-            return;
-        }
-    
         try {
-            // Chuyển đổi dữ liệu nhập vào
-            int ngayCong = Integer.parseInt(ngayCongStr);
-            BigDecimal tongTienLuong = new BigDecimal(tongTienStr);
-            BigDecimal soTienThanhToan = new BigDecimal(soTienThanhToanStr);
-    
-            // Tạo đối tượng tiền lương
+            int gioLam = Integer.parseInt(view.getTxtGioLam().getText().trim());
+            String tinhTrangLuong = view.getCbTinhTrangLuong().getSelectedItem().toString();
+            String ghiChu = view.getTxtGhiChu().getText().trim();
+            
+            // Sử dụng setter thay vì constructor
             TienLuong tienLuong = new TienLuong();
             tienLuong.setMaLuong(maLuong);
-            tienLuong.setMaNhanVien(maNhanVien);
-            tienLuong.setTenNhanVien(tenNhanVien);
-            tienLuong.setNgayCong(ngayCong);
-            tienLuong.setTongTienLuong(tongTienLuong);
-            tienLuong.setSoTienThanhToan(soTienThanhToan);
+            tienLuong.setMaNhanVien(view.getTxtMaNV().getText().trim());
+            tienLuong.setTenNhanVien(view.getTxtTenNV().getText().trim());
             tienLuong.setTinhTrangLuong(tinhTrangLuong);
-            // Gọi phương thức sửa tiền lương trong DAO
+            tienLuong.setGioLamViec(gioLam);
+            tienLuong.setGhiChu(ghiChu);
+            
             model.suaTienLuong(tienLuong);
             JOptionPane.showMessageDialog(view, "Cập nhật tiền lương thành công!");
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(view, "Định dạng không hợp lệ! Vui lòng kiểm tra lại.");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(view, "Lỗi khi cập nhật tiền lương: " + e.getMessage());
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Dữ liệu không hợp lệ! Vui lòng kiểm tra lại.");
         }
     }
-    public boolean xoaTienLuong(String maLuong) {
-        if (maLuong == null || maLuong.isEmpty()) {
+    
+    public void xoaTienLuong() {
+        String maLuong = view.getTxtMaLuong().getText().trim();
+        if (maLuong.isEmpty()) {
             JOptionPane.showMessageDialog(view, "Vui lòng chọn tiền lương cần xóa!");
-            return false;
+            return;
         }
-        boolean isDeleted = model.xoaTienLuong(maLuong);
-        if (isDeleted) {
+        if (model.xoaTienLuong(maLuong)) {
             JOptionPane.showMessageDialog(view, "Xóa tiền lương thành công!");
-            return true;
         } else {
             JOptionPane.showMessageDialog(view, "Không tìm thấy bản ghi tiền lương!");
-            return false;
         }
     }
+    
     public boolean kiemTraTienLuongTonTai(String maLuong) {
         String sql = "SELECT COUNT(*) FROM tienluong WHERE MaLuong = ?";
         try (Connection conn = Connect.getConnect();
@@ -133,8 +100,20 @@ public class TienLuongController implements KTNhanSu {
             ResultSet rs = stmt.executeQuery();
             return rs.next() && rs.getInt(1) > 0;
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Lỗi kiểm tra tiền lương: " + e.getMessage());
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Lỗi kiểm tra tiền lương: " + e.getMessage());
+        }
+        return false;
+    }
+    
+    public boolean kiemTraNhanVienTonTai(String maNhanVien) {
+        String sql = "SELECT COUNT(*) FROM nhanvien WHERE MaNhanVien = ?";
+        try (Connection conn = Connect.getConnect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maNhanVien);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(view, "Lỗi kiểm tra nhân viên: " + e.getMessage());
         }
         return false;
     }

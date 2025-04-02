@@ -6,15 +6,15 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import model.KhoNguyenLieuDAO;
 import model.connectData;
+
 public class khoNguyenLieu extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
-    private JTextField txtMaNguyenLieu, txtTenNguyenLieu, txtMaNCC, txtSoLuong;
+    private JTextField txtMaNguyenLieu, txtTenNguyenLieu, txtMaNCC, txtSoLuong, txtGiaNhap;
     private JButton btnLuuThem, btnHuy, btnLuuSua, btnRefresh;
     private int selectedRow = -1;
     
-
     public JTextField getTxtMaNguyenLieu() {
         return txtMaNguyenLieu;
     }
@@ -47,8 +47,16 @@ public class khoNguyenLieu extends JPanel {
         this.txtSoLuong = txtSoLuong;
     }
 
+    public JTextField getTxtGiaNhap() {
+        return txtGiaNhap;
+    }
+
+    public void setTxtGiaNhap(JTextField txtGiaNhap) {
+        this.txtGiaNhap = txtGiaNhap;
+    }
+
     public khoNguyenLieu() {
-        String[] nlColumns = {"Mã nguyên liệu", "Tên nguyên liệu", "Mã nhà cung cấp","Số lượng",};
+        String[] nlColumns = {"Mã nguyên liệu", "Tên nguyên liệu", "Mã nhà cung cấp", "Giá nhập", "Số lượng"};
         setLayout(new BorderLayout(10, 10));
 
         // Panel chứa nút chức năng
@@ -56,18 +64,20 @@ public class khoNguyenLieu extends JPanel {
         JButton btnThem = new JButton("Thêm");
         JButton btnSua = new JButton("Sửa");
         JButton btnXoa = new JButton("Xóa");
+
         btnThem.setBackground(new Color(72, 201, 176));
         btnSua.setBackground(new Color(255, 193, 7));
         btnXoa.setBackground(new Color(220, 53, 69));
         btnThem.setForeground(Color.WHITE);
         btnSua.setForeground(Color.WHITE);
         btnXoa.setForeground(Color.WHITE);
+
         controlPanel.add(btnThem);
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
         add(controlPanel, BorderLayout.NORTH);
 
-        // Bảng dữ liệu menu
+        // Bảng dữ liệu
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
         table.setRowHeight(25);
@@ -75,46 +85,49 @@ public class khoNguyenLieu extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Load dữ liệu từ database
         connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
+        formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin kho nguyên liệu"));
         formPanel.setBackground(Color.WHITE);
 
-        // Các input field
         txtMaNguyenLieu = new JTextField();
         txtTenNguyenLieu = new JTextField();
         txtMaNCC = new JTextField();
         txtSoLuong = new JTextField();
-        // Tạo các button chức năng
+        txtGiaNhap = new JTextField(); // Thêm JTextField cho Giá nhập
+
         btnLuuThem = new JButton("Thêm");
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
         btnRefresh = new JButton("Refresh");
-        btnRefresh.setBackground(new Color(23, 162, 184));
-        btnRefresh.setForeground(Color.WHITE);
-        btnLuuThem.setBackground(new Color(40, 167, 69));
+
+        btnLuuThem.setBackground(new Color(76, 175, 80)); 
         btnLuuThem.setForeground(Color.WHITE);
-        btnLuuSua.setBackground(new Color(23, 162, 184));
-        btnLuuSua.setForeground(Color.WHITE);
+
+        btnLuuSua.setBackground(new Color(255, 193, 7)); 
+        btnLuuSua.setForeground(Color.BLACK);
+
         btnHuy.setBackground(new Color(108, 117, 125));
         btnHuy.setForeground(Color.WHITE);
 
-        // Thêm các thành phần vào form
+        btnRefresh.setBackground(new Color(0, 123, 255)); 
+        btnRefresh.setForeground(Color.WHITE);
+
+        // Thêm các thành phần vào formPanel
         formPanel.add(new JLabel("Mã nguyên liệu"));
         formPanel.add(txtMaNguyenLieu);
         formPanel.add(new JLabel("Tên nguyên liệu"));
         formPanel.add(txtTenNguyenLieu);
         formPanel.add(new JLabel("Mã nhà cung cấp"));
         formPanel.add(txtMaNCC);
+        formPanel.add(new JLabel("Giá nhập"));
+        formPanel.add(txtGiaNhap);
         formPanel.add(new JLabel("Số lượng"));
         formPanel.add(txtSoLuong);
-        formPanel.add(new JLabel("")); // Dòng trống
-        formPanel.add(new JLabel("")); // Dòng trống
-
-        // Thêm nút Lưu và Hủy
+        formPanel.add(new JLabel(""));
+        formPanel.add(new JLabel(""));
         formPanel.add(btnHuy);
         formPanel.add(btnLuuThem);
         formPanel.add(btnLuuSua);
@@ -123,14 +136,14 @@ public class khoNguyenLieu extends JPanel {
         add(formPanel, BorderLayout.SOUTH);
         formPanel.setVisible(false);
 
-        // Sự kiện "Thêm"
+        // Sự kiện Thêm
         btnThem.addActionListener(e -> {
             selectedRow = -1;
             clearForm();
             formPanel.setVisible(true);
         });
 
-        // Sự kiện "Sửa"
+        // Sự kiện Sửa
         btnSua.addActionListener(e -> {
             selectedRow = table.getSelectedRow();
             if (selectedRow == -1) {
@@ -141,7 +154,7 @@ public class khoNguyenLieu extends JPanel {
             }
         });
 
-        // Sự kiện "Xóa"
+        // Sự kiện Xóa
         btnXoa.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow == -1) {
@@ -149,35 +162,32 @@ public class khoNguyenLieu extends JPanel {
                 return;
             }
             String MaNguyenLieu = tableModel.getValueAt(selectedRow, 0).toString();
-            NguyenLieuController controller = new NguyenLieuController(khoNguyenLieu.this, new KhoNguyenLieuDAO());
-            controller.xoaNguyenLieu(MaNguyenLieu); 
+            NguyenLieuController controller = new NguyenLieuController(this, new KhoNguyenLieuDAO());
+            controller.xoaNguyenLieu(MaNguyenLieu);
             connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
-            
         });
-        
-        
 
-        // Sự kiện "Lưu Thêm"
+        // Sự kiện Lưu Thêm
         btnLuuThem.addActionListener(e -> {
-            NguyenLieuController controller = new NguyenLieuController(khoNguyenLieu.this, new KhoNguyenLieuDAO());
+            NguyenLieuController controller = new NguyenLieuController(this, new KhoNguyenLieuDAO());
             controller.themNguyenLieu();
             connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
         });
 
-        // Sự kiện "Lưu Sửa"
+        // Sự kiện Lưu Sửa
         btnLuuSua.addActionListener(e -> {
-            NguyenLieuController controller = new NguyenLieuController(khoNguyenLieu.this, new KhoNguyenLieuDAO());
+            NguyenLieuController controller = new NguyenLieuController(this, new KhoNguyenLieuDAO());
             controller.suaNguyenLieu();
             connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
         });
 
-        // Sự kiện "Hủy"
+        // Sự kiện Hủy
         btnHuy.addActionListener(e -> {
             formPanel.setVisible(false);
             clearForm();
         });
 
-        // Sự kiện "Refresh"
+        // Sự kiện Refresh
         btnRefresh.addActionListener(e -> {
             connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
         });
@@ -188,12 +198,14 @@ public class khoNguyenLieu extends JPanel {
         txtTenNguyenLieu.setText("");
         txtMaNCC.setText("");
         txtSoLuong.setText("");
+        txtGiaNhap.setText(""); // Reset Giá nhập
     }
 
     private void fillForm(int row) {
         txtMaNguyenLieu.setText(tableModel.getValueAt(row, 0).toString());
         txtTenNguyenLieu.setText(tableModel.getValueAt(row, 1).toString());
         txtMaNCC.setText(tableModel.getValueAt(row, 2).toString());
-        txtSoLuong.setText(tableModel.getValueAt(row, 3).toString());
+        txtGiaNhap.setText(tableModel.getValueAt(row, 3).toString()); // Lấy giá nhập
+        txtSoLuong.setText(tableModel.getValueAt(row, 4).toString());
     }
 }

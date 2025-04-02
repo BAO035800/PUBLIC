@@ -3,7 +3,7 @@ import javax.swing.JOptionPane;
 import model.NhaCungCap;
 import model.NhaCungCapDAO;
 import view.khoNhaCungCap;
-public class NCCController implements KTBanHang {
+public class NCCController {
     private khoNhaCungCap view;
     private NhaCungCapDAO model;
     public NCCController(khoNhaCungCap view, NhaCungCapDAO model) {

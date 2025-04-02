@@ -1,50 +1,47 @@
 package model;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 public class HoaDonNhapDAO {
     public void themHoaDonNhap(HoaDonNhap hoadonnhap) {
-        String sql = "INSERT INTO hoadonnhap (MaHoaDonKho, MaNguyenLieu, MaNhaCungCap, SoLuong, TongTienNhap) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO hoadonnhap (MaHoaDonKho, MaNguyenLieu, MaNhaCungCap) VALUES (?, ?, ?)";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, hoadonnhap.getMaHoaDonKho());
             ps.setString(2, hoadonnhap.getMaNguyenLieu());
             ps.setString(3, hoadonnhap.getMaNhaCungCap());
-            ps.setInt(4, hoadonnhap.getSoLuong());
-            ps.setBigDecimal(5, hoadonnhap.getTongTienNhap());
             ps.executeUpdate();
-            System.out.println("Thêm hóa đơn nhập thành công!");
         } catch (SQLException e) {
-            System.out.println("Thêm thất bại: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
     public void suaHoaDonNhap(HoaDonNhap hoadonnhap) {
-        String sql = "UPDATE hoadonnhap SET MaNguyenLieu = ?, MaNhaCungCap = ?, SoLuong = ?, TongTienNhap = ? WHERE MaHoaDonKho = ?";
+        String sql = "UPDATE hoadonnhap SET MaNguyenLieu = ?, MaNhaCungCap = ? WHERE MaHoaDonKho = ?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, hoadonnhap.getMaNguyenLieu());
             ps.setString(2, hoadonnhap.getMaNhaCungCap());
-            ps.setInt(3, hoadonnhap.getSoLuong());
-            ps.setBigDecimal(4, hoadonnhap.getTongTienNhap());
             ps.setString(5, hoadonnhap.getMaHoaDonKho());
             ps.executeUpdate();
-            System.out.println("Sửa hóa đơn nhập thành công!");
         } catch (SQLException e) {
-            System.out.println("Sửa thất bại: " + e.getMessage());
+            e.printStackTrace();
         }
     }
-    public boolean xoaHoaDonNhap(String MaHoaDonKho) {
+
+    public void xoaHoaDonNhap(String MaHoaDonKho) {
         String sql = "DELETE FROM hoadonnhap WHERE MaHoaDonKho = ?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, MaHoaDonKho);
             ps.executeUpdate();
-            System.out.println("Xóa hóa đơn nhập thành công!");
         } catch (SQLException e) {
-            System.out.println("Xóa thất bại: " + e.getMessage());
+            e.printStackTrace();
         }
-        return false;
     }
+
     public List<HoaDonNhap> layDanhSachHoaDonNhap() {
         List<HoaDonNhap> list = new ArrayList<>();
         String sql = "SELECT * FROM hoadonnhap";
@@ -56,12 +53,10 @@ public class HoaDonNhapDAO {
                 hoadonnhap.setMaHoaDonKho(rs.getString("MaHoaDonKho"));
                 hoadonnhap.setMaNguyenLieu(rs.getString("MaNguyenLieu"));
                 hoadonnhap.setMaNhaCungCap(rs.getString("MaNhaCungCap"));
-                hoadonnhap.setSoLuong(rs.getInt("SoLuong"));
-                hoadonnhap.setTongTienNhap(rs.getBigDecimal("TongTienNhap"));
                 list.add(hoadonnhap);
             }
         } catch (SQLException e) {
-            System.out.println("Lấy danh sách thất bại: " + e.getMessage());
+            e.printStackTrace();
         }
         return list;
     }

@@ -62,6 +62,7 @@ public class MenuDAO {
         }
     }
     
+    
     public List<Menu> getMenu() {
         List<Menu> list = new ArrayList<>();
         String sql = "SELECT * FROM menu";

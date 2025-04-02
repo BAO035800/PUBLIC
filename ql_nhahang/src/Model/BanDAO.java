@@ -31,28 +31,26 @@ public class BanDAO {
             e.printStackTrace();
         }
     }
-    public boolean xoaBan(int SoBan) {
+    public void xoaBan(int SoBan) {
         String sql = "DELETE FROM ban WHERE SoBan = ?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+    
             ps.setInt(1, SoBan);
             int rowsAffected = ps.executeUpdate(); // Kiểm tra số dòng bị ảnh hưởng
-            
+    
             if (rowsAffected > 0) {
-                System.out.println("Xóa bàn thành công");
-                return true; // Trả về true nếu có dòng bị xóa
+                System.out.println("✅ Xóa bàn thành công!");
             } else {
-                System.out.println("Không tìm thấy bàn để xóa");
-                return false; // Trả về false nếu không có dòng nào bị xóa
+                System.out.println("⚠️ Không tìm thấy bàn để xóa!");
             }
-            
+    
         } catch (Exception e) {
-            System.out.println("Xóa bàn thất bại");
+            System.out.println("❌ Xóa bàn thất bại!");
             e.printStackTrace();
-            return false; // Trả về false nếu có lỗi xảy ra
         }
     }
+    
     
     public List<Ban> getBan(){
         List<Ban> list=new ArrayList<>();

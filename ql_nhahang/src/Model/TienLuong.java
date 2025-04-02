@@ -3,54 +3,67 @@ package model;
 import java.math.BigDecimal;
 
 public class TienLuong {
-    private String MaLuong;
-    private String MaNhanVien;
-    private String TenNhanVien;
-    private BigDecimal TongTienLuong;
-    private String TinhTrangLuong;
-    private int NgayCong;
-    private BigDecimal SoTienThanhToan;
+    private String maLuong;
+    private String maNhanVien;
+    private String tenNhanVien;
+    private BigDecimal tongTienLuong;
+    private String tinhTrangLuong;
+    private int GioLamViec;
+    private String GhiChu;
+
     public String getMaLuong() {
-        return MaLuong;
+        return maLuong;
     }
+
     public void setMaLuong(String maLuong) {
-        MaLuong = maLuong;
+        this.maLuong = maLuong;
     }
+
     public String getMaNhanVien() {
-        return MaNhanVien;
+        return maNhanVien;
     }
+
     public void setMaNhanVien(String maNhanVien) {
-        MaNhanVien = maNhanVien;
+        this.maNhanVien = maNhanVien;
     }
+
     public String getTenNhanVien() {
-        return TenNhanVien;
+        return tenNhanVien;
     }
+
     public void setTenNhanVien(String tenNhanVien) {
-        TenNhanVien = tenNhanVien;
+        this.tenNhanVien = tenNhanVien;
     }
+
     public BigDecimal getTongTienLuong() {
-        return TongTienLuong;
+        return tongTienLuong;
     }
+
     public void setTongTienLuong(BigDecimal tongTienLuong) {
-        TongTienLuong = tongTienLuong;
+        this.tongTienLuong = tongTienLuong;
     }
+
     public String getTinhTrangLuong() {
-        return TinhTrangLuong;
+        return tinhTrangLuong;
     }
+
     public void setTinhTrangLuong(String tinhTrangLuong) {
-        TinhTrangLuong = tinhTrangLuong;
+        this.tinhTrangLuong = tinhTrangLuong;
     }
-    public int getNgayCong() {
-        return NgayCong;
+
+    public int getGioLamViec() {
+        return GioLamViec;
     }
-    public void setNgayCong(int ngayCong) {
-        NgayCong = ngayCong;
+
+    public void setGioLamViec(int GioLamViec) {
+        this.GioLamViec = GioLamViec;
     }
-    public BigDecimal getSoTienThanhToan() {
-        return SoTienThanhToan;
+
+    public String getGhiChu() {
+        return GhiChu;
     }
-    public void setSoTienThanhToan(BigDecimal soTienThanhToan) {
-        SoTienThanhToan = soTienThanhToan;
+
+    public void setGhiChu(String GhiChu) {
+        this.GhiChu = GhiChu;
     }
-    
 }

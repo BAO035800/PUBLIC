@@ -84,18 +84,27 @@ public class banhangBan extends JPanel {
             txtTinhTrang.setText(cbTinhTrang.getSelectedItem().toString());
         });
         // Tạo các button chức năng
-        btnLuuThem = new JButton("Lưu");
+        btnLuuThem = new JButton("Thêm");
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
         btnRefresh = new JButton("Refresh");
-        btnRefresh.setBackground(new Color(23, 162, 184));
-        btnRefresh.setForeground(Color.WHITE);
-        btnLuuThem.setBackground(new Color(40, 167, 69));
+
+        // Màu xanh lá cho nút Thêm (Thành công)
+        btnLuuThem.setBackground(new Color(76, 175, 80)); 
         btnLuuThem.setForeground(Color.WHITE);
-        btnLuuSua.setBackground(new Color(23, 162, 184));
-        btnLuuSua.setForeground(Color.WHITE);
+
+        // Màu cam cho nút Sửa (Cảnh báo nhẹ)
+        btnLuuSua.setBackground(new Color(255, 193, 7)); 
+        btnLuuSua.setForeground(Color.BLACK);
+
+        // Màu đỏ cho nút Hủy (Nguy hiểm)
         btnHuy.setBackground(new Color(108, 117, 125));
         btnHuy.setForeground(Color.WHITE);
+
+        // Màu xanh dương cho nút Refresh (Hiện đại)
+        btnRefresh.setBackground(new Color(0, 123, 255)); 
+        btnRefresh.setForeground(Color.WHITE);
+
 
         // Thêm các thành phần vào form
         formPanel.add(new JLabel("Số bàn"));
@@ -143,17 +152,20 @@ public class banhangBan extends JPanel {
             if (confirm == JOptionPane.YES_OPTION) {
                 // Lấy bàn từ bảng
                 int soBan = Integer.parseInt(table.getValueAt(selectedRow, 0).toString());
+                
                 // Xóa bàn
-                BanController banController = new BanController(banhangBan.this,new BanDAO());
-                if(banController.xoaBan(soBan)){
-                    JOptionPane.showMessageDialog(this, "Xóa bàn thành công!");
-                    connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);   
-                }else{
-                    JOptionPane.showMessageDialog(this, "Xóa bàn thất bại!");
-                }
+                BanController banController = new BanController(banhangBan.this, new BanDAO());
+                banController.xoaBan(soBan);  // Phương thức này không trả về giá trị boolean
+        
+                // Hiển thị thông báo tùy thuộc vào kết quả xóa
+                JOptionPane.showMessageDialog(this, "Xóa bàn thành công!");
+                
+                // Làm mới dữ liệu bảng
+                connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
             }
             clearForm();
         });
+        
 
         // Sự kiện "Lưu Thêm"
         btnLuuThem.addActionListener(e -> {

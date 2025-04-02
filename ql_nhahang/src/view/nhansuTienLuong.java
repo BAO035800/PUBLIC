@@ -10,10 +10,35 @@ public class nhansuTienLuong extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
-    private JTextField txtMaLuong, txtMaNV, txtTenNV, txtTongTienLuong, txtTinhTrangLuong, txtNgayCong, txtSoTienThanhToan;
+    private JTextField txtMaLuong, txtMaNV, txtTenNV, txtTinhTrangLuong, txtGioLam, txtGhiChu,txtTongTien;
     private JComboBox<String> cbTinhTrangLuong;
     private JButton btnLuuThem, btnHuy,btnLuuSua,btnRefresh;
     private int selectedRow = -1;
+    
+    public JTextField getTxtGioLam() {
+        return txtGioLam;
+    }
+
+    public void setTxtGioLam(JTextField txtGioLam) {
+        this.txtGioLam = txtGioLam;
+    }
+
+    public JTextField getTxtGhiChu() {
+        return txtGhiChu;
+    }
+
+    public void setTxtGhiChu(JTextField txtGhiChu) {
+        this.txtGhiChu = txtGhiChu;
+    }
+
+    public JTextField getTxtTongTien() {
+        return txtTongTien;
+    }
+
+    public void setTxtTongTien(JTextField txtTongTien) {
+        this.txtTongTien = txtTongTien;
+    }
+
     public JTextField getTxtMaLuong() {
         return txtMaLuong;
     }
@@ -38,13 +63,6 @@ public class nhansuTienLuong extends JPanel {
         this.txtTenNV = txtTenNV;
     }
 
-    public JTextField getTxtTongTienLuong() {
-        return txtTongTienLuong;
-    }
-
-    public void setTxtTongTienLuong(JTextField txtTongTienLuong) {
-        this.txtTongTienLuong = txtTongTienLuong;
-    }
 
     public JTextField getTxtTinhTrangLuong() {
         return txtTinhTrangLuong;
@@ -52,22 +70,6 @@ public class nhansuTienLuong extends JPanel {
 
     public void setTxtTinhTrangLuong(JTextField txtTinhTrangLuong) {
         this.txtTinhTrangLuong = txtTinhTrangLuong;
-    }
-
-    public JTextField getTxtNgayCong() {
-        return txtNgayCong;
-    }
-
-    public void setTxtNgayCong(JTextField txtNgayCong) {
-        this.txtNgayCong = txtNgayCong;
-    }
-
-    public JTextField getTxtSoTienThanhToan() {
-        return txtSoTienThanhToan;
-    }
-
-    public void setTxtSoTienThanhToan(JTextField txtSoTienThanhToan) {
-        this.txtSoTienThanhToan = txtSoTienThanhToan;
     }
 
     public JComboBox<String> getCbTinhTrangLuong() {
@@ -79,7 +81,7 @@ public class nhansuTienLuong extends JPanel {
     }
 
     public nhansuTienLuong() {
-        String[] nvColumns = {"Mã lương", "Mã nhân viên", "Tên nhân viên", "Tổng tiền", "Tình trạng", "Ngày công", "Số tiền đã thanh toán"};
+        String[] nvColumns = {"Mã lương", "Mã nhân viên", "Tên nhân viên", "Tình trạng", "Giờ làm", "Ghi chú","Tổng tiền"};
         tableModel = new DefaultTableModel(nvColumns, 0);
         setLayout(new BorderLayout(10, 10));
 
@@ -108,19 +110,25 @@ public class nhansuTienLuong extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        connectData.loadData(tableModel, "SELECT * FROM tienluong",nvColumns);
+        connectData.loadData(tableModel, """
+                        SELECT tl.MaLuong, tl.MaNhanVien, nv.TenNhanVien, tl.TinhTrangLuong, tl.GioLamViec, tl.GhiChu, 
+                        (nv.Luong1Gio * tl.GioLamViec) AS TongTien
+                        FROM tienluong tl
+                        JOIN nhanvien nv ON tl.MaNhanVien = nv.MaNhanVien
+                        """, nvColumns);
+
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(5, 4, 10, 10));
+        formPanel = new JPanel(new GridLayout(4, 4, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin lương"));
         formPanel.setBackground(Color.WHITE);
         // Tạo các control nhập liệu
         txtMaLuong = new JTextField();
         txtMaNV = new JTextField();
         txtTenNV = new JTextField();
-        txtTongTienLuong = new JTextField();
-        txtNgayCong = new JTextField();
-        txtSoTienThanhToan = new JTextField();
+        txtGioLam=new JTextField();
+        txtGhiChu=new JTextField();
+        txtTongTien=new JTextField();
         //Combo box tình trạng lương
         txtTinhTrangLuong = new JTextField();
         cbTinhTrangLuong = new JComboBox<>(new String[]{"Đã trả", "Chưa trả"});
@@ -133,14 +141,17 @@ public class nhansuTienLuong extends JPanel {
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
         btnRefresh = new JButton("Refresh");
-        btnRefresh.setBackground(new Color(23, 162, 184));
-        btnRefresh.setForeground(Color.WHITE);
-        btnLuuThem.setBackground(new Color(40, 167, 69));
+        btnLuuThem.setBackground(new Color(76, 175, 80)); 
         btnLuuThem.setForeground(Color.WHITE);
-        btnLuuSua.setBackground(new Color(23, 162, 184));
-        btnLuuSua.setForeground(Color.WHITE);
+
+        btnLuuSua.setBackground(new Color(255, 193, 7)); 
+        btnLuuSua.setForeground(Color.BLACK);
+
         btnHuy.setBackground(new Color(108, 117, 125));
         btnHuy.setForeground(Color.WHITE);
+
+        btnRefresh.setBackground(new Color(0, 123, 255)); 
+        btnRefresh.setForeground(Color.WHITE);
         // Thêm các control vào form
         formPanel.add(new JLabel("Mã lương:"));
         formPanel.add(txtMaLuong);
@@ -148,16 +159,12 @@ public class nhansuTienLuong extends JPanel {
         formPanel.add(txtMaNV);
         formPanel.add(new JLabel("Tên nhân viên:"));
         formPanel.add(txtTenNV);
-        formPanel.add(new JLabel("Tổng tiền lương:"));
-        formPanel.add(txtTongTienLuong);
+        formPanel.add(new JLabel("Giờ làm:"));
+        formPanel.add(txtGioLam);
         formPanel.add(new JLabel("Tình trạng lương:"));
         formPanel.add(cbTinhTrangLuong);
-        formPanel.add(new JLabel("Ngày công:"));
-        formPanel.add(txtNgayCong);
-        formPanel.add(new JLabel("Số tiền đã thanh toán:"));
-        formPanel.add(txtSoTienThanhToan);
-        formPanel.add(new JLabel(""));
-        formPanel.add(new JLabel(""));
+        formPanel.add(new JLabel("Ghi chú:"));
+        formPanel.add(txtGhiChu);
         formPanel.add(btnLuuThem);
         formPanel.add(btnLuuSua);
         formPanel.add(btnHuy);
@@ -196,9 +203,13 @@ public class nhansuTienLuong extends JPanel {
                 String maLuong = table.getValueAt(selectedRow, 0).toString();
                 // Gọi controller để xóa (Dùng controller có sẵn, không khởi tạo lại)
                 TienLuongController controller = new TienLuongController(this, new TienLuongDAO());
-                if (controller.xoaTienLuong(maLuong)) {
-                    connectData.loadData(tableModel, "SELECT * FROM tienluong", nvColumns); // Load lại bảng nếu xóa thành công
-                }
+                controller.xoaTienLuong();
+                connectData.loadData(tableModel, """
+                        SELECT tl.MaLuong, tl.MaNhanVien, nv.TenNhanVien, tl.TinhTrangLuong, tl.GioLamViec, tl.GhiChu, 
+                        (nv.Luong1Gio * tl.GioLamViec) AS TongTien
+                        FROM tienluong tl
+                        JOIN nhanvien nv ON tl.MaNhanVien = nv.MaNhanVien
+                        """, nvColumns);
             }
             clearForm();
         });
@@ -207,13 +218,23 @@ public class nhansuTienLuong extends JPanel {
         btnLuuThem.addActionListener(e -> {
             TienLuongController controller = new TienLuongController(this, new TienLuongDAO());
             controller.themTienLuong();
-            connectData.loadData(tableModel, "SELECT * FROM tienluong", nvColumns); 
+            connectData.loadData(tableModel, """
+                        SELECT tl.MaLuong, tl.MaNhanVien, nv.TenNhanVien, tl.TinhTrangLuong, tl.GioLamViec, tl.GhiChu, 
+                        (nv.Luong1Gio * tl.GioLamViec) AS TongTien
+                        FROM tienluong tl
+                        JOIN nhanvien nv ON tl.MaNhanVien = nv.MaNhanVien
+                        """, nvColumns);
         });
         // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
             TienLuongController controller = new TienLuongController(this, new TienLuongDAO());
             controller.suaTienLuong();
-            connectData.loadData(tableModel, "SELECT * FROM tienluong", nvColumns);
+            connectData.loadData(tableModel, """
+                        SELECT tl.MaLuong, tl.MaNhanVien, nv.TenNhanVien, tl.TinhTrangLuong, tl.GioLamViec, tl.GhiChu, 
+                        (nv.Luong1Gio * tl.GioLamViec) AS TongTien
+                        FROM tienluong tl
+                        JOIN nhanvien nv ON tl.MaNhanVien = nv.MaNhanVien
+                        """, nvColumns);
         });
         
         // Sự kiện "Hủy"
@@ -223,7 +244,12 @@ public class nhansuTienLuong extends JPanel {
         });
         // Sự kiện "Refresh"
         btnRefresh.addActionListener(e -> {
-            connectData.loadData(tableModel, "SELECT * FROM tienluong", nvColumns);
+            connectData.loadData(tableModel, """
+                        SELECT tl.MaLuong, tl.MaNhanVien, nv.TenNhanVien, tl.TinhTrangLuong, tl.GioLamViec, tl.GhiChu, 
+                        (nv.Luong1Gio * tl.GioLamViec) AS TongTien
+                        FROM tienluong tl
+                        JOIN nhanvien nv ON tl.MaNhanVien = nv.MaNhanVien
+                        """, nvColumns);
         });
     }
 
@@ -231,19 +257,21 @@ public class nhansuTienLuong extends JPanel {
         txtMaLuong.setText("");
         txtMaNV.setText("");
         txtTenNV.setText("");
-        txtTongTienLuong.setText("");
+        txtTongTien.setText(""); 
         txtTinhTrangLuong.setText("");
-        txtNgayCong.setText("");
-        txtSoTienThanhToan.setText("");
+        txtGioLam.setText(""); 
+        txtGhiChu.setText(""); 
     }
+    
 
     private void fillForm(int row) {
         txtMaLuong.setText(tableModel.getValueAt(row, 0).toString());
         txtMaNV.setText(tableModel.getValueAt(row, 1).toString());
         txtTenNV.setText(tableModel.getValueAt(row, 2).toString());
-        txtTongTienLuong.setText(tableModel.getValueAt(row, 3).toString());
-        txtTinhTrangLuong.setText(tableModel.getValueAt(row, 4).toString());
-        txtNgayCong.setText(tableModel.getValueAt(row, 5).toString());
-        txtSoTienThanhToan.setText(tableModel.getValueAt(row, 6).toString());
+        txtTinhTrangLuong.setText(tableModel.getValueAt(row, 3).toString());
+        txtGioLam.setText(tableModel.getValueAt(row, 4).toString()); 
+        txtGhiChu.setText(tableModel.getValueAt(row, 5).toString()); 
+        txtTongTien.setText(tableModel.getValueAt(row, 6).toString()); 
     }
+    
 }

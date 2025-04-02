@@ -4,7 +4,7 @@ import javax.swing.JOptionPane;
 import model.NhanVien;
 import model.NhanVienDAO;
 import view.nhansuNhanVien;
-public class NhanVienController implements KTNhanSu {
+public class NhanVienController {
     private nhansuNhanVien view;
     private NhanVienDAO model;
     public NhanVienController(nhansuNhanVien view, NhanVienDAO model) {
@@ -73,7 +73,8 @@ public class NhanVienController implements KTNhanSu {
             nhanVien.setLuong1Gio(luong);
             nhanVien.setGioiTinh(gioiTinh);
             nhanVien.setSoDienThoai(soDienThoai);
-            if (!kiemTraNhanVienTonTai(maNV)) {
+            KTNhanSu controller =new KTNhanSu();
+            if (!controller.kiemTraNhanVienTonTai(maNV)) {
                 JOptionPane.showMessageDialog(view, "Không tìm thấy nhân viên!");
                 return;
             }

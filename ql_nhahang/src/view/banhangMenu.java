@@ -111,14 +111,21 @@ public class banhangMenu extends JPanel {
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
         btnRefresh = new JButton("Refresh");
-        btnRefresh.setBackground(new Color(23, 162, 184));
-        btnRefresh.setForeground(Color.WHITE);
-        btnLuuThem.setBackground(new Color(40, 167, 69));
+        // Màu xanh lá cho nút Thêm (Thành công)
+        btnLuuThem.setBackground(new Color(76, 175, 80)); 
         btnLuuThem.setForeground(Color.WHITE);
-        btnLuuSua.setBackground(new Color(23, 162, 184));
-        btnLuuSua.setForeground(Color.WHITE);
+
+        // Màu cam cho nút Sửa (Cảnh báo nhẹ)
+        btnLuuSua.setBackground(new Color(255, 193, 7)); 
+        btnLuuSua.setForeground(Color.BLACK);
+
+        // Màu đỏ cho nút Hủy (Nguy hiểm)
         btnHuy.setBackground(new Color(108, 117, 125));
         btnHuy.setForeground(Color.WHITE);
+
+        // Màu xanh dương cho nút Refresh (Hiện đại)
+        btnRefresh.setBackground(new Color(0, 123, 255)); 
+        btnRefresh.setForeground(Color.WHITE);
 
         // Thêm các thành phần vào form
         formPanel.add(new JLabel("Mã món:"));
@@ -139,7 +146,7 @@ public class banhangMenu extends JPanel {
         formPanel.add(btnRefresh);
 
         add(formPanel, BorderLayout.SOUTH);
-
+        formPanel.setVisible(false);
         // Sự kiện "Thêm"
         btnThem.addActionListener(e -> {
             selectedRow = -1;
@@ -160,20 +167,27 @@ public class banhangMenu extends JPanel {
 
         // Sự kiện "Xóa"
         btnXoa.addActionListener(e -> {
-            selectedRow = table.getSelectedRow();
+            selectedRow = table.getSelectedRow();  // Lấy dòng được chọn từ bảng
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa!");
             } else {
                 int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa món này?");
                 if (confirm == JOptionPane.YES_OPTION) {
+                    // Lấy mã món từ cột đầu tiên của bảng (thường là mã món)
                     String maMon = table.getValueAt(selectedRow, 0).toString();
                     MenuController controller = new MenuController(banhangMenu.this, new MenuDAO());
-                    controller.xoaMenu(maMon);
+            
+                    // Gọi phương thức xóa món với mã món
+                    controller.xoaMenu(maMon);  // Truyền mã món vào đây
+            
+                    // Làm mới bảng sau khi xóa
                     connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
                 }
             }
-            clearForm();
+            clearForm();  // Reset form sau khi xóa
         });
+        
+        
 
         // Sự kiện "Lưu Thêm"
         btnLuuThem.addActionListener(e -> {

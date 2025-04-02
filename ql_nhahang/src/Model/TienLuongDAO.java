@@ -1,39 +1,40 @@
 package model;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+
 public class TienLuongDAO {
-    public void themTienLuong(TienLuong tienluong){
-        String sql = "INSERT INTO tienluong(MaLuong,MaNhanVien,TenNhanVien,TongTienLuong,TinhTrangLuong,NgayCong,SoTienThanhToan) VALUES(?,?,?,?,?,?,?)";
+    public void themTienLuong(TienLuong tienluong) {
+        String sql = "INSERT INTO tienluong(MaLuong, MaNhanVien, TenNhanVien, TinhTrangLuong, GioLamViec, GhiChu) VALUES(?,?,?,?,?,?)";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, tienluong.getMaLuong());
             ps.setString(2, tienluong.getMaNhanVien());
-            ps.setString(3, tienluong.getTenNhanVien()); 
-            ps.setBigDecimal(4,tienluong.getTongTienLuong()); 
-            ps.setString(5, tienluong.getTinhTrangLuong());
-            ps.setInt(6, tienluong.getNgayCong());
-            ps.setBigDecimal(7, tienluong.getSoTienThanhToan());
+            ps.setString(3, tienluong.getTenNhanVien());
+            ps.setString(4, tienluong.getTinhTrangLuong());
+            ps.setInt(5, tienluong.getGioLamViec());
+            ps.setString(6, tienluong.getGhiChu());
             ps.executeUpdate();
-            System.out.println("Thêm nhân viên thành công!");
+            System.out.println("Thêm lương nhân viên thành công!");
         } catch (Exception e) {
-            System.out.println("Thêm nhân viênviên thất bại!");
+            System.out.println("Thêm lương nhân viên thất bại!");
             e.printStackTrace();
         }
     }
+
     public void suaTienLuong(TienLuong tienluong) {
-        String sql = "UPDATE tienluong SET MaNhanVien = ?, TenNhanVien = ?, TongTienLuong = ?, TinhTrangLuong = ?, NgayCong = ?, SoTienThanhToan = ? WHERE MaLuong = ?";
+        String sql = "UPDATE tienluong SET MaNhanVien = ?, TenNhanVien = ?, TinhTrangLuong = ?, GioLamViec = ?, GhiChu = ? WHERE MaLuong = ?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, tienluong.getMaNhanVien());
             ps.setString(2, tienluong.getTenNhanVien());
-            ps.setBigDecimal(3, tienluong.getTongTienLuong());
-            ps.setString(4, tienluong.getTinhTrangLuong());
-            ps.setInt(5, tienluong.getNgayCong());
-            ps.setBigDecimal(6, tienluong.getSoTienThanhToan());
-            ps.setString(7, tienluong.getMaLuong());
-            
+            ps.setString(3, tienluong.getTinhTrangLuong());
+            ps.setInt(4, tienluong.getGioLamViec());
+            ps.setString(5, tienluong.getGhiChu());
+            ps.setString(6, tienluong.getMaLuong());
+
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Cập nhật thông tin lương thành công!");
@@ -45,28 +46,27 @@ public class TienLuongDAO {
             e.printStackTrace();
         }
     }
-    
-    public boolean xoaTienLuong(String maLuong) {    
-    String sql = "DELETE FROM tienluong WHERE MaLuong = ?";
-    try (Connection conn = Connect.getConnect();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, maLuong);
 
-        // Thực hiện câu lệnh xóa
-        int rowsDeleted = ps.executeUpdate();
-        if (rowsDeleted > 0) {
-            JOptionPane.showMessageDialog(null, "Xóa thông tin tiền lương thành công!");
-            return true;
-        } else {
-            System.out.println("Không tìm thấy bản ghi để xóa!");
+    public boolean xoaTienLuong(String maLuong) {
+        String sql = "DELETE FROM tienluong WHERE MaLuong = ?";
+        try (Connection conn = Connect.getConnect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, maLuong);
+
+            int rowsDeleted = ps.executeUpdate();
+            if (rowsDeleted > 0) {
+                JOptionPane.showMessageDialog(null, "Xóa thông tin tiền lương thành công!");
+                return true;
+            } else {
+                System.out.println("Không tìm thấy bản ghi để xóa!");
+                return false;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Xóa thông tin tiền lương thất bại! Lỗi: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Xóa thông tin tiền lương thất bại! Lỗi: " + e.getMessage());
-        e.printStackTrace();
-        return false;
     }
-}
 
     public List<TienLuong> getTienLuong() {
         List<TienLuong> list = new ArrayList<>();
@@ -79,10 +79,9 @@ public class TienLuongDAO {
                 tienluong.setMaLuong(rs.getString("MaLuong"));
                 tienluong.setMaNhanVien(rs.getString("MaNhanVien"));
                 tienluong.setTenNhanVien(rs.getString("TenNhanVien"));
-                tienluong.setTongTienLuong(rs.getBigDecimal("TongTienLuong"));
                 tienluong.setTinhTrangLuong(rs.getString("TinhTrangLuong"));
-                tienluong.setNgayCong(rs.getInt("NgayCong"));
-                tienluong.setSoTienThanhToan(rs.getBigDecimal("SoTienThanhToan"));
+                tienluong.setGioLamViec(rs.getInt("GioLamViec"));
+                tienluong.setGhiChu(rs.getString("GhiChu"));
                 list.add(tienluong);
             }
         } catch (Exception e) {
@@ -90,5 +89,5 @@ public class TienLuongDAO {
             e.printStackTrace();
         }
         return list;
-    }    
+    }
 }

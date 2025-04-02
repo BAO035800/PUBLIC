@@ -16,7 +16,7 @@ public class QLkho extends JPanel {
         tabbedPane.addTab("Kho nguyên liệu", new khoNguyenLieu());
         tabbedPane.addTab("Hóa đơn nhập", new khoHoaDonNhap());
         
-        tabbedPane.setFont(new Font("Arial", Font.BOLD, 12));
+        tabbedPane.setFont(new Font("Arial", Font.BOLD, 14));
         tabbedPane.setForeground(Color.BLACK);
         tabbedPane.setBackground(new Color(173, 216, 230));
         

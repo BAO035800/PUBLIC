@@ -10,7 +10,7 @@ public class khoHoaDonNhap extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
-    private JTextField txtMaHoaDon, txtMaNguyenLieu, txtMaNCC, txtSoLuong, txtGiaNhap;
+    private JTextField txtMaHoaDon, txtMaNguyenLieu, txtMaNCC, txtSoLuong, txtTongTien;
     private JButton btnLuuThem, btnHuy, btnLuuSua, btnRefresh;
     private int selectedRow = -1;
     
@@ -19,44 +19,24 @@ public class khoHoaDonNhap extends JPanel{
         return txtMaHoaDon;
     }
 
-    public void setTxtMaHoaDon(JTextField txtMaHoaDon) {
-        this.txtMaHoaDon = txtMaHoaDon;
-    }
-
     public JTextField getTxtMaNguyenLieu() {
         return txtMaNguyenLieu;
-    }
-
-    public void setTxtMaNguyenLieu(JTextField txtMaNguyenLieu) {
-        this.txtMaNguyenLieu = txtMaNguyenLieu;
     }
 
     public JTextField getTxtMaNCC() {
         return txtMaNCC;
     }
 
-    public void setTxtMaNCC(JTextField txtMaNCC) {
-        this.txtMaNCC = txtMaNCC;
-    }
-
     public JTextField getTxtSoLuong() {
         return txtSoLuong;
     }
 
-    public void setTxtSoLuong(JTextField txtSoLuong) {
-        this.txtSoLuong = txtSoLuong;
-    }
-
-    public JTextField getTxtGiaNhap() {
-        return txtGiaNhap;
-    }
-
-    public void setTxtGiaNhap(JTextField txtGiaNhap) {
-        this.txtGiaNhap = txtGiaNhap;
+    public JTextField getTxtTongTien() {
+        return txtTongTien;
     }
 
     public khoHoaDonNhap() {
-        String[] hdnColumns = {"Mã hóa đơn", "Mã nguyên liệu", "Mã nhà cung cấp","Số lượng", "Giá nhập",};
+        String[] hdnColumns = {"Mã hóa đơn", "Mã nguyên liệu", "Mã nhà cung cấp","Số lượng", "Tổng tiền"};
         setLayout(new BorderLayout(10, 10));
 
         // Panel chứa nút chức năng
@@ -84,10 +64,10 @@ public class khoHoaDonNhap extends JPanel{
         add(scrollPane, BorderLayout.CENTER);
 
         // Load dữ liệu từ database
-        connectData.loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
+        connectData.loadData(tableModel, "SELECT h.MaHoaDonKho, h.MaNguyenLieu, h.MaNhaCungCap, k.SoLuong, (k.GiaTien  * k.SoLuong) AS TongTien FROM hoadonnhap h JOIN khoNguyenLieu k ON h.MaNguyenLieu = k.MaNguyenLieu", hdnColumns);
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
+        formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin hóa đơn nhập"));
         formPanel.setBackground(Color.WHITE);
 
@@ -96,20 +76,26 @@ public class khoHoaDonNhap extends JPanel{
         txtMaNguyenLieu = new JTextField();
         txtMaNCC = new JTextField();
         txtSoLuong = new JTextField();
-        txtGiaNhap = new JTextField();
+        txtTongTien = new JTextField();
         // Tạo các button chức năng
         btnLuuThem = new JButton("Thêm");
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
         btnRefresh = new JButton("Refresh");
-        btnRefresh.setBackground(new Color(23, 162, 184));
-        btnRefresh.setForeground(Color.WHITE);
-        btnLuuThem.setBackground(new Color(40, 167, 69));
+        btnLuuThem.setBackground(new Color(76, 175, 80)); 
         btnLuuThem.setForeground(Color.WHITE);
-        btnLuuSua.setBackground(new Color(23, 162, 184));
-        btnLuuSua.setForeground(Color.WHITE);
+
+        // Màu cam cho nút Sửa (Cảnh báo nhẹ)
+        btnLuuSua.setBackground(new Color(255, 193, 7)); 
+        btnLuuSua.setForeground(Color.BLACK);
+
+        // Màu đỏ cho nút Hủy (Nguy hiểm)
         btnHuy.setBackground(new Color(108, 117, 125));
         btnHuy.setForeground(Color.WHITE);
+
+        // Màu xanh dương cho nút Refresh (Hiện đại)
+        btnRefresh.setBackground(new Color(0, 123, 255)); 
+        btnRefresh.setForeground(Color.WHITE);
 
         // Thêm các thành phần vào form
         formPanel.add(new JLabel("Mã hóa đơn"));
@@ -118,10 +104,15 @@ public class khoHoaDonNhap extends JPanel{
         formPanel.add(txtMaNguyenLieu);
         formPanel.add(new JLabel("Mã nhà cung cấp"));
         formPanel.add(txtMaNCC);
-        formPanel.add(new JLabel("Số lượng"));
-        formPanel.add(txtSoLuong);
-        formPanel.add(new JLabel("Giá nhập"));
-        formPanel.add(txtGiaNhap);
+
+        // Thêm nút Lưu và Hủy
+        formPanel.add(btnHuy);
+        formPanel.add(btnLuuThem);
+        formPanel.add(btnLuuSua);
+        formPanel.add(btnRefresh);
+
+        add(formPanel, BorderLayout.SOUTH);
+        formPanel.setVisible(false);
 
 
         // Thêm nút Lưu và Hủy
@@ -153,23 +144,50 @@ public class khoHoaDonNhap extends JPanel{
 
         // Sự kiện "Xóa"
         btnXoa.addActionListener(e -> {
-           selectedRow = table.getSelectedRow();
+            // Lấy dòng đã chọn trong bảng
+            selectedRow = table.getSelectedRow();
+        
+            // Kiểm tra nếu không có dòng nào được chọn
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa!");
-            } else {
-                String maNCC=tableModel.getValueAt(selectedRow, 0).toString();
-                HDNhapController controller= new HDNhapController(khoHoaDonNhap.this, new HoaDonNhapDAO());
-                controller.xoaHDNhap();
-                clearForm();
+                return;  // Dừng lại nếu không có dòng nào được chọn
             }
-            connectData.loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
+        
+            // Lấy mã nhà cung cấp từ cột 0 trong bảng (giả sử là MaNCC)
+            String maNCC = tableModel.getValueAt(selectedRow, 0).toString();
+        
+            // Thực hiện xóa hóa đơn nhập từ controller
+            HDNhapController controller = new HDNhapController(khoHoaDonNhap.this, new HoaDonNhapDAO());
+        
+            try {
+                // Truyền maNCC hoặc mã hóa đơn cần xóa vào controller (nếu cần)
+                controller.xoaHDNhap(maNCC);
+        
+                // Làm sạch form sau khi xóa
+                clearForm();
+        
+                // Tải lại dữ liệu cho bảng
+                connectData.loadData(tableModel, """
+                    SELECT h.MaHoaDonKho, h.MaNguyenLieu, h.MaNhaCungCap, k.SoLuong, 
+                    (k.GiaTien * k.SoLuong) AS TongTien 
+                    FROM hoadonnhap h 
+                    JOIN khoNguyenLieu k ON h.MaNguyenLieu = k.MaNguyenLieu
+                    """, hdnColumns);
+        
+                JOptionPane.showMessageDialog(this, "Xóa hóa đơn nhập thành công!");
+            } catch (Exception ex) {
+                // Xử lý lỗi khi xóa không thành công
+                JOptionPane.showMessageDialog(this, "Lỗi khi xóa hóa đơn nhập: " + ex.getMessage(), 
+                                              "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
         });
+        
 
         // Sự kiện "Lưu Thêm"
         btnLuuThem.addActionListener(e -> {
            HDNhapController controller = new HDNhapController(khoHoaDonNhap.this, new HoaDonNhapDAO());
            controller.themHDNhap();
-           connectData.loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
+           connectData.loadData(tableModel, "SELECT h.MaHoaDonKho, h.MaNguyenLieu, h.MaNhaCungCap, k.SoLuong, (k.GiaTien * k.SoLuong) AS TongTien FROM hoadonnhap h JOIN khoNguyenLieu k ON h.MaNguyenLieu = k.MaNguyenLieu", hdnColumns);
         });
 
         // Sự kiện "Lưu Sửa"
@@ -177,7 +195,7 @@ public class khoHoaDonNhap extends JPanel{
             HDNhapController controller = new HDNhapController(khoHoaDonNhap.this, new HoaDonNhapDAO());
             controller.suaHDNhap();
             clearForm();
-            connectData.loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
+            connectData.loadData(tableModel, "SELECT h.MaHoaDonKho, h.MaNguyenLieu, h.MaNhaCungCap, k.SoLuong, (k.GiaTien * k.SoLuong) AS TongTien FROM hoadonnhap h JOIN khoNguyenLieu k ON h.MaNguyenLieu = k.MaNguyenLieu", hdnColumns);
         });
 
         // Sự kiện "Hủy"
@@ -188,7 +206,7 @@ public class khoHoaDonNhap extends JPanel{
 
         // Sự kiện "Refresh"
         btnRefresh.addActionListener(e -> {
-            connectData.loadData(tableModel, "SELECT * FROM hoadonnhap", hdnColumns);
+            connectData.loadData(tableModel, "SELECT h.MaHoaDonKho, h.MaNguyenLieu, h.MaNhaCungCap, k.SoLuong, (k.GiaNhap * k.SoLuong) AS TongTien FROM hoadonnhap h JOIN khoNguyenLieu k ON h.MaNguyenLieu = k.MaNguyenLieu", hdnColumns);
         });
     }
 
@@ -197,7 +215,7 @@ public class khoHoaDonNhap extends JPanel{
         txtMaNguyenLieu.setText("");
         txtMaNCC.setText("");
         txtSoLuong.setText("");
-        txtGiaNhap.setText("");
+        txtTongTien.setText("");
     }
 
     private void fillForm(int row) {
@@ -205,6 +223,6 @@ public class khoHoaDonNhap extends JPanel{
         txtMaNguyenLieu.setText(tableModel.getValueAt(row, 1).toString());
         txtMaNCC.setText(tableModel.getValueAt(row, 2).toString());
         txtSoLuong.setText(tableModel.getValueAt(row, 3).toString());
-        txtGiaNhap.setText(tableModel.getValueAt(row, 4).toString());
+        txtTongTien.setText(tableModel.getValueAt(row, 4).toString());
     }
 }
