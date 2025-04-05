@@ -6,27 +6,27 @@ import model.Connect;
 
 public class KTBanHang {
     
-    // Kiểm tra xem bàn có tồn tại hay không (bàn là String)
+    // Kiểm tra bàn
     public boolean kiemTraBanTonTai(String soBan) {
         String sql = "SELECT COUNT(*) FROM ban WHERE SoBan = ?"; 
         try (Connection conn = Connect.getConnect();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setString(1, soBan); // Dùng setString vì SoBan là String
+            stmt.setString(1, soBan); 
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt(1) > 0;  // Trả về true nếu COUNT > 0
+                    return rs.getInt(1) > 0;
                 }
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "❌ Lỗi kiểm tra bàn: " + e.getMessage());
             e.printStackTrace();
         }
-        return false;  // Trả về false nếu có lỗi hoặc bàn không tồn tại
+        return false;
     }
 
-    // Kiểm tra xem món có tồn tại trong menu hay không
+    // Kiểm tra món
     public boolean kiemTraMonTonTai(String maMon) {
         String sql = "SELECT COUNT(*) FROM menu WHERE MaMon = ?"; 
         try (Connection conn = Connect.getConnect();
@@ -36,13 +36,33 @@ public class KTBanHang {
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt(1) > 0;  // Trả về true nếu COUNT > 0
+                    return rs.getInt(1) > 0;
                 }
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "❌ Lỗi kiểm tra món: " + e.getMessage());
             e.printStackTrace();
         }
-        return false;  // Trả về false nếu có lỗi hoặc món không tồn tại
+        return false;
+    }
+
+    // ✅ Thêm kiểm tra mã hóa đơn
+    public boolean kiemTraMaHoaDon(String maHD) {
+        String sql = "SELECT COUNT(*) FROM hoadonbanhang WHERE MaHoaDonBanHang = ?";
+        try (Connection conn = Connect.getConnect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, maHD);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "❌ Lỗi kiểm tra hóa đơn: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
     }
 }

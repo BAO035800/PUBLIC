@@ -38,7 +38,9 @@ public class khoHoaDonNhap extends JPanel{
     public khoHoaDonNhap() {
         String[] hdnColumns = {"Mã hóa đơn", "Mã nguyên liệu", "Mã nhà cung cấp","Số lượng", "Tổng tiền"};
         setLayout(new BorderLayout(10, 10));
-
+        tableModel = new DefaultTableModel(hdnColumns , 0);
+        table = new JTable(tableModel);
+        TableStyler.styleTable(table);
         // Panel chứa nút chức năng
         JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         JButton btnThem = new JButton("Thêm");
@@ -54,12 +56,6 @@ public class khoHoaDonNhap extends JPanel{
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
         add(controlPanel, BorderLayout.NORTH);
-
-        // Bảng dữ liệu menu
-        tableModel = new DefaultTableModel();
-        table = new JTable(tableModel);
-        table.setRowHeight(25);
-        table.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 

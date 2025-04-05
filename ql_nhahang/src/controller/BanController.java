@@ -1,8 +1,12 @@
 package controller;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import model.Ban;
 import model.BanDAO;
+import model.Connect;
 import view.banhangBan;
 
 public class BanController {
@@ -84,18 +88,47 @@ public class BanController {
     }
 
     public void xoaBan(int soBan) {
-        if (!ktBanHang.kiemTraBanTonTai(String.valueOf(soBan))) {
-            JOptionPane.showMessageDialog(view, "⚠️ Không tìm thấy bàn!");
-            return;
-        }
-    
-        int confirm = JOptionPane.showConfirmDialog(view, "Bạn có chắc chắn muốn xóa bàn này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) {
-            return;
-        }
-    
-        model.xoaBan(soBan);
-        JOptionPane.showMessageDialog(view, "✅ Xóa bàn thành công!");
+    if (!ktBanHang.kiemTraBanTonTai(String.valueOf(soBan))) {
+        JOptionPane.showMessageDialog(view, "⚠️ Không tìm thấy bàn!");
+        return;
     }
+
+    // Kiểm tra và xóa các bản ghi trong hóa đơn chi tiết liên quan đến bàn này
+    try (Connection conn = Connect.getConnect();
+         PreparedStatement stmt1 = conn.prepareStatement("DELETE FROM hoadonbanhangchitiet WHERE SoBan = ?");
+         PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM hoadonbanhang WHERE SoBan = ?")) {
+
+        // Xóa các chi tiết hóa đơn liên quan đến bàn này
+        stmt1.setInt(1, soBan);
+        int rowsAffected1 = stmt1.executeUpdate();
+        
+        // Xóa hóa đơn bán hàng liên quan đến bàn này
+        stmt2.setInt(1, soBan);
+        int rowsAffected2 = stmt2.executeUpdate();
+        
+        if (rowsAffected1 > 0 || rowsAffected2 > 0) {
+            JOptionPane.showMessageDialog(view, "Dữ liệu liên quan đến bàn sẽ bị xóa khỏi hóa đơn!");
+        }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(view, "Lỗi khi xóa dữ liệu hóa đơn: " + e.getMessage());
+        e.printStackTrace();
+        return;
+    }
+
+    // Xóa bàn
+    int confirm = JOptionPane.showConfirmDialog(view, "Bạn có chắc chắn muốn xóa bàn này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    try {
+        model.xoaBan(soBan); // Xóa bàn từ database
+        JOptionPane.showMessageDialog(view, "✅ Xóa bàn thành công!");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(view, "Lỗi khi xóa bàn: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+
     
 }

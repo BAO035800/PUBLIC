@@ -49,7 +49,9 @@ public class banhangHoaDonBanHang extends JPanel {
     public banhangHoaDonBanHang() {
         String[] hoaDonColumns = {"Mã hóa đơn", "Số bàn", "Tổng tiền","Ghi chú"};
         setLayout(new BorderLayout(10, 10));
-
+        tableModel = new DefaultTableModel(hoaDonColumns , 0);
+        table = new JTable(tableModel);
+        TableStyler.styleTable(table);
         // Panel chứa nút chức năng
         JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         JButton btnThem = new JButton("Thêm");
@@ -68,10 +70,6 @@ public class banhangHoaDonBanHang extends JPanel {
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
         add(controlPanel, BorderLayout.NORTH);
-
-        // Tạo bảng
-        tableModel = new DefaultTableModel(hoaDonColumns, 0);
-        table = new JTable(tableModel);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         // Load dữ liệu từ database

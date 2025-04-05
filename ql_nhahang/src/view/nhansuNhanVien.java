@@ -71,6 +71,9 @@ public class nhansuNhanVien extends JPanel {
     public nhansuNhanVien() {
         String[] nvColumns = {"Mã NV", "Tên Nhân Viên", "Chức Vụ", "Lương 1 giờ", "Giới Tính","SĐT","Tuổi"};
         setLayout(new BorderLayout(10,10));
+        tableModel = new DefaultTableModel(nvColumns, 0);
+        table = new JTable(tableModel);
+        TableStyler.styleTable(table);
 
         // Panel chứa nút chức năng
         JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
@@ -87,12 +90,6 @@ public class nhansuNhanVien extends JPanel {
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
         add(controlPanel, BorderLayout.NORTH);
-
-        // Bảng dữ liệu nhân viên
-        tableModel = new DefaultTableModel();
-        table = new JTable(tableModel);
-        table.setRowHeight(25);
-        table.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 

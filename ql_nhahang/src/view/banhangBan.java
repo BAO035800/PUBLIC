@@ -1,68 +1,74 @@
 package view;
+
 import controller.BanController;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import model.BanDAO;
 import model.connectData;
+
 public class banhangBan extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
-    private JTextField txtBan,txtTinhTrang,txtGhiChu ;
+    private JTextField txtBan, txtGhiChu;
     private JComboBox<String> cbTinhTrang;
-    private JButton btnLuuThem, btnHuy,btnLuuSua,btnRefresh;
+    private JButton btnLuuThem, btnHuy, btnLuuSua, btnRefresh;
     private int selectedRow = -1;
     
     public JTextField getTxtBan() {
         return txtBan;
     }
+
     public void setTxtBan(JTextField txtBan) {
         this.txtBan = txtBan;
     }
-    public JTextField getTxtTinhTrang() {
-        return txtTinhTrang;
-    }
-    public void setTxtTinhTrang(JTextField txtTinhTrang) {
-        this.txtTinhTrang = txtTinhTrang;
-    }
+
     public JTextField getTxtGhiChu() {
         return txtGhiChu;
     }
+
     public void setTxtGhiChu(JTextField txtGhiChu) {
         this.txtGhiChu = txtGhiChu;
     }
+
     public JComboBox<String> getCbTinhTrang() {
         return cbTinhTrang;
     }
+
     public void setCbTinhTrang(JComboBox<String> cbTinhTrang) {
         this.cbTinhTrang = cbTinhTrang;
     }
+
     public banhangBan() {
         String[] nvColumns = {"Số bàn", "Tình trạng", "Ghi chú"};
         setLayout(new BorderLayout(10,10));
+
+        // Khởi tạo tableModel
+        tableModel = new DefaultTableModel(nvColumns, 0);
+        table = new JTable(tableModel);
+        TableStyler.styleTable(table);
 
         // Panel chứa nút chức năng
         JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         JButton btnThem = new JButton("Thêm");
         JButton btnSua = new JButton("Sửa");
         JButton btnXoa = new JButton("Xóa");
+        
         btnThem.setBackground(new Color(72, 201, 176));
         btnSua.setBackground(new Color(255, 193, 7));
         btnXoa.setBackground(new Color(220, 53, 69));
+        
         btnThem.setForeground(Color.WHITE);
         btnSua.setForeground(Color.WHITE);
         btnXoa.setForeground(Color.WHITE);
+        
         controlPanel.add(btnThem);
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
         add(controlPanel, BorderLayout.NORTH);
 
-        // Bảng dữ liệu nhân viên
-        tableModel = new DefaultTableModel();
-        table = new JTable(tableModel);
-        table.setRowHeight(25);
-        table.setFont(new Font("Arial", Font.PLAIN, 14));
+        // Bảng dữ liệu
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -70,41 +76,31 @@ public class banhangBan extends JPanel {
         connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(5,4, 10, 10));
+        formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin bàn"));
         formPanel.setBackground(Color.WHITE);
 
         // Các input field
         txtBan = new JTextField();
-        txtTinhTrang = new JTextField();
         txtGhiChu = new JTextField();
         cbTinhTrang = new JComboBox<>(new String[] {"Trống", "Đã đặt", "Đang phục vụ"});
         cbTinhTrang.setSelectedIndex(0);
-        cbTinhTrang.addActionListener(e -> {
-            txtTinhTrang.setText(cbTinhTrang.getSelectedItem().toString());
-        });
+
         // Tạo các button chức năng
         btnLuuThem = new JButton("Thêm");
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
         btnRefresh = new JButton("Refresh");
 
-        // Màu xanh lá cho nút Thêm (Thành công)
-        btnLuuThem.setBackground(new Color(76, 175, 80)); 
-        btnLuuThem.setForeground(Color.WHITE);
-
-        // Màu cam cho nút Sửa (Cảnh báo nhẹ)
-        btnLuuSua.setBackground(new Color(255, 193, 7)); 
-        btnLuuSua.setForeground(Color.BLACK);
-
-        // Màu đỏ cho nút Hủy (Nguy hiểm)
+        btnLuuThem.setBackground(new Color(76, 175, 80));
+        btnLuuSua.setBackground(new Color(255, 193, 7));
         btnHuy.setBackground(new Color(108, 117, 125));
+        btnRefresh.setBackground(new Color(0, 123, 255));
+        
+        btnLuuThem.setForeground(Color.WHITE);
+        btnLuuSua.setForeground(Color.BLACK);
         btnHuy.setForeground(Color.WHITE);
-
-        // Màu xanh dương cho nút Refresh (Hiện đại)
-        btnRefresh.setBackground(new Color(0, 123, 255)); 
         btnRefresh.setForeground(Color.WHITE);
-
 
         // Thêm các thành phần vào form
         formPanel.add(new JLabel("Số bàn"));
@@ -113,8 +109,6 @@ public class banhangBan extends JPanel {
         formPanel.add(cbTinhTrang);
         formPanel.add(new JLabel("Ghi chú"));
         formPanel.add(txtGhiChu);
-
-        // Thêm nút Lưu và Hủy
         formPanel.add(btnHuy);
         formPanel.add(btnLuuThem);
         formPanel.add(btnLuuSua);
@@ -122,6 +116,7 @@ public class banhangBan extends JPanel {
 
         add(formPanel, BorderLayout.SOUTH);
         formPanel.setVisible(false);
+
         // Sự kiện "Thêm"
         btnThem.addActionListener(e -> {
             selectedRow = -1;
@@ -135,9 +130,9 @@ public class banhangBan extends JPanel {
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần sửa!");
             } else {
+                fillForm(selectedRow);
                 formPanel.setVisible(true);
             }
-            fillForm(selectedRow);
         });
 
         // Sự kiện "Xóa"
@@ -147,57 +142,43 @@ public class banhangBan extends JPanel {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn bàn cần xóa!");
                 return;
             }
-        
-            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa bàn này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                // Lấy bàn từ bảng
                 int soBan = Integer.parseInt(table.getValueAt(selectedRow, 0).toString());
-                
-                // Xóa bàn
                 BanController banController = new BanController(banhangBan.this, new BanDAO());
-                banController.xoaBan(soBan);  // Phương thức này không trả về giá trị boolean
-        
-                // Hiển thị thông báo tùy thuộc vào kết quả xóa
-                JOptionPane.showMessageDialog(this, "Xóa bàn thành công!");
-                
-                // Làm mới dữ liệu bảng
+                banController.xoaBan(soBan);
                 connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
-            }
-            clearForm();
+                clearForm();
         });
-        
 
         // Sự kiện "Lưu Thêm"
         btnLuuThem.addActionListener(e -> {
-            BanController banController = new BanController(banhangBan.this,new BanDAO());
+            BanController banController = new BanController(banhangBan.this, new BanDAO());
             banController.themBan();
             connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
         });
+
         // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
-            BanController banController = new BanController(banhangBan.this,new BanDAO());
+            BanController banController = new BanController(banhangBan.this, new BanDAO());
             banController.suaBan();
             connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
         });
-        
+
         // Sự kiện "Hủy"
-        btnHuy.addActionListener(e -> {
-            formPanel.setVisible(false);
-        });
+        btnHuy.addActionListener(e -> formPanel.setVisible(false));
+
         // Sự kiện "Refresh"
-        btnRefresh.addActionListener(e -> {
-            connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
-        });
+        btnRefresh.addActionListener(e -> connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns));
     }
+
     private void clearForm() {
         txtBan.setText("");
-        txtTinhTrang.setText("");
         txtGhiChu.setText("");
         cbTinhTrang.setSelectedIndex(0);
     }
+
     private void fillForm(int row) {
         txtBan.setText(table.getValueAt(row, 0).toString());
-        txtTinhTrang.setText(table.getValueAt(row, 1).toString());
+        cbTinhTrang.setSelectedItem(table.getValueAt(row, 1).toString());
         txtGhiChu.setText(table.getValueAt(row, 2).toString());
     }
 }

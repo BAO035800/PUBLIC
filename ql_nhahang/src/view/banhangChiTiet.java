@@ -26,6 +26,10 @@ public class banhangChiTiet extends JPanel {
     public banhangChiTiet() {
         String[] chitietColumns = {"STT", "Mã món", "Mã hóa đơn", "Số bàn", "Giá tiền", "Số lượng đặt", "Tổng tiền"};
         setLayout(new BorderLayout(10, 10));
+        // Khởi tạo tableModel
+        tableModel = new DefaultTableModel(chitietColumns, 0);
+        table = new JTable(tableModel);
+        TableStyler.styleTable(table);
         
         JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         JButton btnThem = new JButton("Thêm");
@@ -41,11 +45,6 @@ public class banhangChiTiet extends JPanel {
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
         add(controlPanel, BorderLayout.NORTH);
-        
-        tableModel = new DefaultTableModel();
-        table = new JTable(tableModel);
-        table.setRowHeight(25);
-        table.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(table);
         add(new JScrollPane(table), BorderLayout.CENTER);
         

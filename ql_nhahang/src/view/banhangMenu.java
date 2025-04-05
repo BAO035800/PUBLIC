@@ -66,6 +66,9 @@ public class banhangMenu extends JPanel {
     public banhangMenu() {
         String[] menuColumns = {"Mã món", "Tên món", "Giá","Tình trạng", "Số lượng",};
         setLayout(new BorderLayout(10, 10));
+        tableModel = new DefaultTableModel(menuColumns  , 0);
+        table = new JTable(tableModel);
+        TableStyler.styleTable(table);
 
         // Panel chứa nút chức năng
         JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
@@ -83,11 +86,6 @@ public class banhangMenu extends JPanel {
         controlPanel.add(btnXoa);
         add(controlPanel, BorderLayout.NORTH);
 
-        // Bảng dữ liệu menu
-        tableModel = new DefaultTableModel();
-        table = new JTable(tableModel);
-        table.setRowHeight(25);
-        table.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -171,8 +169,7 @@ public class banhangMenu extends JPanel {
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa!");
             } else {
-                int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa món này?");
-                if (confirm == JOptionPane.YES_OPTION) {
+            
                     // Lấy mã món từ cột đầu tiên của bảng (thường là mã món)
                     String maMon = table.getValueAt(selectedRow, 0).toString();
                     MenuController controller = new MenuController(banhangMenu.this, new MenuDAO());
@@ -182,7 +179,6 @@ public class banhangMenu extends JPanel {
             
                     // Làm mới bảng sau khi xóa
                     connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
-                }
             }
             clearForm();  // Reset form sau khi xóa
         });

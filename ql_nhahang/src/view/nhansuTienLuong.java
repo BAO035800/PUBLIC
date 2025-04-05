@@ -81,9 +81,11 @@ public class nhansuTienLuong extends JPanel {
     }
 
     public nhansuTienLuong() {
-        String[] nvColumns = {"Mã lương", "Mã nhân viên", "Tên nhân viên", "Tình trạng", "Giờ làm", "Ghi chú","Tổng tiền"};
-        tableModel = new DefaultTableModel(nvColumns, 0);
+        String[] tienluongColums  = {"Mã lương", "Mã nhân viên", "Tên nhân viên", "Tình trạng", "Giờ làm", "Ghi chú","Tổng tiền"};
         setLayout(new BorderLayout(10, 10));
+        tableModel = new DefaultTableModel(tienluongColums, 0);
+        table = new JTable(tableModel);
+        TableStyler.styleTable(table);
 
         // Panel chứa nút chức năng
         JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
@@ -100,12 +102,6 @@ public class nhansuTienLuong extends JPanel {
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
         add(controlPanel, BorderLayout.NORTH);
-
-        // Bảng dữ liệu tiền lương
-        tableModel = new DefaultTableModel();
-        table = new JTable(tableModel);
-        table.setRowHeight(25);
-        table.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -115,7 +111,7 @@ public class nhansuTienLuong extends JPanel {
                         (nv.Luong1Gio * tl.GioLamViec) AS TongTien
                         FROM tienluong tl
                         JOIN nhanvien nv ON tl.MaNhanVien = nv.MaNhanVien
-                        """, nvColumns);
+                        """, tienluongColums);
 
 
         // Panel nhập liệu
@@ -137,7 +133,7 @@ public class nhansuTienLuong extends JPanel {
             txtTinhTrangLuong.setText(cbTinhTrangLuong.getSelectedItem().toString());
         });
         // Tạo các button chức năng
-        btnLuuThem = new JButton("Lưu");
+        btnLuuThem = new JButton("Thêm");
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
         btnRefresh = new JButton("Refresh");
@@ -201,7 +197,6 @@ public class nhansuTienLuong extends JPanel {
             if (confirm == JOptionPane.YES_OPTION) {
                 // Lấy mã lương từ bản
                 String maLuong = table.getValueAt(selectedRow, 0).toString();
-                // Gọi controller để xóa (Dùng controller có sẵn, không khởi tạo lại)
                 TienLuongController controller = new TienLuongController(this, new TienLuongDAO());
                 controller.xoaTienLuong();
                 connectData.loadData(tableModel, """
@@ -209,7 +204,7 @@ public class nhansuTienLuong extends JPanel {
                         (nv.Luong1Gio * tl.GioLamViec) AS TongTien
                         FROM tienluong tl
                         JOIN nhanvien nv ON tl.MaNhanVien = nv.MaNhanVien
-                        """, nvColumns);
+                        """, tienluongColums);
             }
             clearForm();
         });
@@ -223,7 +218,7 @@ public class nhansuTienLuong extends JPanel {
                         (nv.Luong1Gio * tl.GioLamViec) AS TongTien
                         FROM tienluong tl
                         JOIN nhanvien nv ON tl.MaNhanVien = nv.MaNhanVien
-                        """, nvColumns);
+                        """, tienluongColums);
         });
         // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
@@ -234,7 +229,7 @@ public class nhansuTienLuong extends JPanel {
                         (nv.Luong1Gio * tl.GioLamViec) AS TongTien
                         FROM tienluong tl
                         JOIN nhanvien nv ON tl.MaNhanVien = nv.MaNhanVien
-                        """, nvColumns);
+                        """, tienluongColums);
         });
         
         // Sự kiện "Hủy"
@@ -249,7 +244,7 @@ public class nhansuTienLuong extends JPanel {
                         (nv.Luong1Gio * tl.GioLamViec) AS TongTien
                         FROM tienluong tl
                         JOIN nhanvien nv ON tl.MaNhanVien = nv.MaNhanVien
-                        """, nvColumns);
+                        """, tienluongColums);
         });
     }
 
