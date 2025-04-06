@@ -25,7 +25,7 @@ public class Main extends JFrame {
         // Panel hiển thị nội dung
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
-        contentPanel.add(new Home(), "TrangChu");
+        // contentPanel.add(new Home(), "TrangChu");
         contentPanel.add(new QLbanhang(), "BanHang");
         contentPanel.add(new QLkho(), "Kho");
         contentPanel.add(new QLnhansu(), "NhanSu");
@@ -53,8 +53,22 @@ public class Main extends JFrame {
         adminLabel.setFont(new Font("Arial", Font.BOLD, 14));
         menuPanel.add(adminLabel);
 
-        String[] buttonNames = {"TRANG CHỦ", "QUẢN LÝ BÁN HÀNG", "QUẢN LÝ NHÂN SỰ", "QUẢN LÝ KHO", "THOÁT"};
-        String[] panelKeys = {"TrangChu", "BanHang", "NhanSu", "Kho", null}; // null cho nút Thoát vì không cần chuyển panel
+        String[] buttonNames = {
+            //"TRANG CHỦ",//
+            "QUẢN LÝ BÁN HÀNG", 
+            "QUẢN LÝ NHÂN SỰ", 
+            "QUẢN LÝ KHO", 
+            "THOÁT"
+        };
+        
+        String[] panelKeys = {
+            // "TrangChu",  // Đây là khóa cho panel Trang Chủ
+            "BanHang",   // Đây là khóa cho panel Quản Lý Bán Hàng
+            "NhanSu",    // Đây là khóa cho panel Quản Lý Nhân Sự
+            "Kho",       // Đây là khóa cho panel Quản Lý Kho
+            null         // null dùng để đánh dấu chỗ không có panel
+        };
+        
 
         for (int i = 0; i < buttonNames.length; i++) {
             JButton button = createStyledButton(buttonNames[i]);
