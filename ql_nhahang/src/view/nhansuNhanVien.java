@@ -109,7 +109,7 @@ public class nhansuNhanVien extends JPanel {
         txtSoDienThoai = new JTextField();
         //Combo box chức vụ
         txtChucVu = new JTextField();
-        cbChucVu = new JComboBox<>(new String[]{"Quản lý", "Phục vụ", "Thu Ngân", "Bảo vệ"});
+        cbChucVu = new JComboBox<>(new String[]{"Đầu bếp", "Phục vụ", "Thu ngân", "Quản lý", "Bảo vệ"});
         cbChucVu.setSelectedIndex(0);
         cbChucVu.addActionListener(e -> {
             txtChucVu.setText(cbChucVu.getSelectedItem().toString());
