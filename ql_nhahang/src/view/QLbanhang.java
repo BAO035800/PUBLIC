@@ -3,7 +3,9 @@ import java.awt.*;
 import javax.swing.*;
 
 public class QLbanhang extends JPanel {
+    private JTable table;
     public QLbanhang() {
+        table = new JTable();
         setLayout(new BorderLayout());
 
         // 🌟 Thiết lập UIManager trước khi tạo JTabbedPane
@@ -27,5 +29,8 @@ public class QLbanhang extends JPanel {
 
         // 🌟 Thêm vào giao diện chính
         add(tabbedPane, BorderLayout.CENTER);
+    }
+    public JTable getTable() {
+        return table;
     }
 }

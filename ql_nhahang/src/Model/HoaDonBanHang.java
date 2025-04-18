@@ -8,6 +8,7 @@ public class HoaDonBanHang {
     private int SoBan;
     private BigDecimal TongTienHoaDon;
     private String GhiChu;
+    private BigDecimal TongTien;
     public String getMaHoaDonBanHang() {
         return MaHoaDonBanHang;
     }
@@ -49,6 +50,12 @@ public class HoaDonBanHang {
     }
     public void setGhiChu(String ghiChu) {
         GhiChu = ghiChu;
+    }
+    public BigDecimal getTongTien() {
+        return TongTien;
+    }
+    public void setTongTien(BigDecimal tongTien) {
+        TongTien = tongTien;
     }
     
 }

@@ -2,8 +2,9 @@ package view;
 import java.awt.*;
 import javax.swing.*;
 public class QLnhansu extends JPanel {
-
+    private JTable table;
     public QLnhansu() {
+        table = new JTable();
         setLayout(new BorderLayout());
 
         // Tạo thanh tab full màn hình
@@ -23,5 +24,8 @@ public class QLnhansu extends JPanel {
         UIManager.put("TabbedPane.tabAreaInsets", new Insets(0, 0, 0, 0)); // Loại bỏ khoảng trống trên tab
         UIManager.put("TabbedPane.tabInsets", new Insets(10, 20, 10, 20)); // Padding chữ trong tab
         add(tabbedPane, BorderLayout.CENTER);
+    }
+    public JTable getTable() {
+        return table;
     }
 }

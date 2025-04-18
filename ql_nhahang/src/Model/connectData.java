@@ -1,6 +1,10 @@
 package model;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
 public class connectData {
@@ -60,5 +64,32 @@ public class connectData {
         } catch (SQLException e) {
             System.err.println("❌ Lỗi khi tải dữ liệu: " + e.getMessage());
         }
+    }
+    public static List<Map<String, Object>> loadDataFromTable(String tableName) {
+        List<Map<String, Object>> data = new ArrayList<>();
+        String sql = "SELECT * FROM " + tableName; // Lấy tất cả dữ liệu từ bảng
+
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            // Lấy thông tin cột
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // Duyệt qua tất cả các dòng dữ liệu
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>();
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnName = metaData.getColumnName(i);
+                    Object columnValue = rs.getObject(i);
+                    row.put(columnName, columnValue);
+                }
+                data.add(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 }

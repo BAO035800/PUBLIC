@@ -1,51 +1,53 @@
 package view;
-
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import model.connectData;
 
 public class Main extends JFrame {
-    private JPanel contentPanel; // Khu vực hiển thị nội dung
-    private CardLayout cardLayout; // Điều khiển chuyển đổi nội dung
-    private JButton currentButton = null; // Biến lưu trạng thái nút được chọn
+    private JPanel contentPanel;
+    private CardLayout cardLayout;
+    private JButton currentButton = null;
 
     public Main() {
-        // Cấu hình JFrame
         setTitle("Quản Lý Nhà Hàng");
         setSize(800, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        setLocationRelativeTo(null); // Hiển thị ở giữa màn hình
+        setLocationRelativeTo(null);
 
-        // Thanh Menu
         setJMenuBar(createMenuBar());
 
-        // Menu bên trái
         JPanel menuPanel = createMenuPanel();
 
-        // Panel hiển thị nội dung
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
-        // contentPanel.add(new Home(), "TrangChu");
         contentPanel.add(new QLbanhang(), "BanHang");
+        contentPanel.add(new QLbep(), "Bep");
         contentPanel.add(new QLkho(), "Kho");
         contentPanel.add(new QLnhansu(), "NhanSu");
 
-        // Thêm vào JFrame
         add(menuPanel, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
 
-        // Mặc định hiển thị trang chủ
-        // Mặc định hiển thị trang chủ
-        setButtonFocus((JButton) menuPanel.getComponent(1));  // Hiển thị nút "Trang Chủ" ban đầu
-        // Hiển thị nút "Trang Chủ" ban đầu
-        cardLayout.show(contentPanel, "TrangChu");
+        // Mặc định hiển thị panel Quản Lý Bán Hàng
+        setButtonFocus((JButton) menuPanel.getComponent(1));
+        cardLayout.show(contentPanel, "BanHang");
 
         setVisible(true);
     }
 
-    // Tạo menu bên trái
     private JPanel createMenuPanel() {
-        JPanel menuPanel = new JPanel(new GridLayout(6, 1));
+        JPanel menuPanel = new JPanel(new GridLayout(7, 1));
         menuPanel.setPreferredSize(new Dimension(200, getHeight()));
         menuPanel.setBackground(Color.decode("#69B9EB"));
 
@@ -54,28 +56,30 @@ public class Main extends JFrame {
         menuPanel.add(adminLabel);
 
         String[] buttonNames = {
-            //"TRANG CHỦ",//
-            "QUẢN LÝ BÁN HÀNG", 
-            "QUẢN LÝ NHÂN SỰ", 
-            "QUẢN LÝ KHO", 
+            "QUẢN LÝ BÁN HÀNG",
+            "QUẢN LÝ BẾP",
+            "QUẢN LÝ NHÂN SỰ",
+            "QUẢN LÝ KHO",
+            "REFRESH",
             "THOÁT"
         };
-        
+
         String[] panelKeys = {
-            // "TrangChu",  // Đây là khóa cho panel Trang Chủ
-            "BanHang",   // Đây là khóa cho panel Quản Lý Bán Hàng
-            "NhanSu",    // Đây là khóa cho panel Quản Lý Nhân Sự
-            "Kho",       // Đây là khóa cho panel Quản Lý Kho
-            null         // null dùng để đánh dấu chỗ không có panel
+            "BanHang",
+            "Bep",
+            "NhanSu",
+            "Kho",
+            "REFRESH",
+            null // THOÁT
         };
-        
 
         for (int i = 0; i < buttonNames.length; i++) {
             JButton button = createStyledButton(buttonNames[i]);
 
-            // Kiểm tra nếu nút là "Thoát", gọi phương thức thoát trực tiếp
-            if (i == buttonNames.length - 1) {
-                button.addActionListener(e -> System.exit(0)); // Gọi System.exit(0) để thoát ngay lập tức
+            if (buttonNames[i].equals("THOÁT")) {
+                button.addActionListener(e -> System.exit(0));
+            } else if (buttonNames[i].equals("REFRESH")) {
+                button.addActionListener(e -> refreshAllData());
             } else {
                 final String panelKey = panelKeys[i];
                 button.addActionListener(e -> {
@@ -89,7 +93,6 @@ public class Main extends JFrame {
         return menuPanel;
     }
 
-    // Tạo nút bấm có kiểu dáng đẹp
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setFocusPainted(false);
@@ -106,6 +109,7 @@ public class Main extends JFrame {
                     button.setBackground(new Color(111, 205, 240));
                 }
             }
+
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 if (button != currentButton) {
@@ -116,7 +120,6 @@ public class Main extends JFrame {
         return button;
     }
 
-    // Cập nhật trạng thái khi nút được chọn
     private void setButtonFocus(JButton selectedButton) {
         selectedButton.setFont(new Font("Arial", Font.BOLD, 14));
         selectedButton.setBackground(new Color(111, 205, 240));
@@ -128,19 +131,97 @@ public class Main extends JFrame {
         currentButton = selectedButton;
     }
 
-    // Tạo thanh menu
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
         JMenuItem exitItem = new JMenuItem("Exit");
-        exitItem.addActionListener(e -> System.exit(0)); // Thoát ứng dụng
+        exitItem.addActionListener(e -> System.exit(0));
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
         return menuBar;
     }
 
+    private void refreshAllData() {
+        // Tạo danh sách tên bảng và JTable tương ứng
+        Map<String, JTable> tableMap = new HashMap<>();
+        QLbanhang qlBanHangInstance = new QLbanhang();
+        tableMap.put("ban", qlBanHangInstance.getTable());
+        tableMap.put("menu", qlBanHangInstance.getTable());
+        tableMap.put("hoadonbanhangchitiet", qlBanHangInstance.getTable());
+        tableMap.put("hoadonbanhang", qlBanHangInstance.getTable());
+        QLbep qlBepInstance = new QLbep();
+        tableMap.put("chebienmon", qlBepInstance.getTable());
+        tableMap.put("phancongbep", qlBepInstance.getTable());
+        tableMap.put("congthucmonan", qlBepInstance.getTable());
+        QLkho qlKhoInstance = new QLkho();
+        tableMap.put("nhacungcap", qlKhoInstance.getTable());
+        tableMap.put("khonguyenlieu", qlKhoInstance.getTable());
+        tableMap.put("tonkho", qlKhoInstance.getTable());
+        QLnhansu qlNhanSuInstance = new QLnhansu();
+        tableMap.put("nhanvien", qlNhanSuInstance.getTable());
+        tableMap.put("tienluong", qlNhanSuInstance.getTable());
+        // Duyệt qua tất cả các bảng và tải dữ liệu
+        for (String tableName : tableMap.keySet()) {
+            List<Map<String, Object>> data = DatabaseHelper.loadDataFromTable(tableName);
+            updateTable(tableMap.get(tableName), data);
+        }
+        
+        JOptionPane.showMessageDialog(this, "Đã tải lại toàn bộ dữ liệu từ cơ sở dữ liệu!");
+    }
+
+    public static class DatabaseHelper {
+        public static List<Map<String, Object>> loadDataFromTable(String tableName) {
+            List<Map<String, Object>> data = new ArrayList<>();
+            
+            // Câu lệnh SQL để lấy dữ liệu
+            String sql = "SELECT * FROM " + tableName;
+            
+            // Giả sử bạn có phương thức kết nối và thực thi câu lệnh SQL để lấy dữ liệu vào list
+            try (Connection conn = connectData.connect(); 
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+                // Lấy thông tin về các cột từ ResultSetMetaData
+                ResultSetMetaData metaData = rs.getMetaData();
+                int columnCount = metaData.getColumnCount(); // Số lượng cột trong bảng
+
+                // Lấy dữ liệu từ ResultSet
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+
+                    // Duyệt qua tất cả các cột của bảng
+                    for (int i = 1; i <= columnCount; i++) {
+                        // Lấy tên cột từ metaData và giá trị từ ResultSet
+                        String columnName = metaData.getColumnName(i);
+                        Object columnValue = rs.getObject(i);
+                        
+                        // Thêm cột vào map
+                        row.put(columnName, columnValue);
+                    }
+                    
+                    // Thêm dòng vào danh sách
+                    data.add(row);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return data;
+        }
+    }
+
+    // Phương thức cập nhật bảng chung
+    private void updateTable(JTable table, List<Map<String, Object>> data) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);  // Xóa các dòng cũ
+    
+        // Thêm dữ liệu mới vào bảng
+        for (Map<String, Object> row : data) {
+            model.addRow(row.values().toArray());
+        }
+    }
+
     public static void main(String[] args) {
-        // Khởi tạo giao diện đăng nhập
         Login loginForm = new Login();
     }
 }
+
