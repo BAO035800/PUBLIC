@@ -1,4 +1,5 @@
 package view;
+
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -17,8 +18,12 @@ public class Main extends JFrame {
     private JPanel contentPanel;
     private CardLayout cardLayout;
     private JButton currentButton = null;
+    private String userRole; // Vai trò của người dùng
+    private Map<String, JButton> buttonMap; // Lưu các nút theo panel key
 
-    public Main() {
+    public Main(String role) {
+        this.userRole = role; // Lưu vai trò
+        buttonMap = new HashMap<>(); // Khởi tạo map để lưu nút
         setTitle("Quản Lý Nhà Hàng");
         setSize(800, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,17 +36,31 @@ public class Main extends JFrame {
 
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
-        contentPanel.add(new QLbanhang(), "BanHang");
-        contentPanel.add(new QLbep(), "Bep");
-        contentPanel.add(new QLkho(), "Kho");
-        contentPanel.add(new QLnhansu(), "NhanSu");
+
+        // Thêm các panel dựa trên vai trò
+        if (userRole.equals("Admin")) {
+            contentPanel.add(new QLbanhang(), "BanHang");
+            contentPanel.add(new QLbep(), "Bep");
+            contentPanel.add(new QLkho(), "Kho");
+            contentPanel.add(new QLnhansu(), "NhanSu");
+        } else if (userRole.equals("BanHang")) {
+            contentPanel.add(new QLbanhang(), "BanHang");
+        } else if (userRole.equals("Bep")) {
+            contentPanel.add(new QLbep(), "Bep");
+            contentPanel.add(new QLkho(), "Kho");
+        }
 
         add(menuPanel, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
 
-        // Mặc định hiển thị panel Quản Lý Bán Hàng
-        setButtonFocus((JButton) menuPanel.getComponent(1));
-        cardLayout.show(contentPanel, "BanHang");
+        // Mặc định hiển thị panel đầu tiên dựa trên vai trò
+        if (userRole.equals("Admin") || userRole.equals("BanHang")) {
+            cardLayout.show(contentPanel, "BanHang");
+            setButtonFocus(buttonMap.get("BanHang")); // Sử dụng nút từ buttonMap
+        } else if (userRole.equals("Bep")) {
+            cardLayout.show(contentPanel, "Bep");
+            setButtonFocus(buttonMap.get("Bep")); // Sử dụng nút từ buttonMap
+        }
 
         setVisible(true);
     }
@@ -51,10 +70,11 @@ public class Main extends JFrame {
         menuPanel.setPreferredSize(new Dimension(200, getHeight()));
         menuPanel.setBackground(Color.decode("#69B9EB"));
 
-        JLabel adminLabel = new JLabel("XIN CHÀO ADMIN", SwingConstants.CENTER);
+        JLabel adminLabel = new JLabel("XIN CHÀO " + userRole.toUpperCase(), SwingConstants.CENTER);
         adminLabel.setFont(new Font("Arial", Font.BOLD, 14));
         menuPanel.add(adminLabel);
 
+        // Danh sách nút và panel keys
         String[] buttonNames = {
             "QUẢN LÝ BÁN HÀNG",
             "QUẢN LÝ BẾP",
@@ -68,11 +88,26 @@ public class Main extends JFrame {
             "Bep",
             "NhanSu",
             "Kho",
-            "REFRESH",
             null // THOÁT
         };
 
+        // Xác định các nút hiển thị dựa trên vai trò
+        boolean[] showButton = new boolean[buttonNames.length];
+        if (userRole.equals("Admin")) {
+            showButton = new boolean[]{true, true, true, true, true}; // Admin thấy tất cả
+        } else if (userRole.equals("BanHang")) {
+            showButton = new boolean[]{true, false, false, false, true}; // Bán hàng chỉ thấy tab Bán hàng
+        } else if (userRole.equals("Bep")) {
+            showButton = new boolean[]{false, true, false, true, true}; // Bếp chỉ thấy tab Bếp và Kho
+        }
+
+        // Tạo các nút dựa trên vai trò
         for (int i = 0; i < buttonNames.length; i++) {
+            if (!showButton[i]) {
+                menuPanel.add(new JLabel()); // Thêm placeholder nếu nút không được hiển thị
+                continue;
+            }
+
             JButton button = createStyledButton(buttonNames[i]);
 
             if (buttonNames[i].equals("THOÁT")) {
@@ -83,6 +118,7 @@ public class Main extends JFrame {
                     cardLayout.show(contentPanel, panelKey);
                     setButtonFocus(button);
                 });
+                buttonMap.put(panelKey, button); // Lưu nút vào map
             }
 
             menuPanel.add(button);
@@ -118,6 +154,7 @@ public class Main extends JFrame {
     }
 
     private void setButtonFocus(JButton selectedButton) {
+        if (selectedButton == null) return; // Tránh lỗi nếu nút không tồn tại
         selectedButton.setFont(new Font("Arial", Font.BOLD, 14));
         selectedButton.setBackground(new Color(111, 205, 240));
 
@@ -142,33 +179,22 @@ public class Main extends JFrame {
         public static List<Map<String, Object>> loadDataFromTable(String tableName) {
             List<Map<String, Object>> data = new ArrayList<>();
             
-            // Câu lệnh SQL để lấy dữ liệu
             String sql = "SELECT * FROM " + tableName;
             
-            // Giả sử bạn có phương thức kết nối và thực thi câu lệnh SQL để lấy dữ liệu vào list
             try (Connection conn = connectData.connect(); 
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(sql)) {
+                 Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
 
-                // Lấy thông tin về các cột từ ResultSetMetaData
                 ResultSetMetaData metaData = rs.getMetaData();
-                int columnCount = metaData.getColumnCount(); // Số lượng cột trong bảng
+                int columnCount = metaData.getColumnCount();
 
-                // Lấy dữ liệu từ ResultSet
                 while (rs.next()) {
                     Map<String, Object> row = new HashMap<>();
-
-                    // Duyệt qua tất cả các cột của bảng
                     for (int i = 1; i <= columnCount; i++) {
-                        // Lấy tên cột từ metaData và giá trị từ ResultSet
                         String columnName = metaData.getColumnName(i);
                         Object columnValue = rs.getObject(i);
-                        
-                        // Thêm cột vào map
                         row.put(columnName, columnValue);
                     }
-                    
-                    // Thêm dòng vào danh sách
                     data.add(row);
                 }
             } catch (SQLException e) {
@@ -178,19 +204,16 @@ public class Main extends JFrame {
         }
     }
 
-    // Phương thức cập nhật bảng chung
     private void updateTable(JTable table, List<Map<String, Object>> data) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);  // Xóa các dòng cũ
+        model.setRowCount(0);
     
-        // Thêm dữ liệu mới vào bảng
         for (Map<String, Object> row : data) {
             model.addRow(row.values().toArray());
         }
     }
 
     public static void main(String[] args) {
-        Login loginForm = new Login();
+        new Login();
     }
 }
-

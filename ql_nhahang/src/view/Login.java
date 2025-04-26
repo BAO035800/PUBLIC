@@ -68,9 +68,12 @@ public class Login extends JFrame {
         String username = txtUsername.getText();
         String password = new String(txtPassword.getPassword());
 
-        if (UsersDAO.loginUser(username, password)) {
-            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
-            new Main().setVisible(true);
+        // Gọi UsersDAO để đăng nhập và lấy vai trò
+        String role = UsersDAO.loginUser(username, password);
+
+        if (role != null) {
+            JOptionPane.showMessageDialog(this, "Đăng nhập thành công! Vai trò: " + role);
+            new Main(role).setVisible(true); // Truyền vai trò vào Main
             dispose(); // Đóng form đăng nhập
         } else {
             JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -94,5 +97,9 @@ public class Login extends JFrame {
                 button.setBackground(new Color(70, 130, 180));
             }
         });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new Login());
     }
 }

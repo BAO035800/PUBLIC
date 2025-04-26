@@ -37,7 +37,7 @@ CREATE TABLE `ban` (
 
 LOCK TABLES `ban` WRITE;
 /*!40000 ALTER TABLE `ban` DISABLE KEYS */;
-INSERT INTO `ban` VALUES (1,'Đang phục vụ',''),(2,'Đang phục vụ',''),(3,'Trống',''),(4,'Trống',''),(5,'Trống',''),(6,'Trống',''),(7,'Trống',''),(8,'Trống',''),(9,'Trống',''),(10,'Trống','');
+INSERT INTO `ban` VALUES (1,'Trống',''),(2,'Trống',''),(3,'Trống',''),(4,'Trống',''),(5,'Trống',''),(6,'Trống',''),(7,'Trống',''),(8,'Trống',''),(9,'Trống',''),(10,'Trống','');
 /*!40000 ALTER TABLE `ban` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,7 +118,7 @@ CREATE TABLE `hoadonbanhang` (
 
 LOCK TABLES `hoadonbanhang` WRITE;
 /*!40000 ALTER TABLE `hoadonbanhang` DISABLE KEYS */;
-INSERT INTO `hoadonbanhang` VALUES ('1','Chưa thanh toán');
+INSERT INTO `hoadonbanhang` VALUES ('1','Đã thanh toán');
 /*!40000 ALTER TABLE `hoadonbanhang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -332,4 +332,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-27  5:16:32
+-- Dump completed on 2025-04-27  5:39:29
