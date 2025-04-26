@@ -15,7 +15,7 @@ public class QLkho extends JPanel {
         tabbedPane.setPreferredSize(new Dimension(1000, 600)); // Điều chỉnh kích thước theo màn hình
         tabbedPane.addTab("Nhà cung cấp", new khoNhaCungCap());
         tabbedPane.addTab("Kho nguyên liệu", new khoNguyenLieu());
-        tabbedPane.addTab("Tồn kho", new khoTonKho());
+        
         
         tabbedPane.setFont(new Font("Arial", Font.BOLD, 14));
         tabbedPane.setForeground(Color.BLACK);

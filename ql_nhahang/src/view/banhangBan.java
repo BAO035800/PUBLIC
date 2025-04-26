@@ -15,7 +15,7 @@ public class banhangBan extends JPanel {
     private JComboBox<String> cbTinhTrang;
     private JButton btnLuuThem, btnHuy, btnLuuSua, btnRefresh;
     private int selectedRow = -1;
-    
+
     public JTextField getTxtBan() {
         return txtBan;
     }
@@ -42,7 +42,7 @@ public class banhangBan extends JPanel {
 
     public banhangBan() {
         String[] nvColumns = {"Số bàn", "Tình trạng", "Ghi chú"};
-        setLayout(new BorderLayout(10,10));
+        setLayout(new BorderLayout(10, 10));
 
         // Khởi tạo tableModel
         tableModel = new DefaultTableModel(nvColumns, 0);
@@ -50,22 +50,26 @@ public class banhangBan extends JPanel {
         TableStyler.styleTable(table);
 
         // Panel chứa nút chức năng
-        JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+        JPanel controlPanel = new JPanel(new GridLayout(1, 4, 10, 10));
         JButton btnThem = new JButton("Thêm");
         JButton btnSua = new JButton("Sửa");
         JButton btnXoa = new JButton("Xóa");
-        
+        btnRefresh = new JButton("Refresh");
+
         btnThem.setBackground(new Color(72, 201, 176));
         btnSua.setBackground(new Color(255, 193, 7));
         btnXoa.setBackground(new Color(220, 53, 69));
-        
+        btnRefresh.setBackground(new Color(0, 123, 255));
+
         btnThem.setForeground(Color.WHITE);
         btnSua.setForeground(Color.WHITE);
         btnXoa.setForeground(Color.WHITE);
-        
+        btnRefresh.setForeground(Color.WHITE);
+
         controlPanel.add(btnThem);
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
+        controlPanel.add(btnRefresh);
         add(controlPanel, BorderLayout.NORTH);
 
         // Bảng dữ liệu
@@ -76,31 +80,28 @@ public class banhangBan extends JPanel {
         connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        formPanel = new JPanel(new GridLayout(5, 4, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin bàn"));
         formPanel.setBackground(Color.WHITE);
 
         // Các input field
         txtBan = new JTextField();
         txtGhiChu = new JTextField();
-        cbTinhTrang = new JComboBox<>(new String[] {"Trống", "Đã đặt", "Đang phục vụ"});
+        cbTinhTrang = new JComboBox<>(new String[] {"Trống", "Đang phục vụ"});
         cbTinhTrang.setSelectedIndex(0);
 
-        // Tạo các button chức năng
+        // Tạo các button chức năng trong form
         btnLuuThem = new JButton("Thêm");
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
-        btnRefresh = new JButton("Refresh");
 
         btnLuuThem.setBackground(new Color(76, 175, 80));
         btnLuuSua.setBackground(new Color(255, 193, 7));
         btnHuy.setBackground(new Color(108, 117, 125));
-        btnRefresh.setBackground(new Color(0, 123, 255));
-        
+
         btnLuuThem.setForeground(Color.WHITE);
         btnLuuSua.setForeground(Color.BLACK);
         btnHuy.setForeground(Color.WHITE);
-        btnRefresh.setForeground(Color.WHITE);
 
         // Thêm các thành phần vào form
         formPanel.add(new JLabel("Số bàn"));
@@ -111,8 +112,8 @@ public class banhangBan extends JPanel {
         formPanel.add(txtGhiChu);
         formPanel.add(btnHuy);
         formPanel.add(btnLuuThem);
+        formPanel.add(new JLabel());
         formPanel.add(btnLuuSua);
-        formPanel.add(btnRefresh);
 
         add(formPanel, BorderLayout.SOUTH);
         formPanel.setVisible(false);
@@ -142,11 +143,11 @@ public class banhangBan extends JPanel {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn bàn cần xóa!");
                 return;
             }
-                int soBan = Integer.parseInt(table.getValueAt(selectedRow, 0).toString());
-                BanController banController = new BanController(banhangBan.this, new BanDAO());
-                banController.xoaBan(soBan);
-                connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
-                clearForm();
+            int soBan = Integer.parseInt(table.getValueAt(selectedRow, 0).toString());
+            BanController banController = new BanController(banhangBan.this, new BanDAO());
+            banController.xoaBan(soBan);
+            connectData.loadData(tableModel, "SELECT * FROM ban", nvColumns);
+            clearForm();
         });
 
         // Sự kiện "Lưu Thêm"

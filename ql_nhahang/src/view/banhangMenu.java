@@ -6,153 +6,105 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import model.MenuDAO;
 import model.connectData;
+
 public class banhangMenu extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JPanel formPanel;
-    private JTextField txtMaMon, txtTenMon, txtGia,txtTinhTrang,txtSoLuong;
+    private JTextField txtMaMon, txtTenMon, txtGia, txtTinhTrang, txtSoLuong;
     private JComboBox<String> cbTinhTrang;
-    private JButton btnLuuThem, btnHuy, btnLuuSua, btnRefresh;
+    private JButton btnLuuThem, btnHuy, btnLuuSua;
     private int selectedRow = -1;
 
-    public JTextField getTxtMaMon() {
-        return txtMaMon;
-    }
-
-    public void setTxtMaMon(JTextField txtMaMon) {
-        this.txtMaMon = txtMaMon;
-    }
-
-    public JTextField getTxtTenMon() {
-        return txtTenMon;
-    }
-
-    public void setTxtTenMon(JTextField txtTenMon) {
-        this.txtTenMon = txtTenMon;
-    }
-
-    public JTextField getTxtGia() {
-        return txtGia;
-    }
-
-    public void setTxtGia(JTextField txtGia) {
-        this.txtGia = txtGia;
-    }
-
-    public JTextField getTxtTinhTrang() {
-        return txtTinhTrang;
-    }
-
-    public void setTxtTinhTrang(JTextField txtTinhTrang) {
-        this.txtTinhTrang = txtTinhTrang;
-    }
-
-    public JTextField getTxtSoLuong() {
-        return txtSoLuong;
-    }
-
-    public void setTxtSoLuong(JTextField txtSoLuong) {
-        this.txtSoLuong = txtSoLuong;
-    }
-
-    public JComboBox<String> getCbTinhTrang() {
-        return cbTinhTrang;
-    }
-
-    public void setCbTinhTrang(JComboBox<String> cbTinhTrang) {
-        this.cbTinhTrang = cbTinhTrang;
-    }
+    public JTextField getTxtMaMon() { return txtMaMon; }
+    public JTextField getTxtTenMon() { return txtTenMon; }
+    public JTextField getTxtGia() { return txtGia; }
+    public JTextField getTxtTinhTrang() { return txtTinhTrang; }
+    public JTextField getTxtSoLuong() { return txtSoLuong; }
+    public JComboBox<String> getCbTinhTrang() { return cbTinhTrang; }
 
     public banhangMenu() {
-        String[] menuColumns = {"Mã món", "Tên món", "Giá","Tình trạng", "Số lượng",};
+        String[] menuColumns = {"Mã món", "Tên món", "Giá", "Tình trạng", "Số lượng"};
         setLayout(new BorderLayout(10, 10));
-        tableModel = new DefaultTableModel(menuColumns  , 0);
+
+        // BẢNG HIỂN THỊ
+        tableModel = new DefaultTableModel(menuColumns, 0);
         table = new JTable(tableModel);
         TableStyler.styleTable(table);
-
-        // Panel chứa nút chức năng
-        JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
-        JButton btnThem = new JButton("Thêm");
-        JButton btnSua = new JButton("Sửa");
-        JButton btnXoa = new JButton("Xóa");
-        btnThem.setBackground(new Color(72, 201, 176));
-        btnSua.setBackground(new Color(255, 193, 7));
-        btnXoa.setBackground(new Color(220, 53, 69));
-        btnThem.setForeground(Color.WHITE);
-        btnSua.setForeground(Color.WHITE);
-        btnXoa.setForeground(Color.WHITE);
-        controlPanel.add(btnThem);
-        controlPanel.add(btnSua);
-        controlPanel.add(btnXoa);
-        add(controlPanel, BorderLayout.NORTH);
-
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Load dữ liệu từ database
-        connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
+        // NÚT CHỨC NĂNG TRÊN ĐẦU
+        JPanel controlPanel = new JPanel(new GridLayout(1, 4, 10, 10));
+        JButton btnThem = new JButton("Thêm");
+        JButton btnSua = new JButton("Sửa");
+        JButton btnXoa = new JButton("Xóa");
+        JButton btnRefresh = new JButton("Refresh");
 
-        // Panel nhập liệu
+        btnThem.setBackground(new Color(72, 201, 176));
+        btnSua.setBackground(new Color(255, 193, 7));
+        btnXoa.setBackground(new Color(220, 53, 69));
+        btnRefresh.setBackground(new Color(0, 123, 255));
+
+        btnThem.setForeground(Color.WHITE);
+        btnSua.setForeground(Color.WHITE);
+        btnXoa.setForeground(Color.WHITE);
+        btnRefresh.setForeground(Color.WHITE);
+
+        controlPanel.add(btnThem);
+        controlPanel.add(btnSua);
+        controlPanel.add(btnXoa);
+        controlPanel.add(btnRefresh);
+        add(controlPanel, BorderLayout.NORTH);
+
+        // FORM NHẬP LIỆU ẨN
         formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin menu"));
         formPanel.setBackground(Color.WHITE);
 
-        // Các input field
         txtMaMon = new JTextField();
         txtTenMon = new JTextField();
         txtGia = new JTextField();
         txtTinhTrang = new JTextField();
         txtSoLuong = new JTextField();
         cbTinhTrang = new JComboBox<>(new String[]{"Còn", "Hết"});
-        // Tạo các button chức năng
+
         btnLuuThem = new JButton("Thêm");
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
-        btnRefresh = new JButton("Refresh");
-        // Màu xanh lá cho nút Thêm (Thành công)
-        btnLuuThem.setBackground(new Color(76, 175, 80)); 
+
+        btnLuuThem.setBackground(new Color(76, 175, 80));
         btnLuuThem.setForeground(Color.WHITE);
-
-        // Màu cam cho nút Sửa (Cảnh báo nhẹ)
-        btnLuuSua.setBackground(new Color(255, 193, 7)); 
+        btnLuuSua.setBackground(new Color(255, 193, 7));
         btnLuuSua.setForeground(Color.BLACK);
-
-        // Màu đỏ cho nút Hủy (Nguy hiểm)
         btnHuy.setBackground(new Color(108, 117, 125));
         btnHuy.setForeground(Color.WHITE);
 
-        // Màu xanh dương cho nút Refresh (Hiện đại)
-        btnRefresh.setBackground(new Color(0, 123, 255)); 
-        btnRefresh.setForeground(Color.WHITE);
+        formPanel.add(new JLabel("Mã món:")); formPanel.add(txtMaMon);
+        formPanel.add(new JLabel("Tên món:")); formPanel.add(txtTenMon);
+        formPanel.add(new JLabel("Giá:")); formPanel.add(txtGia);
+        formPanel.add(new JLabel("Tình trạng:")); formPanel.add(cbTinhTrang);
+        formPanel.add(new JLabel("Số lượng:")); formPanel.add(txtSoLuong);
 
-        // Thêm các thành phần vào form
-        formPanel.add(new JLabel("Mã món:"));
-        formPanel.add(txtMaMon);
-        formPanel.add(new JLabel("Tên món:"));
-        formPanel.add(txtTenMon);
-        formPanel.add(new JLabel("Giá:"));
-        formPanel.add(txtGia);
-        formPanel.add(new JLabel("Tình trạng:"));
-        formPanel.add(cbTinhTrang);
-        formPanel.add(new JLabel("Số lượng:"));
-        formPanel.add(txtSoLuong);
-
-        // Thêm nút Lưu và Hủy
         formPanel.add(btnHuy);
         formPanel.add(btnLuuThem);
         formPanel.add(btnLuuSua);
-        formPanel.add(btnRefresh);
+        formPanel.add(new JLabel()); // ô trống
 
         add(formPanel, BorderLayout.SOUTH);
         formPanel.setVisible(false);
-        // Sự kiện "Thêm"
+
+        // LOAD DỮ LIỆU TỪ DATABASE
+        connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
+
+        // ======= SỰ KIỆN NÚT =======
+
         btnThem.addActionListener(e -> {
             selectedRow = -1;
             clearForm();
             formPanel.setVisible(true);
         });
 
-        // Sự kiện "Sửa"
         btnSua.addActionListener(e -> {
             selectedRow = table.getSelectedRow();
             if (selectedRow == -1) {
@@ -163,51 +115,38 @@ public class banhangMenu extends JPanel {
             }
         });
 
-        // Sự kiện "Xóa"
         btnXoa.addActionListener(e -> {
-            selectedRow = table.getSelectedRow();  // Lấy dòng được chọn từ bảng
+            selectedRow = table.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa!");
             } else {
-            
-                    // Lấy mã món từ cột đầu tiên của bảng (thường là mã món)
-                    String maMon = table.getValueAt(selectedRow, 0).toString();
-                    MenuController controller = new MenuController(banhangMenu.this, new MenuDAO());
-            
-                    // Gọi phương thức xóa món với mã món
-                    controller.xoaMenu(maMon);  // Truyền mã món vào đây
-            
-                    // Làm mới bảng sau khi xóa
-                    connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
+                String maMon = table.getValueAt(selectedRow, 0).toString();
+                MenuController controller = new MenuController(this, new MenuDAO());
+                controller.xoaMenu(maMon);
+                connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
+                clearForm();
             }
-            clearForm();  // Reset form sau khi xóa
         });
-        
-        
 
-        // Sự kiện "Lưu Thêm"
+        btnRefresh.addActionListener(e -> {
+            connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
+        });
+
         btnLuuThem.addActionListener(e -> {
-            MenuController controller = new MenuController(banhangMenu.this, new MenuDAO());
+            MenuController controller = new MenuController(this, new MenuDAO());
             controller.themMenu();
             connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
         });
 
-        // Sự kiện "Lưu Sửa"
         btnLuuSua.addActionListener(e -> {
-            MenuController controller = new MenuController(banhangMenu.this, new MenuDAO());
+            MenuController controller = new MenuController(this, new MenuDAO());
             controller.suaMenu();
             connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
         });
 
-        // Sự kiện "Hủy"
         btnHuy.addActionListener(e -> {
             formPanel.setVisible(false);
             clearForm();
-        });
-
-        // Sự kiện "Refresh"
-        btnRefresh.addActionListener(e -> {
-            connectData.loadData(tableModel, "SELECT * FROM menu", menuColumns);
         });
     }
 

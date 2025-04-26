@@ -60,7 +60,6 @@ public class Main extends JFrame {
             "QUẢN LÝ BẾP",
             "QUẢN LÝ NHÂN SỰ",
             "QUẢN LÝ KHO",
-            "REFRESH",
             "THOÁT"
         };
 
@@ -78,8 +77,6 @@ public class Main extends JFrame {
 
             if (buttonNames[i].equals("THOÁT")) {
                 button.addActionListener(e -> System.exit(0));
-            } else if (buttonNames[i].equals("REFRESH")) {
-                button.addActionListener(e -> refreshAllData());
             } else {
                 final String panelKey = panelKeys[i];
                 button.addActionListener(e -> {
@@ -139,34 +136,6 @@ public class Main extends JFrame {
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
         return menuBar;
-    }
-
-    private void refreshAllData() {
-        // Tạo danh sách tên bảng và JTable tương ứng
-        Map<String, JTable> tableMap = new HashMap<>();
-        QLbanhang qlBanHangInstance = new QLbanhang();
-        tableMap.put("ban", qlBanHangInstance.getTable());
-        tableMap.put("menu", qlBanHangInstance.getTable());
-        tableMap.put("hoadonbanhangchitiet", qlBanHangInstance.getTable());
-        tableMap.put("hoadonbanhang", qlBanHangInstance.getTable());
-        QLbep qlBepInstance = new QLbep();
-        tableMap.put("chebienmon", qlBepInstance.getTable());
-        tableMap.put("phancongbep", qlBepInstance.getTable());
-        tableMap.put("congthucmonan", qlBepInstance.getTable());
-        QLkho qlKhoInstance = new QLkho();
-        tableMap.put("nhacungcap", qlKhoInstance.getTable());
-        tableMap.put("khonguyenlieu", qlKhoInstance.getTable());
-        tableMap.put("tonkho", qlKhoInstance.getTable());
-        QLnhansu qlNhanSuInstance = new QLnhansu();
-        tableMap.put("nhanvien", qlNhanSuInstance.getTable());
-        tableMap.put("tienluong", qlNhanSuInstance.getTable());
-        // Duyệt qua tất cả các bảng và tải dữ liệu
-        for (String tableName : tableMap.keySet()) {
-            List<Map<String, Object>> data = DatabaseHelper.loadDataFromTable(tableName);
-            updateTable(tableMap.get(tableName), data);
-        }
-        
-        JOptionPane.showMessageDialog(this, "Đã tải lại toàn bộ dữ liệu từ cơ sở dữ liệu!");
     }
 
     public static class DatabaseHelper {

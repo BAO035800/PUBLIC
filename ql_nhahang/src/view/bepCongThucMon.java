@@ -29,27 +29,32 @@ public class bepCongThucMon extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         // Panel nút chức năng
-        JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+        JPanel controlPanel = new JPanel(new GridLayout(1, 4, 10, 10));
         JButton btnThem = new JButton("Thêm");
         JButton btnSua = new JButton("Sửa");
         JButton btnXoa = new JButton("Xóa");
+        btnRefresh = new JButton("Refresh");
 
         btnThem.setBackground(new Color(72, 201, 176));
         btnSua.setBackground(new Color(255, 193, 7));
         btnXoa.setBackground(new Color(220, 53, 69));
+        btnRefresh.setBackground(new Color(0, 123, 255));
+
         btnThem.setForeground(Color.WHITE);
         btnSua.setForeground(Color.WHITE);
         btnXoa.setForeground(Color.WHITE);
+        btnRefresh.setForeground(Color.WHITE);
 
         controlPanel.add(btnThem);
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
+        controlPanel.add(btnRefresh);
         add(controlPanel, BorderLayout.NORTH);
 
         connectData.loadData(tableModel, "SELECT * FROM congthucmonan", columns);
 
         // Panel form nhập liệu
-        formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        formPanel = new JPanel(new GridLayout(5, 4, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Thông tin công thức"));
         formPanel.setBackground(Color.WHITE);
 
@@ -60,7 +65,6 @@ public class bepCongThucMon extends JPanel {
         btnLuuThem = new JButton("Thêm");
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
-        btnRefresh = new JButton("Refresh");
 
         btnLuuThem.setBackground(new Color(76, 175, 80));
         btnLuuThem.setForeground(Color.WHITE);
@@ -68,8 +72,6 @@ public class bepCongThucMon extends JPanel {
         btnLuuSua.setForeground(Color.BLACK);
         btnHuy.setBackground(new Color(108, 117, 125));
         btnHuy.setForeground(Color.WHITE);
-        btnRefresh.setBackground(new Color(0, 123, 255));
-        btnRefresh.setForeground(Color.WHITE);
 
         formPanel.add(new JLabel("Mã món"));
         formPanel.add(txtMaMon);
@@ -80,7 +82,6 @@ public class bepCongThucMon extends JPanel {
         formPanel.add(btnHuy);
         formPanel.add(btnLuuThem);
         formPanel.add(btnLuuSua);
-        formPanel.add(btnRefresh);
 
         add(formPanel, BorderLayout.SOUTH);
         formPanel.setVisible(false);
@@ -151,5 +152,4 @@ public class bepCongThucMon extends JPanel {
         txtMaNguyenLieu.setText(tableModel.getValueAt(row, 1).toString());
         txtSoLuong.setText(tableModel.getValueAt(row, 2).toString());
     }
-
 }

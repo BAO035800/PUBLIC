@@ -34,27 +34,32 @@ public class khoTonKho extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         // Panel chức năng
-        JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+        JPanel controlPanel = new JPanel(new GridLayout(1, 4, 10, 10)); // Thêm một nút nữa để có 4 nút
         JButton btnThem = new JButton("Thêm");
         JButton btnSua = new JButton("Sửa");
         JButton btnXoa = new JButton("Xóa");
+        btnRefresh = new JButton("Refresh");
 
         btnThem.setBackground(new Color(72, 201, 176));
         btnSua.setBackground(new Color(255, 193, 7));
         btnXoa.setBackground(new Color(220, 53, 69));
+        btnRefresh.setBackground(new Color(0, 123, 255));
+
         btnThem.setForeground(Color.WHITE);
         btnSua.setForeground(Color.WHITE);
         btnXoa.setForeground(Color.WHITE);
+        btnRefresh.setForeground(Color.WHITE);
 
         controlPanel.add(btnThem);
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
+        controlPanel.add(btnRefresh);  // Đưa Refresh lên đầu
         add(controlPanel, BorderLayout.NORTH);
 
         connectData.loadData(tableModel, "SELECT * FROM tonkho", columns);
 
         // Panel form nhập liệu
-        formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Thông tin tồn kho"));
         formPanel.setBackground(Color.WHITE);
 
@@ -64,7 +69,6 @@ public class khoTonKho extends JPanel {
         btnLuuThem = new JButton("Thêm");
         btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
-        btnRefresh = new JButton("Refresh");
 
         btnLuuThem.setBackground(new Color(76, 175, 80));
         btnLuuThem.setForeground(Color.WHITE);
@@ -72,8 +76,6 @@ public class khoTonKho extends JPanel {
         btnLuuSua.setForeground(Color.BLACK);
         btnHuy.setBackground(new Color(108, 117, 125));
         btnHuy.setForeground(Color.WHITE);
-        btnRefresh.setBackground(new Color(0, 123, 255));
-        btnRefresh.setForeground(Color.WHITE);
 
         // Ngày, tháng, năm JComboBox
         cbNgay = new JComboBox<>();
@@ -102,7 +104,6 @@ public class khoTonKho extends JPanel {
         formPanel.add(btnHuy);
         formPanel.add(btnLuuThem);
         formPanel.add(btnLuuSua);
-        formPanel.add(btnRefresh);
 
         add(formPanel, BorderLayout.SOUTH);
         formPanel.setVisible(false);
@@ -131,7 +132,7 @@ public class khoTonKho extends JPanel {
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa!");
             } else {
-                String maNguyenLieu = table.getValueAt(selectedRow, 0).toString(); 
+                String maNguyenLieu = table.getValueAt(selectedRow, 0).toString();
                 TonKhoController controller = new TonKhoController(this, new TonKhoDAO());
                 controller.xoaTonKho(maNguyenLieu);
                 JOptionPane.showMessageDialog(this, "✅ Đã xóa nguyên liệu khỏi tồn kho!");

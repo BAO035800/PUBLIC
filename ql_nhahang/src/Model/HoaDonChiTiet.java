@@ -2,19 +2,12 @@ package model;
 import java.math.BigDecimal;
 
 public class HoaDonChiTiet {
-    private int ID;
     private String MaMon;
     private String MaHoaDonBanHang;
     private int SoBan;
     private BigDecimal GiaTien;
     private int SoLuongDat;
     private BigDecimal TongTien;
-    public int getID() {
-        return ID;
-    }
-    public void setID(int iD) {
-        ID = iD;
-    }
     public String getMaMon() {
         return MaMon;
     }

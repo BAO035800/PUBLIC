@@ -7,13 +7,14 @@ import java.util.List;
 public class CheBienMonDAO {
 
     public void themCheBienMon(CheBienMon cb) {
-        String sql = "INSERT INTO chebienmon(MaCheBien, MaMon, MaHoaDonBanHang, TrangThai) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO chebienmonan(MaCheBienMonAn, MaMon, SoBan, MaHoaDonBanHang, TinhTrang) VALUES(?, ?, ?, ?, ?)";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cb.getMaCheBien());
             ps.setString(2, cb.getMaMon());
-            ps.setString(3, cb.getMaHoaDonBanHang());
-            ps.setString(4, cb.getTrangThai());
+            ps.setInt(3, cb.getSoBan());
+            ps.setString(4, cb.getMaHoaDonBanHang());
+            ps.setString(5, cb.getTinhTrang());
             ps.executeUpdate();
             System.out.println("✅ Thêm chế biến món thành công!");
         } catch (SQLException e) {
@@ -23,13 +24,14 @@ public class CheBienMonDAO {
     }
 
     public void suaCheBienMon(CheBienMon cb) {
-        String sql = "UPDATE chebienmon SET MaMon=?, MaHoaDonBanHang=?, TrangThai=? WHERE MaCheBien=?";
+        String sql = "UPDATE chebienmonan SET MaMon=?, SoBan=?, MaHoaDonBanHang=?, TinhTrang=? WHERE MaCheBienMonAn=?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cb.getMaMon());
-            ps.setString(2, cb.getMaHoaDonBanHang());
-            ps.setString(3, cb.getTrangThai());
-            ps.setString(4, cb.getMaCheBien());
+            ps.setInt(2, cb.getSoBan());
+            ps.setString(3, cb.getMaHoaDonBanHang());
+            ps.setString(4, cb.getTinhTrang());
+            ps.setString(5, cb.getMaCheBien());
             ps.executeUpdate();
             System.out.println("✅ Cập nhật chế biến món thành công!");
         } catch (SQLException e) {
@@ -39,7 +41,7 @@ public class CheBienMonDAO {
     }
 
     public void xoaCheBienMon(String maCheBien) {
-        String sql = "DELETE FROM chebienmon WHERE MaCheBien=?";
+        String sql = "DELETE FROM chebienmonan WHERE MaCheBienMonAn=?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, maCheBien);
@@ -53,16 +55,17 @@ public class CheBienMonDAO {
 
     public List<CheBienMon> getDanhSachCheBien() {
         List<CheBienMon> list = new ArrayList<>();
-        String sql = "SELECT * FROM chebienmon";
+        String sql = "SELECT * FROM chebienmonan";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 CheBienMon cb = new CheBienMon();
-                cb.setMaCheBien(rs.getString("MaCheBien"));
+                cb.setMaCheBien(rs.getString("MaCheBienMonAn"));
                 cb.setMaMon(rs.getString("MaMon"));
+                cb.setSoBan(rs.getInt("SoBan"));
                 cb.setMaHoaDonBanHang(rs.getString("MaHoaDonBanHang"));
-                cb.setTrangThai(rs.getString("TrangThai"));
+                cb.setTinhTrang(rs.getString("TinhTrang"));
                 list.add(cb);
             }
         } catch (SQLException e) {

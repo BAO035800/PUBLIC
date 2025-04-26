@@ -13,9 +13,9 @@ public class QLbep extends JPanel {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setPreferredSize(new Dimension(1000, 600));
         
-        tabbedPane.addTab("Chế biến món", new bepCheBienMon());
-        tabbedPane.addTab("Phân công bếp", new bepPhanCongBep());
         tabbedPane.addTab("Công thức món ăn", new bepCongThucMon());
+        tabbedPane.addTab("Chế biến món ăn", new bepCheBienMon());
+        tabbedPane.addTab("Tồn kho", new khoTonKho());
 
         tabbedPane.setFont(new Font("Arial", Font.BOLD, 14));
         tabbedPane.setForeground(Color.BLACK);

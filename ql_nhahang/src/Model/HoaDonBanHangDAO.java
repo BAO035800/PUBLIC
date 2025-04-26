@@ -7,12 +7,11 @@ import java.util.List;
 public class HoaDonBanHangDAO {
     // Thêm hóa đơn bán hàng
     public void themHoaDon(HoaDonBanHang hoaDon) {
-        String sql = "INSERT INTO hoadonbanhang(MaHoaDonBanHang, SoBan, GhiChu) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO hoadonbanhang(MaHoaDonBanHang, TrangThai) VALUES(?, ?)";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, hoaDon.getMaHoaDonBanHang());
-            ps.setInt(2, hoaDon.getSoBan());
-            ps.setString(3, hoaDon.getGhiChu());
+            ps.setString(2, hoaDon.getTinhTrang());
             ps.executeUpdate();
             System.out.println("✅ Thêm hóa đơn thành công!");
         } catch (SQLException e) {
@@ -23,17 +22,15 @@ public class HoaDonBanHangDAO {
 
     // Sửa hóa đơn bán hàng
     public void suaHoaDon(HoaDonBanHang hoaDon) {
-        String sql = "UPDATE hoadonbanhang SET SoBan=?, GhiChu=? WHERE MaHoaDonBanHang=?";
+        String sql = "UPDATE hoadonbanhang SET  TrangThai=? WHERE MaHoaDonBanHang=?";
         try (Connection conn = Connect.getConnect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, hoaDon.getSoBan());
-            ps.setBigDecimal(2, hoaDon.getTongTienHoaDon());
-            ps.setString(3, hoaDon.getGhiChu());
-            ps.setString(4, hoaDon.getMaHoaDonBanHang());
+            ps.setString(1, hoaDon.getTinhTrang());
+            ps.setString(2, hoaDon.getMaHoaDonBanHang());
             ps.executeUpdate();
-            System.out.println("✅ Cập nhật hóa đơn thành công!");
+            System.out.println("✅ Sửa hóa đơn thành công!");
         } catch (SQLException e) {
-            System.out.println("❌ Cập nhật hóa đơn thất bại!");
+            System.out.println("❌ Sửa hóa đơn thất bại!");
             e.printStackTrace();
         }
     }
@@ -63,7 +60,7 @@ public class HoaDonBanHangDAO {
                 hoaDon.setMaHoaDonBanHang(rs.getString("MaHoaDonBanHang"));
                 hoaDon.setSoBan(rs.getInt("SoBan"));
                 hoaDon.setTongTienHoaDon(rs.getBigDecimal("TongTienHoaDon"));
-                hoaDon.setGhiChu(rs.getString("GhiChu"));
+                hoaDon.setGhiChu(rs.getString("TinhTrang"));
                 list.add(hoaDon);
             }
         } catch (SQLException e) {

@@ -9,6 +9,8 @@ public class HoaDonBanHang {
     private BigDecimal TongTienHoaDon;
     private String GhiChu;
     private BigDecimal TongTien;
+    private String TinhTrang;
+    
     public String getMaHoaDonBanHang() {
         return MaHoaDonBanHang;
     }
@@ -56,6 +58,14 @@ public class HoaDonBanHang {
     }
     public void setTongTien(BigDecimal tongTien) {
         TongTien = tongTien;
+    }
+
+    public String getTinhTrang() {
+        return TinhTrang;
+    }
+
+    public void setTinhTrang(String TinhTrang) {
+        this.TinhTrang = TinhTrang;
     }
     
 }

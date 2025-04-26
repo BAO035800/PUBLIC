@@ -4,7 +4,9 @@ public class CheBienMon {
     private String maCheBien;
     private String maMon;
     private String maHoaDonBanHang;
-    private String trangThai;
+    private String tinhTrang;
+    private int soBan;
+    
     public String getMaCheBien() {
         return maCheBien;
     }
@@ -23,11 +25,26 @@ public class CheBienMon {
     public void setMaHoaDonBanHang(String maHoaDonBanHang) {
         this.maHoaDonBanHang = maHoaDonBanHang;
     }
-    public String getTrangThai() {
-        return trangThai;
+    public String gettinhTrang() {
+        return tinhTrang;
     }
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
+    public void settinhTrang(String tinhTrang) {
+        this.tinhTrang = tinhTrang;
+    }
+
+    public String getTinhTrang() {
+        return tinhTrang;
+    }
+
+    public void setTinhTrang(String tinhTrang) {
+        this.tinhTrang = tinhTrang;
+    }
+
+    public int getSoBan() {
+        return soBan;
+    }
+
+    public void setSoBan(int soBan) {
+        this.soBan = soBan;
     }
 }
-

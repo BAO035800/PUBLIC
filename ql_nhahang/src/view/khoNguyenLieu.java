@@ -56,35 +56,44 @@ public class khoNguyenLieu extends JPanel {
     }
 
     public khoNguyenLieu() {
-        String[] nlColumns = {"Mã nguyên liệu", "Tên nguyên liệu", "Mã nhà cung cấp", "Giá nhập", "Số lượng"};
+        // Thêm cột "Tổng tiền nhập" vào mảng cột
+        String[] nlColumns = {"Mã nguyên liệu", "Tên nguyên liệu", "Mã nhà cung cấp", "Giá nhập", "Số lượng", "Tổng tiền nhập"};
         setLayout(new BorderLayout(10, 10));
-        tableModel = new DefaultTableModel(nlColumns , 0);
+        tableModel = new DefaultTableModel(nlColumns, 0);
         table = new JTable(tableModel);
         TableStyler.styleTable(table);
+
         // Panel chứa nút chức năng
-        JPanel controlPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+        JPanel controlPanel = new JPanel(new GridLayout(1, 4, 10, 10));
         JButton btnThem = new JButton("Thêm");
         JButton btnSua = new JButton("Sửa");
         JButton btnXoa = new JButton("Xóa");
+        JButton btnRefresh = new JButton("Refresh");
 
         btnThem.setBackground(new Color(72, 201, 176));
         btnSua.setBackground(new Color(255, 193, 7));
         btnXoa.setBackground(new Color(220, 53, 69));
+        btnRefresh.setBackground(new Color(0, 123, 255));
+
         btnThem.setForeground(Color.WHITE);
         btnSua.setForeground(Color.WHITE);
         btnXoa.setForeground(Color.WHITE);
+        btnRefresh.setForeground(Color.WHITE);
 
         controlPanel.add(btnThem);
         controlPanel.add(btnSua);
         controlPanel.add(btnXoa);
+        controlPanel.add(btnRefresh);
         add(controlPanel, BorderLayout.NORTH);
+        
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
+        // Tải dữ liệu ban đầu với cột Tổng tiền nhập
+        loadDataWithTotal();
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin kho nguyên liệu"));
         formPanel.setBackground(Color.WHITE);
 
@@ -92,12 +101,11 @@ public class khoNguyenLieu extends JPanel {
         txtTenNguyenLieu = new JTextField();
         txtMaNCC = new JTextField();
         txtSoLuong = new JTextField();
-        txtGiaNhap = new JTextField(); // Thêm JTextField cho Giá nhập
+        txtGiaNhap = new JTextField();
 
-        btnLuuThem = new JButton("Thêm");
-        btnLuuSua = new JButton("Sửa");
+        btnLuuThem = new JButton("Lưu Thêm");
+        btnLuuSua = new JButton("Lưu Sửa");
         btnHuy = new JButton("Hủy");
-        btnRefresh = new JButton("Refresh");
 
         btnLuuThem.setBackground(new Color(76, 175, 80)); 
         btnLuuThem.setForeground(Color.WHITE);
@@ -107,9 +115,6 @@ public class khoNguyenLieu extends JPanel {
 
         btnHuy.setBackground(new Color(108, 117, 125));
         btnHuy.setForeground(Color.WHITE);
-
-        btnRefresh.setBackground(new Color(0, 123, 255)); 
-        btnRefresh.setForeground(Color.WHITE);
 
         // Thêm các thành phần vào formPanel
         formPanel.add(new JLabel("Mã nguyên liệu"));
@@ -122,12 +127,10 @@ public class khoNguyenLieu extends JPanel {
         formPanel.add(txtGiaNhap);
         formPanel.add(new JLabel("Số lượng"));
         formPanel.add(txtSoLuong);
-        formPanel.add(new JLabel(""));
-        formPanel.add(new JLabel(""));
+        
         formPanel.add(btnHuy);
         formPanel.add(btnLuuThem);
         formPanel.add(btnLuuSua);
-        formPanel.add(btnRefresh);
 
         add(formPanel, BorderLayout.SOUTH);
         formPanel.setVisible(false);
@@ -157,24 +160,24 @@ public class khoNguyenLieu extends JPanel {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn nguyên liệu cần xóa!");
                 return;
             }
-            String MaNguyenLieu = tableModel.getValueAt(selectedRow, 0).toString();
+            String maNguyenLieu = tableModel.getValueAt(selectedRow, 0).toString();
             NguyenLieuController controller = new NguyenLieuController(this, new KhoNguyenLieuDAO());
-            controller.xoaNguyenLieu(MaNguyenLieu);
-            connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
+            controller.xoaNguyenLieu(maNguyenLieu);
+            loadDataWithTotal();
         });
 
         // Sự kiện Lưu Thêm
         btnLuuThem.addActionListener(e -> {
             NguyenLieuController controller = new NguyenLieuController(this, new KhoNguyenLieuDAO());
             controller.themNguyenLieu();
-            connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
+            loadDataWithTotal();
         });
 
         // Sự kiện Lưu Sửa
         btnLuuSua.addActionListener(e -> {
             NguyenLieuController controller = new NguyenLieuController(this, new KhoNguyenLieuDAO());
             controller.suaNguyenLieu();
-            connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
+            loadDataWithTotal();
         });
 
         // Sự kiện Hủy
@@ -185,7 +188,7 @@ public class khoNguyenLieu extends JPanel {
 
         // Sự kiện Refresh
         btnRefresh.addActionListener(e -> {
-            connectData.loadData(tableModel, "SELECT * FROM khonguyenlieu", nlColumns);
+            loadDataWithTotal();
         });
     }
 
@@ -194,14 +197,43 @@ public class khoNguyenLieu extends JPanel {
         txtTenNguyenLieu.setText("");
         txtMaNCC.setText("");
         txtSoLuong.setText("");
-        txtGiaNhap.setText(""); // Reset Giá nhập
+        txtGiaNhap.setText("");
     }
 
     private void fillForm(int row) {
         txtMaNguyenLieu.setText(tableModel.getValueAt(row, 0).toString());
         txtTenNguyenLieu.setText(tableModel.getValueAt(row, 1).toString());
         txtMaNCC.setText(tableModel.getValueAt(row, 2).toString());
-        txtGiaNhap.setText(tableModel.getValueAt(row, 3).toString()); // Lấy giá nhập
+        txtGiaNhap.setText(tableModel.getValueAt(row, 3).toString());
         txtSoLuong.setText(tableModel.getValueAt(row, 4).toString());
+    }
+
+    // Phương thức tải dữ liệu và tính Tổng tiền nhập
+    private void loadDataWithTotal() {
+        // Định nghĩa lại các cột ban đầu mà không có Tổng tiền nhập để load từ cơ sở dữ liệu
+        String[] dbColumns = {"Mã nguyên liệu", "Tên nguyên liệu", "Mã nhà cung cấp", "Giá nhập", "Số lượng"};
+        DefaultTableModel tempModel = new DefaultTableModel(dbColumns, 0);
+        
+        // Tải dữ liệu từ cơ sở dữ liệu vào tempModel
+        connectData.loadData(tempModel, "SELECT * FROM khonguyenlieu", dbColumns);
+
+        // Xóa dữ liệu cũ trong tableModel
+        tableModel.setRowCount(0);
+
+        // Duyệt qua các dòng trong tempModel để tính Tổng tiền nhập và thêm vào tableModel
+        for (int i = 0; i < tempModel.getRowCount(); i++) {
+            String maNguyenLieu = tempModel.getValueAt(i, 0).toString();
+            String tenNguyenLieu = tempModel.getValueAt(i, 1).toString();
+            String maNCC = tempModel.getValueAt(i, 2).toString();
+            double giaNhap = Double.parseDouble(tempModel.getValueAt(i, 3).toString());
+            int soLuong = Integer.parseInt(tempModel.getValueAt(i, 4).toString());
+            
+            // Tính tổng tiền nhập
+            double tongTienNhap = giaNhap * soLuong;
+
+            // Thêm dòng mới vào tableModel với cột Tổng tiền nhập
+            Object[] row = {maNguyenLieu, tenNguyenLieu, maNCC, giaNhap, soLuong, tongTienNhap};
+            tableModel.addRow(row);
+        }
     }
 }
