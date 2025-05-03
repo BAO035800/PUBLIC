@@ -11,6 +11,7 @@ import model.CheBienMon;
 import model.CheBienMonDAO;
 import model.Connect;
 import view.bepCheBienMon;
+
 public class CheBienMonController {
     private bepCheBienMon view;
     private CheBienMonDAO dao;
@@ -97,8 +98,11 @@ public class CheBienMonController {
             // Tạo danh sách để lưu dữ liệu từ bảng hoadonchitiet
             List<CheBienMon> hoaDonChiTietList = new ArrayList<>();
             
-            // Kết nối cơ sở dữ liệu và lấy dữ liệu từ bảng hoadonchitiet
-            String sql = "SELECT MaHoaDonBanHang, MaMon, SoBan FROM hoadonbanhangchitiet";
+            // Kết nối cơ sở dữ liệu và lấy dữ liệu từ bảng hoadonchitiet với hóa đơn chưa thanh toán
+            String sql = "SELECT c.MaHoaDonBanHang, c.MaMon, c.SoBan " +
+                         "FROM hoadonbanhangchitiet c " +
+                         "JOIN hoadonbanhang h ON c.MaHoaDonBanHang = h.MaHoaDonBanHang " +
+                         "WHERE h.TrangThai = 'Chưa thanh toán'";
             try (Connection conn = Connect.getConnect();
                  PreparedStatement ps = conn.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
@@ -116,7 +120,7 @@ public class CheBienMonController {
 
             // Kiểm tra nếu không có dữ liệu
             if (hoaDonChiTietList.isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Không có dữ liệu trong bảng hóa đơn chi tiết để làm mới!");
+                JOptionPane.showMessageDialog(view, "Không có hóa đơn chưa thanh toán trong bảng hóa đơn chi tiết để làm mới!");
                 return;
             }
 

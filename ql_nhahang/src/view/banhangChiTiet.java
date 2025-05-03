@@ -79,8 +79,8 @@ public class banhangChiTiet extends JPanel {
         txtSoLuongDat = new JTextField();
         txtTongTien = new JTextField(); txtTongTien.setEnabled(false);
 
-        btnLuuThem = new JButton("Lưu thêm");
-        btnLuuSua = new JButton("Lưu sửa");
+        btnLuuThem = new JButton("Thêm");
+        btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
 
         formPanel.add(new JLabel("Mã món:")); formPanel.add(txtMaMon);

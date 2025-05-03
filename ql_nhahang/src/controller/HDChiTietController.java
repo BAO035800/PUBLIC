@@ -60,8 +60,22 @@ public class HDChiTietController {
             int soBan = Integer.parseInt(soBanStr);
             int soLuongDat = Integer.parseInt(soLuongDatStr);
 
-            // Bắt đầu giao dịch
+            // Kiểm tra xem bàn đã được đặt trong hóa đơn chưa thanh toán chưa
             try (Connection conn = Connect.getConnect()) {
+                String sqlCheckBan = "SELECT COUNT(*) FROM hoadonbanhang h " +
+                                    "JOIN hoadonbanhangchitiet c ON h.MaHoaDonBanHang = c.MaHoaDonBanHang " +
+                                    "WHERE c.SoBan = ? AND h.TrangThai = 'Chưa thanh toán' AND c.MaHoaDonBanHang != ?";
+                try (PreparedStatement stmt = conn.prepareStatement(sqlCheckBan)) {
+                    stmt.setInt(1, soBan);
+                    stmt.setString(2, maHD);
+                    ResultSet rs = stmt.executeQuery();
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        JOptionPane.showMessageDialog(view, "❌ Bàn " + soBan + " đã được đặt trong một hóa đơn chưa thanh toán!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+
+                // Bắt đầu giao dịch
                 conn.setAutoCommit(false);
                 try {
                     // Kiểm tra trạng thái hóa đơn

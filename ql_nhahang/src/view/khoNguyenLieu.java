@@ -93,7 +93,7 @@ public class khoNguyenLieu extends JPanel {
         loadDataWithTotal();
 
         // Panel nhập liệu
-        formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createTitledBorder("Nhập thông tin kho nguyên liệu"));
         formPanel.setBackground(Color.WHITE);
 
@@ -103,8 +103,8 @@ public class khoNguyenLieu extends JPanel {
         txtSoLuong = new JTextField();
         txtGiaNhap = new JTextField();
 
-        btnLuuThem = new JButton("Lưu Thêm");
-        btnLuuSua = new JButton("Lưu Sửa");
+        btnLuuThem = new JButton("Thêm");
+        btnLuuSua = new JButton("Sửa");
         btnHuy = new JButton("Hủy");
 
         btnLuuThem.setBackground(new Color(76, 175, 80)); 
