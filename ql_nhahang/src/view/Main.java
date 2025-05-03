@@ -111,7 +111,10 @@ public class Main extends JFrame {
             JButton button = createStyledButton(buttonNames[i]);
 
             if (buttonNames[i].equals("THOÁT")) {
-                button.addActionListener(e -> System.exit(0));
+                button.addActionListener(e -> {
+                    dispose(); // Đóng khung hiện tại
+                    new Login(); // Mở khung đăng nhập
+                });
             } else {
                 final String panelKey = panelKeys[i];
                 button.addActionListener(e -> {
@@ -169,7 +172,10 @@ public class Main extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
         JMenuItem exitItem = new JMenuItem("Exit");
-        exitItem.addActionListener(e -> System.exit(0));
+        exitItem.addActionListener(e -> {
+            dispose(); // Đóng khung hiện tại
+            new Login(); // Mở khung đăng nhập
+        });
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
         return menuBar;
