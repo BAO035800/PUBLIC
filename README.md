@@ -1,1 +1,1 @@
-# prj
+#ĐÂY LÀ PROJECT NHỎ ĐƯỢC PUBLIC (CÁC PROJECT Ở TRƯỜNG VÀ PROJECT NGHỊCH)
