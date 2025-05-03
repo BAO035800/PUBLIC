@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy Tính Cầm Tay</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 10px;
+}
+.calculator {
+    background-color: #333;
+    padding: 25px; /* Tăng khoảng padding */
+    border-radius: 15px; /* Tăng độ bo tròn */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* Làm nổi bật hơn */
+    width: 350px; /* Tăng chiều rộng */
+}
+.display {
+    margin-bottom: 20px;
+    height: auto;
+    border-radius: 8px;
+    border: 6px solid #222;
+    overflow: hidden;
+}
+#equation {
+    width: 100%;
+    height: 40px; /* Tăng chiều cao */
+    font-size: 20px; /* Tăng kích thước chữ */
+    padding: 8px;
+    border: none;
+    background-color: #222;
+    color: #bbb;
+}
+#result {
+    width: 100%;
+    height: 60px; /* Tăng chiều cao */
+    font-size: 28px; /* Font chữ lớn hơn */
+    padding: 10px;
+    border: none;
+    background-color: #222;
+    color: white;
+}
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px; /* Khoảng cách giữa các nút */
+}
+button {
+    font-size: 18px; /* Kích thước chữ lớn hơn */
+    padding: 18px; /* Tăng kích thước nút */
+    border: none;
+    border-radius: 8px;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+button:hover {
+    background-color: #555;
+}
+button:active {
+    background-color: #666;
+}
+.operator {
+    background-color: #ff9500;
+}
+.operator:hover {
+    background-color: #ff6d00;
+}
+.equals {
+    background-color: #4CAF50;
+    grid-column: span 4;
+}
+.equals:hover {
+    background-color: #45a049;
+}
+.clear {
+    background-color: #f44336;
+}
+.clear:hover {
+    background-color: #b92522;
+}
+.clear-all {
+    background-color: #e91e63;
+}
+.clear-all:hover {
+    background-color: #c2185b;
+}
+.turn{
+    background-color: #4CAF50; /* Màu xanh khi bật */
+    color: white;
+}
+.turn-on {
+    background-color: #4CAF50; /* Màu xanh khi bật */
+    color: white;
+}
+.turn-on:hover {
+    background-color: #48854a; /* Màu xanh khi bật */
+    color: white;
+}
+.turn-off {
+    background-color: #f44336; /* Màu đỏ khi tắt */
+    color: white;
+}
+.turn-off:hover {
+    background-color: #c1291e; /* Màu đỏ khi tắt */
+    color: white;
+}
+#tin{
+    width:15px;
+    height:15px;
+    margin-bottom:10px;
+    border-radius: 999px;
+    background-color: #f44336;
+}
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div id="tin"></div>
+        <div class="display">
+            <input type="text" id="equation" disabled placeholder="Phép tính">
+            <input type="text" id="result" disabled placeholder="0">
+        </div>
+        <div class="buttons">
+            <button type="button" class="btn clear">C</button>
+            <button type="button" class="btn clear-all">CE</button>
+            <button type="button" class="btn turn">ON</button>
+            <button type="button" class="btn operator div input">/</button>
+            <button type="button" class="btn number input">7</button>
+            <button type="button" class="btn number input">8</button>
+            <button type="button" class="btn number input">9</button>
+            <button type="button" class="btn operator add input">+</button>
+            <button type="button" class="btn number input">4</button>
+            <button type="button" class="btn number input">5</button>
+            <button type="button" class="btn number input">6</button>
+            <button type="button" class="btn operator input">-</button>
+            <button type="button" class="btn number input">1</button>
+            <button type="button" class="btn number input">2</button>
+            <button type="button" class="btn number input">3</button>
+            <button type="button" class="btn operator multi input">*</button>
+            <button type="button" class="btn number input">0</button>
+            <button type="button" class="btn input">.</button>
+            <button type="button" class="btn operator input">(</button>
+            <button type="button" class="btn operator input">)</button>
+            <button type="button" class="btn equals">=</button>
+        </div>
+    </div>
+    <script>
+        let number=document.getElementsByClassName('number')
+        let input=document.getElementsByClassName('input')
+        let output=document.getElementById('equation')
+        let ketqua=document.getElementById('result')
+        let clear=document.getElementsByClassName('clear')[0]
+        let clearall=document.getElementsByClassName('clear-all')[0]
+        let operator=document.getElementsByClassName('operator')
+        let equal=document.getElementsByClassName('equals')[0]
+        let on=document.getElementsByClassName('turn')[0]
+        let num
+        let tinhieu=document.getElementById('tin')
+        let mangall=[],j=0,mangso=[]
+        for(let i=0;i<input.length;i++){
+            input[i].addEventListener('click', function () {
+                let giatri = input[i].textContent.trim();
+                if (giatri !== '' && giatri !== undefined) { // Chỉ thêm giá trị hợp lệ
+                    mangall[j++] = giatri;
+                output.value += giatri; // Hiển thị trên màn hình
+                }
+                input[i].style.color='white';
+                output.style.color='white'
+            });
+
+        }
+        for(let i=0;i<number.length;i++){
+            number[i].addEventListener('click',function(){
+                num=number[i].textContent
+                num=parseInt(num);
+                mangso[j++]=num
+            })
+        } 
+        /*clearall.addEventListener('click',function(){
+            output.value=''
+            result=0
+            ketqua.value=''
+            mangall=[]
+            j=0
+        })*/
+        clear.addEventListener('click', function () {
+            if (mangall.length > 0) {
+        // Xóa phần tử cuối cùng trong mảng và giao diện
+                mangall.pop();
+                output.value = mangall.join('');
+                j--;
+        // Cập nhật lại kết quả sau khi xóa
+                try {
+                    let arr = chuyendoi(mangall, mangso);
+                    ketqua.value = calculator(arr); // Cập nhật giá trị kết quả
+                } 
+                catch (error) {
+                   ketqua.value = ''; // Đặt trống nếu xảy ra lỗi
+                }
+           } 
+           else {
+                ketqua.value = ''; // Không có gì để xóa
+            }
+        });
+
+        clear.addEventListener('click',function(){
+            output.value=output.value.slice(0,-1);
+            mangall.pop()
+            j--;
+            let arr=[]
+            arr=chuyendoi(mangall,mangso)
+            return calculator(arr)
+        })    
+        function chuyendoi(a,b){
+            for(let i=0;i<a.length;i++){
+                for(let j=0;j<b.length;j++){
+                    if(a[i]==b[j]){
+                        a[i]=b[j]
+                        break
+                    }
+                }
+            }
+            a=a.filter(element => element!==undefined&&element!=='')
+            let temp=''
+            let arr=[]
+            for(let i=0;i<a.length;i++){
+                /*if(typeof a[i]==='number'){
+                    temp+=a[i].toString()
+                }*/
+                if (!isNaN(a[i]) || a[i] === '.') { // Nếu là số
+                    temp += a[i];
+                }
+                else{
+                    if(temp!=''){
+                        if(temp.includes('.')){
+                            arr.push(parseFloat(temp))
+                        }
+                        else{
+                            arr.push(parseFloat(temp,10))
+                        }
+                        temp=''
+                    }
+                    arr.push(a[i]);
+                } 
+            }
+            if(temp!==''){
+                arr.push(parseFloat(temp,10))
+            }
+            return arr
+        }
+        function calculator(a){
+            let so=[]
+            let dau=[]
+            let thutu={'+':1,'-':1,'*':2,'/':2}
+            let tinh = ()=>{
+                let b=so.pop()
+                let a=so.pop()
+                let op=dau.pop()
+                let kq=0
+                switch(op){
+                    case'+':kq=a+b;break;
+                    case'-':kq=a-b;break;
+                    case'*':kq=a*b;break;
+                    case'/':kq=a/b;break;
+                }
+                kq = Math.round(kq * 1e10)/1e10;
+                return so.push(kq);
+            }
+            for(let i=0;i<a.length;i++){
+                if(typeof a[i]==='number'){
+                    so.push(a[i])
+                }
+                else if(a[i]==='('){
+                    dau.push(a[i])
+                }
+                else if(a[i]===')'){
+                    while(dau.length&&dau[dau.length-1]!=='('){
+                        tinh()
+                    }
+                    dau.pop()
+                }
+                else{
+                    while(dau.length&&thutu[dau[dau.length-1]]>=thutu[a[i]]){
+                        tinh()
+                    }
+                    dau.push(a[i])
+                }
+            }
+            while(dau.length){
+                tinh()
+            }  
+            return so[0]      
+        }
+        /*on.addEventListener('click',function(){
+            ison=!ison
+            if (ison){
+                on.textContent = 'OFF'; // Đổi nội dung nút thành OFF
+                on.classList.add('turn-on'); // Thêm màu xanh cho nút
+                on.classList.remove('turn-off'); // Xóa màu đỏ
+                output.value = ''; // Xóa màn hình phép tính
+                ketqua.value = ''; // Xóa màn hình kết quả
+                enableButtons(); // Bật các nút
+            }
+            else{
+                on.textContent = 'ON'; // Đổi nội dung nút thành ON
+                on.classList.add('turn-off'); // Thêm màu đỏ khi tắt
+                on.classList.remove('turn-on'); // Xóa màu xanh (nếu có)
+                output.value = 'TẮT'; // Hiển thị trạng thái "TẮT"
+                ketqua.value = '---'; // Hiển thị trạng thái rỗng
+                disableButtons(); // Tắt các nút
+            }
+        })*/
+        let trangthai=true
+        function dongbo(){
+            if(trangthai){
+                on.textContent = 'ON';
+                on.classList.add('turn-on');
+                on.classList.remove('turn-off');
+                disableButtons();
+            }
+            else{
+                on.textContent = 'OFF';
+                on.classList.add('turn-off');
+                on.classList.remove('turn-on');
+                enableButtons();
+            }
+        }
+        on.addEventListener('click',function(){
+            if(trangthai){
+                on.textContent='OFF'
+                on.classList.add('turn-off')
+                on.classList.remove('turn-on')
+                enableButtons()
+                trangthai=false
+                tin.style.backgroundColor="#4CAF50"
+            }
+            else{
+                on.textContent='ON'
+                on.classList.add('turn-on'); 
+                on.classList.remove('turn-off'); 
+                output.value=''
+                result=0
+                ketqua.value=''
+                mangall=[]
+                j=0
+                disableButtons();
+                trangthai=true
+                tin.style.backgroundColor="#f44336"
+            }
+        })
+        function enableButtons() {
+            for (let i = 0; i < input.length; i++) {
+                input[i].disabled = false; // Bật nút
+            }
+            equal.disabled = false; // Bật nút "="
+            clear.disabled = false; // Bật nút "C"
+            clearall.disabled = false; // Bật nút "CE"
+        }
+        function disableButtons() {
+            for (let i = 0; i < input.length; i++) {
+                input[i].disabled = true; // Vô hiệu hóa nút
+            }
+            equal.disabled = true; // Vô hiệu hóa nút "="
+            clear.disabled = true; // Vô hiệu hóa nút "C"
+            clearall.disabled = true; // Vô hiệu hóa nút "CE"
+        }
+        dongbo()
+         equal.addEventListener('click',function(){
+            try{
+                let arr=[]
+                arr=chuyendoi(mangall,mangso)
+                console.log('mang moi:',arr)
+                ketqua.value = calculator(arr);
+            }
+            catch(error){
+                ketqua.value=ERROR
+            }
+        })
+        
+    </script>
+</body>
+</html>

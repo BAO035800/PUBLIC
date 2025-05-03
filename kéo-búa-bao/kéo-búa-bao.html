@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kéo-búa-bao</title>
+    <style>
+        .main{
+            width:80%;
+            margin-right:auto;
+            margin-left:auto;
+            box-shadow: 10px 10px rgba(222, 214, 214, 0.233);
+            border:2px solid rgba(142, 141, 142, 0.438);
+            border-radius: 10px;
+            height:auto;
+            margin-top:100px;
+            border-radius: 10px;
+        }
+        h1{
+            display:flex;
+            justify-content: center;
+        }
+        .content{
+            width:100%;
+            height:100%;
+            display:flex;
+        }
+        .nguoi{
+            width:50%;
+            height:100%;
+        }
+        .may{
+            width:50%;
+            height:100%;
+        }
+        img{
+            border:1px solid rgb(204, 204, 204);
+            width:80%;
+            border-radius: 10px;
+        }
+        .anh{
+            margin-right:auto;
+            margin-left:auto;
+            width:75%;
+        }
+        .option{
+            margin-top:3vw;
+            margin-left:12vw;
+            border-radius: 10px;
+        }
+        .option option{
+            width:auto;
+            height:auto;
+            padding:15px;
+            border:none;
+            border-radius: 10px;
+        }
+        #play{
+            margin-top:3vw;
+            margin-left:33vw;
+            width:auto;
+            height:auto;
+            padding:15px;
+            font-size:20px;
+            color:white;
+            border:none;
+            border-radius: 10px;
+            background-color:rgb(119, 193, 119);
+        }
+        #play:hover{
+            background-color:rgb(81, 140, 78);
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>KÉO-BÚA-BAO</h1>
+        <div class="content">
+            <div class="nguoi">
+                <div class="anh">
+                    <img src="bantaytrai gif.gif" class="gif" alt="anh">
+                    <img src="trái-bao.jpg" class="bua" alt="anh">
+                    <img src="trái-kéo.jpg" class="keo" alt="anh">
+                    <img src="trái-lá.jpg" class="la" alt="anh">
+                </div>
+                <div class="option">
+                    <select name="options" id="options">
+                        <option value="" disabled selected>Chọn</option>
+                        <option value="bua">Búa</option>
+                        <option value="keo">Kéo</option>
+                        <option value="la">Lá</option>
+                    </select>
+                </div>
+                <button type="button" id="play" >Chơi</button>
+            </div>
+            <div class="may">
+                <div class="anh">
+                    <img src="bantayphai gif.gif" class="gif" alt="anh">
+                    <img src="phải-bao.jpg" class="bua" alt="anh">
+                    <img src="phải-kéo.jpg" class="keo" alt="anh">
+                    <img src="phải-lá.jpg" class="la" alt="anh">
+                </div>
+            </div>
+        </div>
+        <div>
+            <p>Kết quả:</p>
+            <p id="ketqua"></p>
+        </div>
+    </div>
+    <script>
+        function an(a){
+            for(let i=0;i<a.length;i++){
+                a[i].style.display="none";
+            }
+        }
+        function chon(a,b){
+            for(let i=0;i<a.length;i++){
+                a[i].style.display='block'
+            }
+            for(let i=0;i<b.length;i++){
+                b[i].style.display='none'  
+            }
+        }
+        function xoa(a,b){
+            for(let i=0;i<a.length;i++){
+                a[i].style.display="none";
+            }
+            for(let i=0;i<b.length;i++){
+                b[i].style.display="none";
+            }
+        }
+        let bua = document.getElementsByClassName('bua');
+        let keo = document.getElementsByClassName('keo');
+        let la = document.getElementsByClassName('la');
+        let gif = document.getElementsByClassName('gif');
+        let options=document.getElementById('options');
+        let mayanh=document.querySelectorAll('.may .anh img')
+        let play=document.getElementById('play');
+        let ketqua=document.getElementById('ketqua')
+        an(bua);
+        an(keo);
+        an(la);
+        let giatri
+        options.addEventListener('change',function(){
+            giatri=options.value
+            if(options.value ==='bua'){
+                xoa(keo,la)
+                chon(bua,gif)
+                for(i=0;i<mayanh.length;i++){
+                    mayanh[0].style.display='block'
+                    mayanh[i].style.display='none'
+                }
+            }
+            else if(options.value ==='keo'){
+                xoa(bua,la)
+                chon(keo,gif)
+                for(i=0;i<mayanh.length;i++){
+                    mayanh[0].style.display='block'
+                    mayanh[i].style.display='none'
+                }
+            }
+            else if(options.value ==='la'){
+                xoa(bua,keo)
+                chon(la,gif)
+                for(i=0;i<mayanh.length;i++){
+                    mayanh[0].style.display='block'
+                    mayanh[i].style.display='none'
+                }
+            }
+        })
+        /*play.addEventListener('click',function(){
+            for(let i=0;i<mayanh.length;i++){
+                mayanh[i]=i
+            }
+            let may=Math.floor((Math.random()*i)+1)
+            console.log(may)
+            if((giatri==='bua'&& may==='la')||(giatri==='la'&& may==='keo')||(giatri==='keo'&& may==='bua')){
+                ketqua.innerHTML='Bạn đã thua'
+            }
+            else if((giatri==='la'&& may==='bua')||(giatri==='keo'&& may==='la')||(giatri==='bua'&& may==='keo')){
+                ketqua.innerHTML='Bạn đã thắng'
+            }
+            else if((giatri==='bua'&& may==='bua')||(giatri==='keo'&& may==='keo')||(giatri==='la'&& may==='la')){
+                ketqua.innerHTML='Bạn đã hòa'
+            }
+        })*/
+    play.addEventListener('click', function() {
+        let mayChoices = ['bua', 'keo', 'la']; 
+        let may = mayChoices[Math.floor(Math.random() * mayChoices.length)];
+        for (let i = 0; i < mayanh.length; i++) {
+            mayanh[i].style.display = 'none';
+        }
+        if (may === 'bua'){
+            mayanh[1].style.display = 'block';
+        } 
+        else if (may === 'keo') {
+            mayanh[2].style.display = 'block'; 
+        } 
+        else if (may === 'la') {
+            mayanh[3].style.display = 'block'; 
+        }
+        if ((giatri === 'bua' && may === 'la') || 
+            (giatri === 'la' && may === 'keo') || 
+            (giatri === 'keo' && may === 'bua')) {
+            ketqua.innerHTML = 'Bạn đã thua';
+        } 
+        else if (giatri === may) {
+            ketqua.innerHTML = 'Bạn đã hòa';
+        } 
+        else {
+            ketqua.innerHTML = 'Bạn đã thắng';
+        }
+    });
+    </script>
+</body>
+</html>
