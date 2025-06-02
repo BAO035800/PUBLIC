@@ -1,0 +1,61 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "QlBanhangSpingApplication",
+            "request": "launch",
+            "mainClass": "QlBanhangSpingApplication",
+            "projectName": "ql-banhangSPING"
+        },
+        {
+            "type": "java",
+            "name": "QlBanhangSpingApplication",
+            "request": "launch",
+            "mainClass": "com.example.ql_banhangSPING.QlBanhangSpingApplication",
+            "projectName": "ql-banhangSPING"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "com.example.Ioc.testscan.Main",
+            "projectName": "Ioc"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "com.example.Ioc.Main",
+            "projectName": "Ioc"
+        },
+        {
+            "type": "java",
+            "name": "UserNotification",
+            "request": "launch",
+            "mainClass": "UserNotification"
+        },
+        {
+            "type": "java",
+            "name": "UserNotification",
+            "request": "launch",
+            "mainClass": "test.trash.UserNotification"
+        },
+        {
+            "type": "java",
+            "name": "QlBandoanApplication",
+            "request": "launch",
+            "mainClass": "com.example.ql_bandoan.QlBandoanApplication",
+            "projectName": "ql-bandoan"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-QlBandoanApplication<ql-bandoan>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.ql_bandoan.com.example.ql_bandoan.QlBandoanApplication",
+            "projectName": "ql-bandoan",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

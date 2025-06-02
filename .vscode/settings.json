@@ -2,5 +2,10 @@
     "java.project.referencedLibraries": [
         "ql_nhahang/lib/mysql-connector-j-9.2.0.jar",
         "test-lib\\**\\*.jar"
-    ]
+    ],
+    "java.project.sourcePaths": [
+        "ql_nhahang/src",
+        "ql-bandoan/ql-bandoan/src/main/java/com/example/ql_bandoan"
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
 }

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>🌤 Dự báo thời tiết đẹp</title>
+  <style>
+    /* Reset một chút */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #6dd5fa, #2980b9);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .weather-container {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      padding: 30px 40px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 15px;
+      font-size: 16px;
+      outline: none;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    button {
+      width: 100%;
+      background-color: #2980b9;
+      border: none;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1c5980;
+    }
+
+    #result {
+      margin-top: 25px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    /* Emoji tăng kích thước */
+    #result strong {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 450px) {
+      .weather-container {
+        padding: 20px 25px;
+      }
+
+      button, input[type="text"] {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="weather-container">
+    <h2>🌍 Tra cứu thời tiết</h2>
+    <input type="text" id="cityInput" placeholder="Nhập tên thành phố (vd: Hanoi)" />
+    <button onclick="getWeather()">Xem thời tiết</button>
+
+    <div id="result">📍 Nhập tên thành phố để xem thời tiết.</div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const apiKey = "bc9f01e447f03f5f108603f107b488f4"; // Thay bằng API key của bạn
+      const city = document.getElementById("cityInput").value.trim();
+      const result = document.getElementById("result");
+
+      if (!city) {
+        result.textContent = "⚠️ Vui lòng nhập tên thành phố.";
+        return;
+      }
+
+      result.textContent = "⏳ Đang lấy dữ liệu...";
+
+      try {
+        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=vi`);
+        if (!res.ok) throw new Error("Không tìm thấy thành phố!");
+        const data = await res.json();
+
+        const name = data.name;
+        const temp = data.main.temp;
+        const desc = data.weather[0].description;
+        const humidity = data.main.humidity;
+
+        result.innerHTML = `
+          <strong>📍 ${name}</strong>
+          🌡 Nhiệt độ: ${temp}°C<br />
+          🌫 Trạng thái: ${desc}<br />
+          💧 Độ ẩm: ${humidity}%
+        `;
+      } catch (err) {
+        result.textContent = "❌ Lỗi: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
